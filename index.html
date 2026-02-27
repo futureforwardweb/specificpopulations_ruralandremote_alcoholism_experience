@@ -9,56 +9,108 @@
 :root{
   --black:#060606;--near:#0f0f0f;--panel:#161616;
   --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.05);
-  --ember:#e06535;--ember-dim:rgba(224,101,53,0.13);--ember-mid:rgba(224,101,53,0.32);
+  --ember:#e06535;--ember-dim:rgba(224,101,53,0.13);
   --green:#2e7d4f;--gl:#4db374;--gdim:rgba(46,125,79,0.13);
   --red:#b03030;--rdim:rgba(176,48,48,0.13);
-  --blue:#5088cc;--bdim:rgba(80,136,204,0.12);
+  --blue:#5088cc;
   --w:#f4f1eb;--grey:rgba(244,241,235,0.78);--grey2:rgba(244,241,235,0.45);--grey3:rgba(244,241,235,0.25);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth;background:var(--black)}
-body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--w);overflow-x:hidden;min-height:100vh}
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;mix-blend-mode:overlay}
+html{background:#000;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--w);overflow-x:hidden;min-height:100vh;overflow-y:hidden}
+body.story-started{overflow-y:auto}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35;mix-blend-mode:overlay}
 
-/* ── PROGRESS ── */
+/* ═══════════ SPLASH SCREEN ═══════════ */
+#splash{position:fixed;inset:0;z-index:30000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transition:opacity 0.8s ease}
+#splash.gone{opacity:0;pointer-events:none}
+.sp-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");opacity:0.6}
+.sp-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse at 50% 100%,rgba(180,50,10,0.18) 0%,transparent 70%);pointer-events:none}
+.sp-content{position:relative;z-index:10;text-align:center;max-width:460px}
+.sp-cert{display:inline-flex;align-items:center;gap:0.6rem;border:1px solid rgba(224,101,53,0.35);padding:0.4rem 1.1rem;margin-bottom:2.5rem;opacity:0;animation:sp-rise 0.8s ease 0.3s forwards}
+.sp-cert-box{width:28px;height:28px;border:2px solid var(--ember);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--ember)}
+.sp-cert-txt{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(224,101,53,0.7)}
+.sp-warning{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.38em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:1.2rem;opacity:0;animation:sp-rise 0.8s ease 0.6s forwards}
+.sp-title{font-family:'Lora',serif;font-size:clamp(2.4rem,8vw,4rem);font-weight:600;line-height:1.05;margin-bottom:0.8rem;opacity:0;animation:sp-rise 0.9s ease 0.9s forwards}
+.sp-title em{font-style:italic;color:var(--ember)}
+.sp-themes{display:flex;flex-direction:column;gap:0.4rem;margin:1.5rem 0 2.2rem;opacity:0;animation:sp-rise 0.8s ease 1.1s forwards}
+.sp-theme{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.28);display:flex;align-items:center;gap:0.7rem;justify-content:center}
+.sp-theme::before,.sp-theme::after{content:'';flex:1;max-width:40px;height:1px;background:rgba(255,255,255,0.08)}
+.sp-divider{width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.12),transparent);margin:0 auto 1.8rem;opacity:0;animation:sp-rise 0.8s ease 1.3s forwards}
+.sp-begin{display:inline-block;padding:1rem 3.2rem;border:1px solid var(--ember);color:var(--w);font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;background:transparent;position:relative;overflow:hidden;opacity:0;animation:sp-rise 0.9s ease 1.5s forwards;transition:all 0.35s}
+.sp-begin::before{content:'';position:absolute;inset:0;background:var(--ember);transform:scaleX(0);transform-origin:left;transition:transform 0.35s ease}
+.sp-begin:hover::before{transform:scaleX(1)}
+.sp-begin:hover{color:#000}
+.sp-begin span{position:relative;z-index:1}
+.sp-begin:hover span{color:#000}
+.sp-credit{position:absolute;bottom:2rem;left:0;right:0;text-align:center;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.12);opacity:0;animation:sp-rise 0.8s ease 1.8s forwards}
+@keyframes sp-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════ TRANSITION OVERLAY ═══════════ */
+#tov{position:fixed;inset:0;z-index:25000;background:#000;display:none;overflow:hidden}
+.tov-sky{position:absolute;inset:0;background:linear-gradient(180deg,#000 0%,#000 100%);transition:background 2s ease}
+.tov-sky.lit{background:linear-gradient(180deg,#020101 0%,#0c0302 20%,#1f0804 40%,#3a1008 58%,#4a1e0d 64%,#1f0804 74%,#0a0302 88%,#020101 100%)}
+.tov-horizon{position:absolute;top:58%;left:0;right:0;height:1px;background:transparent;transition:all 1s ease;transform:scaleX(0)}
+.tov-horizon.show{transform:scaleX(1);background:rgba(224,101,53,0.5);box-shadow:0 0 60px 6px rgba(224,101,53,0.35),0 0 120px 20px rgba(180,50,5,0.15)}
+.tov-sun{position:absolute;top:58%;left:50%;transform:translate(-50%,-50%) scale(0);width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#ffe08a 0%,#ff9030 30%,#e04010 60%,transparent 100%);transition:all 1.8s cubic-bezier(0.25,0.46,0.45,0.94);opacity:0}
+.tov-sun.show{transform:translate(-50%,-50%) scale(1);opacity:1;box-shadow:0 0 80px 30px rgba(220,80,20,0.3),0 0 200px 80px rgba(150,40,5,0.15)}
+.tov-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 58%,transparent 0%,transparent 100%);transition:background 2s ease}
+.tov-glow.show{background:radial-gradient(ellipse at 50% 58%,rgba(150,50,8,0.35) 0%,rgba(80,20,3,0.15) 35%,transparent 65%)}
+.tov-land{position:absolute;bottom:0;width:100%;height:44%;background:linear-gradient(180deg,#2a1005 0%,#0c0401 50%,#040201 100%);clip-path:polygon(0% 55%,3% 44%,6% 51%,9% 39%,12% 47%,15% 35%,18% 43%,21% 31%,24% 38%,27% 26%,31% 34%,34% 22%,37% 30%,41% 20%,44% 28%,48% 18%,51% 26%,55% 16%,58% 24%,62% 19%,65% 27%,69% 21%,72% 29%,76% 23%,79% 31%,83% 26%,86% 33%,90% 27%,93% 34%,97% 29%,100% 35%,100% 100%,0% 100%);transform:translateY(105%);transition:transform 1.4s cubic-bezier(0.22,1,0.36,1)}
+.tov-land.show{transform:translateY(0)}
+.tov-dust{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tov-dust::before,.tov-dust::after{content:'';position:absolute;width:200%;height:100%;background:linear-gradient(90deg,transparent 20%,rgba(180,70,10,0.04) 50%,transparent 80%);animation:dustdrift 4s ease-in-out infinite;opacity:0;transition:opacity 1s}
+.tov-dust::after{animation-delay:2s;animation-direction:reverse}
+.tov-dust.show::before,.tov-dust.show::after{opacity:1}
+@keyframes dustdrift{0%{transform:translateX(-25%)}100%{transform:translateX(0%)}}
+.tov-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);text-align:center;z-index:20;pointer-events:none}
+.tov-title .tt-eyebrow{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.52em;text-transform:uppercase;color:rgba(224,101,53,0);margin-bottom:1.5rem;transition:color 1s ease}
+.tov-title .tt-eyebrow.show{color:rgba(224,101,53,0.7)}
+.tov-title .tt-h{font-family:'Lora',serif;font-size:clamp(5rem,18vw,10rem);font-weight:600;line-height:0.82;letter-spacing:-0.04em;display:block}
+.tov-title .tt-h span{display:inline-block;opacity:0;transform:translateY(40px) scale(0.9);transition:opacity 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1);color:var(--w)}
+.tov-title .tt-h span.em{color:var(--ember);font-style:italic}
+.tov-title .tt-h span.show{opacity:1;transform:translateY(0) scale(1)}
+.tov-fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity 1.4s ease}
+.tov-fade.show{opacity:1}
+
+/* ═══════════ PROGRESS ═══════════ */
 #prog{position:fixed;top:0;left:0;height:2px;background:var(--ember);z-index:1001;width:0;transition:width 0.15s;box-shadow:0 0 8px rgba(224,101,53,0.6)}
 
-/* ── COUNTDOWN BAR ── */
+/* ═══════════ COUNTDOWN BAR ═══════════ */
 .cbar{margin-top:3.5rem;display:flex;flex-direction:column;align-items:center;gap:1.1rem;opacity:0;transform:translateY(18px);transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none}
 .cbar.show{opacity:1;transform:translateY(0);pointer-events:auto}
 .cbar-btn{display:flex;align-items:center;gap:1rem;padding:0.9rem 2.2rem;border:1px solid var(--ember);color:var(--w);background:transparent;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:all 0.28s;position:relative;overflow:hidden}
 .cbar-btn::before{content:'';position:absolute;inset:0;background:var(--ember);transform:scaleX(0);transform-origin:left;transition:transform 0.28s ease}
 .cbar-btn:hover::before{transform:scaleX(1)}
-.cbar-btn:hover{color:#000}
-.cbar-btn span{position:relative;z-index:1}
 .cbar-btn:hover span{color:#000}
+.cbar-btn span{position:relative;z-index:1}
 .cbar-ring{position:relative;width:44px;height:44px;flex-shrink:0}
 .cbar-ring svg{transform:rotate(-90deg)}
 .cbar-ring-track{stroke:rgba(255,255,255,0.08);fill:none;stroke-width:2}
 .cbar-ring-fill{stroke:var(--ember);fill:none;stroke-width:2;stroke-linecap:round;transition:stroke-dashoffset 1s linear;stroke-dasharray:113;stroke-dashoffset:0}
 .cbar-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--grey3)}
 
-/* ── TOOLTIP ── */
-.tooltip{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);background:rgba(18,18,18,0.98);border:1px solid rgba(255,255,255,0.12);padding:1rem 1.5rem;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;color:var(--grey);text-align:center;max-width:280px;line-height:1.6;opacity:0;transition:all 0.25s;pointer-events:none;z-index:2000}
+/* ═══════════ TOOLTIP ═══════════ */
+.tooltip{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);background:rgba(15,15,15,0.98);border:1px solid rgba(255,255,255,0.12);padding:1rem 1.5rem;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--grey);text-align:center;max-width:280px;line-height:1.6;opacity:0;transition:all 0.25s;pointer-events:none;z-index:2000}
 .tooltip.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-/* ── LANDING ── */
+/* ═══════════ LANDING (post-transition) ═══════════ */
 #s0{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#060402}
 .l-sky{position:absolute;inset:0;background:linear-gradient(180deg,#040201 0%,#0b0403 16%,#180705 34%,#341407 52%,#4a1e0d 64%,#341407 74%,#110603 86%,#060503 100%)}
-.l-sun{position:absolute;bottom:31%;left:50%;transform:translateX(-50%);width:165px;height:165px;border-radius:50%;background:radial-gradient(circle,#ffe88a 0%,#ffa040 26%,#e8501a 54%,#8f2010 80%,transparent 100%);box-shadow:0 0 90px 35px rgba(232,80,26,0.22),0 0 200px 90px rgba(143,32,16,0.1);animation:sp 5s ease-in-out infinite}
-@keyframes sp{0%,100%{box-shadow:0 0 90px 35px rgba(232,80,26,0.22),0 0 200px 90px rgba(143,32,16,0.1)}50%{box-shadow:0 0 120px 55px rgba(232,80,26,0.3),0 0 260px 120px rgba(143,32,16,0.14)}}
+.l-sun{position:absolute;bottom:31%;left:50%;transform:translateX(-50%);width:165px;height:165px;border-radius:50%;background:radial-gradient(circle,#ffe88a 0%,#ffa040 26%,#e8501a 54%,#8f2010 80%,transparent 100%);box-shadow:0 0 90px 35px rgba(232,80,26,0.22),0 0 200px 90px rgba(143,32,16,0.1);animation:sp2 5s ease-in-out infinite}
+@keyframes sp2{0%,100%{box-shadow:0 0 90px 35px rgba(232,80,26,0.22)}50%{box-shadow:0 0 120px 55px rgba(232,80,26,0.3)}}
 .l-land{position:absolute;bottom:0;left:0;right:0;height:34%;background:linear-gradient(180deg,#2e1208 0%,#0e0401 55%,#040301 100%);clip-path:polygon(0% 42%,4% 33%,8% 38%,14% 26%,20% 32%,26% 21%,32% 28%,38% 17%,44% 23%,50% 15%,56% 21%,62% 16%,68% 22%,74% 18%,80% 25%,86% 20%,92% 27%,97% 22%,100% 28%,100% 100%,0% 100%)}
 .l-glow{position:absolute;bottom:30%;left:0;right:0;height:200px;background:linear-gradient(180deg,transparent,rgba(200,80,20,0.08),transparent)}
-.l-con{position:relative;z-index:10;text-align:center;padding:2rem}
-.l-eye{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.42em;text-transform:uppercase;color:var(--ember);font-weight:500;margin-bottom:2.2rem;opacity:0;animation:rise 1s ease 0.6s forwards}
-.l-h1{font-family:'Lora',serif;font-size:clamp(4.5rem,14vw,8rem);font-weight:600;line-height:0.85;letter-spacing:-0.03em;margin-bottom:1.6rem;opacity:0;animation:rise 1s ease 0.9s forwards}
+.l-con{position:relative;z-index:10;text-align:center;padding:2rem;opacity:0;animation:rise 1s ease 0.4s forwards}
+.l-eye{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.42em;text-transform:uppercase;color:var(--ember);font-weight:500;margin-bottom:2.2rem}
+.l-h1{font-family:'Lora',serif;font-size:clamp(4.5rem,14vw,8rem);font-weight:600;line-height:0.85;letter-spacing:-0.03em;margin-bottom:1.6rem}
 .l-h1 em{font-style:italic;color:var(--ember)}
-.l-sub{font-size:0.95rem;font-weight:300;color:rgba(244,241,235,0.62);max-width:320px;margin:0 auto 3.2rem;line-height:1.9;opacity:0;animation:rise 1s ease 1.2s forwards}
-.l-btn{display:inline-block;padding:0.9rem 2.8rem;border:1px solid var(--ember);color:var(--w);font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;letter-spacing:0.24em;text-transform:uppercase;cursor:pointer;background:transparent;transition:all 0.3s;opacity:0;animation:rise 1s ease 1.5s forwards}
+.l-sub{font-size:0.95rem;font-weight:300;color:rgba(244,241,235,0.62);max-width:320px;margin:0 auto 3.2rem;line-height:1.9}
+.l-btn{display:inline-block;padding:0.9rem 2.8rem;border:1px solid var(--ember);color:var(--w);font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;letter-spacing:0.24em;text-transform:uppercase;cursor:pointer;background:transparent;transition:all 0.3s}
 .l-btn:hover{background:var(--ember);color:#000}
 @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── NARRATIVE ── */
+/* ═══════════ NARRATIVE ═══════════ */
 .narr{padding:6rem 2rem 5rem;display:flex;align-items:center;justify-content:center;position:relative}
 .ni{max-width:540px;width:100%}
 .ch{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.42em;text-transform:uppercase;color:var(--grey3);display:flex;align-items:center;gap:1rem;margin-bottom:3.2rem}
@@ -66,54 +118,35 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nh{font-family:'Lora',serif;font-size:clamp(1.85rem,5vw,2.8rem);font-weight:600;line-height:1.15;margin-bottom:1.6rem}
 .nb{font-size:0.93rem;line-height:2;color:var(--grey);font-weight:300}
 .nb p{margin-bottom:1.2rem}
-.pull{font-family:'Lora',serif;font-size:clamp(1.1rem,2.8vw,1.35rem);font-style:italic;color:rgba(224,101,53,0.9);padding:2rem 0;margin:2.2rem 0;border-top:1px solid rgba(224,101,53,0.18);border-bottom:1px solid rgba(224,101,53,0.18);line-height:1.65;text-shadow:0 0 40px rgba(224,101,53,0.15)}
-
-/* ── STATS ── */
+.pull{font-family:'Lora',serif;font-size:clamp(1.1rem,2.8vw,1.35rem);font-style:italic;color:rgba(224,101,53,0.9);padding:2rem 0;margin:2.2rem 0;border-top:1px solid rgba(224,101,53,0.18);border-bottom:1px solid rgba(224,101,53,0.18);line-height:1.65}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:2.8rem 0}
 .stat{background:var(--near);padding:1.5rem}
 .sn{font-family:'Lora',serif;font-size:2.4rem;font-weight:600;color:var(--ember);line-height:1;margin-bottom:0.4rem}
 .sd{font-size:0.7rem;color:var(--grey2);line-height:1.6}
-
-/* ── INNER VOICE ── */
 .inner-voice{margin:2.2rem 0;padding:1.6rem 1.6rem 1.6rem 2rem;border-left:2px solid rgba(224,101,53,0.4);background:var(--ember-dim);border-radius:0 8px 8px 0;position:relative}
 .inner-voice::before{content:'Jake';position:absolute;top:-10px;left:1.6rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(224,101,53,0.6);background:var(--black);padding:0 0.6rem}
 .inner-voice p{font-family:'Lora',serif;font-style:italic;font-size:0.93rem;line-height:1.85;color:rgba(244,241,235,0.82);margin-bottom:0.7rem}
 .inner-voice p:last-child{margin-bottom:0}
-
-/* ── SKILL PILL ── */
 .skill-pill{display:inline-block;padding:0.32rem 0.9rem;border:1px solid;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.28em;text-transform:uppercase;border-radius:2px;margin-bottom:1rem}
-.skill-pill.g{border-color:var(--gl);color:var(--gl)}
 .skill-pill.o{border-color:var(--ember);color:var(--ember)}
-.skill-pill.b{border-color:var(--blue);color:var(--blue)}
-
-/* ── INSIGHT BOX ── */
+.skill-pill.g{border-color:var(--gl);color:var(--gl)}
 .insight{margin:1.5rem 0;padding:1.4rem 1.5rem;background:rgba(255,255,255,0.028);border:1px solid var(--border);border-radius:6px}
 .il{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.6rem}
-.il.g{color:var(--gl)}.il.o{color:var(--ember)}.il.b{color:var(--blue)}
+.il.o{color:var(--ember)}.il.g{color:var(--gl)}.il.b{color:var(--blue)}
 .insight p{font-size:0.84rem;line-height:1.82;color:var(--grey)}
 .insight p em{font-style:italic;color:rgba(244,241,235,0.88)}
-
-/* ── SKILL STEPS ── */
 .steps{margin:1.5rem 0;display:flex;flex-direction:column;gap:1rem}
 .step{padding:1.2rem 1.3rem 1.2rem 3.4rem;background:rgba(255,255,255,0.024);border:1px solid var(--border);border-radius:5px;position:relative}
 .step::before{content:attr(data-n);position:absolute;left:0.9rem;top:1rem;font-family:'Lora',serif;font-size:1.5rem;font-weight:600;color:rgba(255,255,255,0.07);line-height:1}
 .step h4{font-size:0.88rem;font-weight:600;margin-bottom:0.32rem;color:var(--w)}
 .step p{font-size:0.78rem;color:var(--grey);line-height:1.78}
 
-/* ── PHONE ── */
+/* ═══════════ PHONE ═══════════ */
 .phone-stage{padding:4rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem;position:relative}
 .pl{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey2);text-align:center}
-.phone{width:min(360px,calc(100vw - 2rem));background:#0a0a0a;border-radius:52px;padding:12px;box-shadow:0 60px 120px rgba(0,0,0,0.9),inset 0 0 0 1px rgba(255,255,255,0.12),inset 0 2px 0 rgba(255,255,255,0.06);position:relative;transition:transform 0.5s ease}
+.phone{width:min(360px,calc(100vw - 2rem));background:#0a0a0a;border-radius:52px;padding:12px;box-shadow:0 60px 120px rgba(0,0,0,0.9),inset 0 0 0 1px rgba(255,255,255,0.12),inset 0 2px 0 rgba(255,255,255,0.06)}
 .phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:108px;height:30px;background:#0a0a0a;border-radius:0 0 18px 18px;z-index:10;box-shadow:inset 0 -1px 0 rgba(255,255,255,0.05)}
 .psc{background:#000;border-radius:40px;height:min(700px,calc(100svh - 150px));overflow:hidden;display:flex;flex-direction:column;position:relative}
-
-/* Face down phone */
-.phone.face-down{transform:rotate(180deg)}
-.phone.face-down .psc{filter:brightness(0.12)}
-.face-down-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:200;border-radius:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.7rem}
-.fdo-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.2)}
-.fdo-icon{font-size:1.4rem;opacity:0.3}
-
 .sbar{padding:14px 22px 6px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;position:relative;z-index:5;pointer-events:none}
 .st{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:500}
 .si{display:flex;gap:5px;align-items:center;font-size:0.67rem;opacity:0.8}
@@ -127,7 +160,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .lt{font-family:'Lora',serif;font-size:4.6rem;font-weight:400;letter-spacing:-0.04em;margin-top:62px;text-align:center;line-height:1}
 .ld{font-family:'DM Mono',monospace;font-size:0.68rem;color:rgba(255,255,255,0.38);margin-top:6px;letter-spacing:0.06em}
 .notifs{width:100%;padding:0 10px;margin-top:auto;margin-bottom:22px;display:flex;flex-direction:column;gap:7px}
-.nc{background:rgba(255,255,255,0.12);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:14px;padding:12px 13px;display:flex;gap:9px;align-items:flex-start;opacity:0;transform:translateY(8px) scale(0.97);transition:all 0.42s cubic-bezier(0.34,1.4,0.64,1);border:1px solid rgba(255,255,255,0.08);cursor:pointer}
+.nc{background:rgba(255,255,255,0.12);backdrop-filter:blur(24px);border-radius:14px;padding:12px 13px;display:flex;gap:9px;align-items:flex-start;opacity:0;transform:translateY(8px) scale(0.97);transition:all 0.42s cubic-bezier(0.34,1.4,0.64,1);border:1px solid rgba(255,255,255,0.08);cursor:pointer}
 .nc.in{opacity:1;transform:translateY(0) scale(1)}
 .nc-ico{width:33px;height:33px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0}
 .nc-b{flex:1;min-width:0}
@@ -159,13 +192,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .badge{position:absolute;top:-5px;right:-5px;background:#e03232;color:white;font-family:'DM Mono',monospace;font-size:0.5rem;font-weight:500;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:2px solid #080808;padding:0 2px}
 .albl{font-size:0.56rem;color:rgba(255,255,255,0.6);text-align:center}
 .dock{background:rgba(255,255,255,0.07);border-radius:26px;padding:12px 13px;margin:0 12px 14px;display:flex;justify-content:space-around;position:relative;z-index:2;border:1px solid rgba(255,255,255,0.06);flex-shrink:0}
-.da{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;cursor:pointer;transition:transform 0.12s}
+.da{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;cursor:pointer;transition:transform 0.12s;position:relative}
 .da:active{transform:scale(0.88)}
-.ehint{position:absolute;bottom:100px;right:30px;display:flex;align-items:center;gap:5px;opacity:0;transition:opacity 0.5s;pointer-events:none;z-index:100;flex-direction:column;align-items:flex-end}
-.ehint.show{opacity:1}
-.ehint-txt{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.24)}
-.ehint-arr{font-size:0.65rem;color:rgba(255,255,255,0.24);animation:boba 1.4s ease-in-out infinite}
-@keyframes boba{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+
+/* DISCOVERY TOAST */
+.disc-toast{position:absolute;top:50px;left:10px;right:10px;z-index:90;background:rgba(224,101,53,0.92);backdrop-filter:blur(16px);border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;transform:translateY(-80px);opacity:0;transition:all 0.5s cubic-bezier(0.34,1.4,0.64,1)}
+.disc-toast.show{transform:translateY(0);opacity:1}
+.disc-toast p{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:#000;font-weight:500;line-height:1.5}
 
 /* SLIDE APPS */
 .sapp{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;transform:translateX(110%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);z-index:60;overflow:hidden}
@@ -193,8 +226,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .tydots span{width:5px;height:5px;background:rgba(255,255,255,0.42);border-radius:50%;animation:td 1.1s ease-in-out infinite}
 .tydots span:nth-child(2){animation-delay:0.18s}.tydots span:nth-child(3){animation-delay:0.36s}
 @keyframes td{0%,80%,100%{transform:scale(1)}40%{transform:scale(1.35) translateY(-2px)}}
-
-/* CHAT CHOICES */
 .cchoices{padding:10px 12px 12px;background:#0c0c0c;border-top:1px solid rgba(255,255,255,0.06);display:none;flex-direction:column;gap:7px;flex-shrink:0}
 .cchoices.show{display:flex}
 .cclbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.22);text-align:center;margin-bottom:2px}
@@ -203,41 +234,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .cc:disabled{cursor:not-allowed}
 .cc.locked{opacity:0.22;cursor:not-allowed}
 .cc.locked:hover{border-color:rgba(255,255,255,0.11);background:transparent}
-.cc.unlocked{border-color:rgba(77,179,116,0.35);background:rgba(46,125,79,0.06)}
-.cc.unlocked:hover:not(:disabled){border-color:var(--gl);background:var(--gdim)}
+.cc.unlocked-opt{border-color:rgba(77,179,116,0.35);background:rgba(46,125,79,0.06)}
+.cc.unlocked-opt:hover:not(:disabled){border-color:var(--gl);background:var(--gdim)}
+.locked-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:rgba(255,255,255,0.2);font-style:italic;margin-top:-2px;padding-left:3px}
+.unlocked-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:rgba(77,179,116,0.55);margin-top:-2px;padding-left:3px}
 .cc.pulse-hint{animation:cch 1.7s ease-in-out infinite}
 @keyframes cch{0%,100%{border-color:rgba(255,255,255,0.11)}50%{border-color:rgba(224,101,53,0.55)}}
-.locked-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:rgba(255,255,255,0.2);font-style:italic;margin-top:-2px;padding-left:3px;text-align:left}
-.unlocked-note{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:rgba(77,179,116,0.5);margin-top:-2px;padding-left:3px}
-
-/* COMPOSE */
 .compose{padding:10px 12px 14px;background:#0c0c0c;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
 .compose-input{flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.11);border-radius:20px;padding:8px 14px;color:var(--w);font-family:'DM Sans',sans-serif;font-size:0.82rem;outline:none;resize:none;line-height:1.4;min-height:36px;max-height:100px;transition:border-color 0.2s}
 .compose-input:focus{border-color:rgba(255,255,255,0.24)}
 .compose-input::placeholder{color:rgba(255,255,255,0.24)}
 .compose-send{width:34px;height:34px;border-radius:50%;background:var(--green);border:none;color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;opacity:0.5}
 .compose-send.active{opacity:1}
-.compose-send:hover.active{background:var(--gl)}
-
-/* INCOMING CALL SCREEN */
-.call-screen{position:absolute;inset:0;background:linear-gradient(180deg,#0a1a0a 0%,#050c05 100%);z-index:80;display:flex;flex-direction:column;align-items:center;padding-top:70px;transition:opacity 0.5s}
-.call-screen.hidden{opacity:0;pointer-events:none}
-.call-name{font-family:'Lora',serif;font-size:2.2rem;font-weight:400;letter-spacing:-0.02em;margin-top:1.5rem;text-align:center}
-.call-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.5rem}
-.call-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#1a3a5a,#0d2040);display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative}
-.call-avatar::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,255,255,0.08);animation:callring 2s ease-out infinite}
-.call-avatar::before{content:'';position:absolute;inset:-16px;border-radius:50%;border:1px solid rgba(255,255,255,0.04);animation:callring 2s ease-out 0.4s infinite}
-@keyframes callring{0%{transform:scale(1);opacity:0.6}100%{transform:scale(1.3);opacity:0}}
-.call-btns{margin-top:auto;margin-bottom:40px;width:100%;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
-.cb-decline{width:62px;height:62px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:transform 0.15s}
-.cb-accept{width:62px;height:62px;border-radius:50%;background:#27ae60;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;animation:glow-accept 1.5s ease-in-out infinite}
-@keyframes glow-accept{0%,100%{box-shadow:0 0 0 0 rgba(39,174,96,0.4)}50%{box-shadow:0 0 0 12px rgba(39,174,96,0)}}
-.call-missed-badge{position:absolute;top:16px;right:16px;background:rgba(192,57,43,0.9);border-radius:12px;padding:4px 10px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:white;display:none}
-
-/* MUM PHONE SECTION */
-.mum-night{background:linear-gradient(180deg,#010303 0%,#02050a 100%)}
-.night-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.15);text-align:center;padding:3rem 2rem 0}
-.face-down-caption{font-family:'Lora',serif;font-size:0.95rem;font-style:italic;color:rgba(255,255,255,0.25);text-align:center;max-width:300px;margin:1.5rem auto 2rem;line-height:1.7}
 
 /* INSTAGRAM */
 .ig-feed{flex:1;overflow-y:auto;scrollbar-width:none}
@@ -248,99 +256,56 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ig-sn{font-size:1rem;font-weight:700}.ig-sl{font-size:0.58rem;color:rgba(255,255,255,0.38)}
 .ig-bio{padding:0 14px 12px;background:#000;border-bottom:1px solid rgba(255,255,255,0.06)}
 .ig-name{font-size:0.8rem;font-weight:700}.ig-btxt{font-size:0.72rem;color:rgba(255,255,255,0.48);margin-top:2px;line-height:1.5}
-.ig-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.05)}
-.igc{aspect-ratio:1;background:#0f0f0f;display:flex;align-items:center;justify-content:center;font-size:1.55rem;position:relative;cursor:pointer;overflow:hidden}
-.igc:active{opacity:0.7}
-.igc-t{position:absolute;bottom:3px;right:4px;font-family:'DM Mono',monospace;font-size:0.46rem;color:rgba(255,255,255,0.3)}
-
-/* ── RIPPLE EFFECT PHONE CAROUSEL ── */
-.ripple-stage{padding:4rem 2rem;display:flex;flex-direction:column;align-items:center;gap:2rem;background:linear-gradient(180deg,#060809 0%,#04060a 100%)}
-.rp-label{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey2);text-align:center}
-.ripple-phone-wrap{position:relative;width:min(340px,calc(100vw - 2rem))}
-.ripple-perspective{width:100%;background:#0a0a0a;border-radius:44px;padding:10px;box-shadow:0 50px 100px rgba(0,0,0,0.85),inset 0 0 0 1px rgba(255,255,255,0.1)}
-.ripple-perspective::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:90px;height:26px;background:#0a0a0a;border-radius:0 0 14px 14px;z-index:10}
-.rsc{background:#000;border-radius:34px;height:min(560px,72vh);overflow:hidden;position:relative;display:flex;flex-direction:column}
-.rsc .sbar{background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);position:relative}
-.rp-slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity 0.8s ease;pointer-events:none}
-.rp-slide.active{opacity:1;pointer-events:auto}
-.rp-perspective-tag{position:absolute;top:50px;right:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px 9px;font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);z-index:10}
-
-/* Perspective dots */
-.rp-dots{display:flex;gap:6px;justify-content:center}
-.rp-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.18);transition:background 0.4s,transform 0.3s}
-.rp-dot.active{background:var(--ember);transform:scale(1.3)}
-
-/* Perspective: call log */
-.clog-item{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.cli-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.cli-info{flex:1}
-.cli-name{font-size:0.82rem;font-weight:600}
-.cli-name.missed{color:#e06060}
-.cli-sub{font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px}
-.cli-t{font-size:0.6rem;color:rgba(255,255,255,0.28);font-family:'DM Mono',monospace;flex-shrink:0}
-.cli-missed-icon{font-size:0.7rem;color:#e06060}
-
-/* Perspective: mum texts */
-.mum-msg-wrap{flex:1;overflow-y:auto;padding:12px;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,#0a0a10 0%,#060610 100%)}
-.mum-header{background:rgba(0,0,0,0.5);padding:10px 14px;display:flex;gap:10px;align-items:center;flex-shrink:0}
-.mum-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a4a6a,#1a2a4a);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0}
-.mum-hname{font-size:0.82rem;font-weight:600}
-.mum-hsub{font-size:0.58rem;color:rgba(255,255,255,0.35)}
-.mum-bub{max-width:82%;background:#1c2a3a;border-radius:16px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;align-self:flex-start;opacity:0;transform:translateY(6px);transition:all 0.35s ease}
-.mum-bub.show{opacity:1;transform:translateY(0)}
-.mum-bub-t{font-family:'DM Mono',monospace;font-size:0.53rem;color:rgba(255,255,255,0.25);align-self:flex-start;padding-left:4px}
-.mum-unseen{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:rgba(255,255,255,0.15);text-align:center;text-transform:uppercase;margin-top:auto;padding:12px}
-
-/* Perspective: brother */
-.ig-stories{background:#000;flex:1;overflow:hidden;display:flex;flex-direction:column}
-.ig-story-row{padding:10px 12px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
-.ig-story-row::-webkit-scrollbar{display:none}
-.ig-story{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
-.ig-story-ring{width:52px;height:52px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#fd1d1d,#833ab4,#fcb045);cursor:pointer}
-.ig-story-av{width:100%;height:100%;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:2px solid #000}
-.ig-story-name{font-size:0.5rem;color:rgba(255,255,255,0.55)}
-.ig-post{background:#0a0a0a;margin:0 1px;position:relative}
+.ig-post{background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.04)}
 .ig-post-hdr{padding:8px 10px;display:flex;gap:8px;align-items:center}
 .ig-post-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;background:linear-gradient(135deg,var(--ember),#7a1a0a)}
 .ig-post-name{font-size:0.72rem;font-weight:600}
 .ig-post-time{font-size:0.56rem;color:rgba(255,255,255,0.35);margin-left:auto}
-.ig-post-img{width:100%;aspect-ratio:1;background:#1a1206;display:flex;align-items:center;justify-content:center;font-size:3rem}
+.ig-post-img{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:3.5rem}
 .ig-post-actions{padding:8px 10px 4px;font-size:0.95rem;display:flex;gap:10px}
-.ig-post-caption{padding:0 10px 8px;font-size:0.72rem;line-height:1.5;color:rgba(255,255,255,0.65)}
+.ig-post-likes{padding:0 10px 4px;font-size:0.75rem;font-weight:700}
+.ig-post-caption{padding:0 10px 4px;font-size:0.73rem;line-height:1.55;color:rgba(255,255,255,0.8)}
 .ig-post-caption strong{color:white}
-.brother-thought{background:rgba(255,255,255,0.04);border-top:1px solid rgba(255,255,255,0.05);padding:12px 14px;margin-top:auto;flex-shrink:0}
-.brother-thought p{font-family:'Lora',serif;font-style:italic;font-size:0.76rem;color:rgba(255,255,255,0.3);line-height:1.6}
+.ig-post-comment{padding:4px 10px;font-size:0.71rem;line-height:1.5;color:rgba(255,255,255,0.55);border-top:none}
+.ig-post-comment strong{color:rgba(255,255,255,0.75)}
+.ig-post-shared{padding:3px 10px 8px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03)}
+.ig-post-shared-txt{font-size:0.62rem;color:rgba(255,255,255,0.28);font-style:italic}
 
-/* Perspective: Thommo draft */
-.thommo-draft{flex:1;display:flex;flex-direction:column;padding:14px;background:linear-gradient(180deg,#080c10 0%,#060810 100%)}
-.draft-chip{background:rgba(255,100,50,0.08);border:1px solid rgba(255,100,50,0.15);border-radius:8px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,100,50,0.5);margin-bottom:14px;display:flex;align-items:center;gap:6px}
-.draft-bub{background:#2c2c2e;border-radius:14px;padding:10px 13px;font-size:0.8rem;line-height:1.55;color:rgba(255,255,255,0.6);margin-bottom:8px;font-style:italic;border-bottom-left-radius:3px}
-.draft-del{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:rgba(255,255,255,0.15);padding-left:4px}
-.thommo-thought{margin-top:auto;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px}
-.thommo-thought p{font-family:'Lora',serif;font-style:italic;font-size:0.76rem;color:rgba(255,255,255,0.28);line-height:1.65}
+/* INCOMING CALL SCREEN */
+.call-screen{position:absolute;inset:0;background:linear-gradient(180deg,#0a1a0a 0%,#050c05 100%);z-index:80;display:flex;flex-direction:column;align-items:center;padding-top:70px;transition:opacity 0.5s}
+.call-screen.hidden{opacity:0;pointer-events:none}
+.call-name{font-family:'Lora',serif;font-size:2.2rem;font-weight:400;letter-spacing:-0.02em;margin-top:1.5rem;text-align:center}
+.call-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.5rem}
+.call-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#1a3a5a,#0d2040);display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative}
+.call-avatar::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,255,255,0.08);animation:callring 2s ease-out infinite}
+@keyframes callring{0%{transform:scale(1);opacity:0.6}100%{transform:scale(1.3);opacity:0}}
+.call-btns{margin-top:auto;margin-bottom:40px;width:100%;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.cb-decline{width:62px;height:62px;border-radius:50%;background:#c0392b;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:transform 0.15s}
+.cb-accept{width:62px;height:62px;border-radius:50%;background:#27ae60;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;animation:glowacc 1.5s ease-in-out infinite}
+@keyframes glowacc{0%,100%{box-shadow:0 0 0 0 rgba(39,174,96,0.4)}50%{box-shadow:0 0 0 12px rgba(39,174,96,0)}}
 
-/* ── VOID ── */
-.void{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);position:relative;overflow:hidden}
-.void-stamp{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.36em;text-transform:uppercase;color:rgba(255,255,255,0.12);text-align:center;opacity:0;animation:rise 1.8s ease 0.5s forwards}
-.void-line{width:1px;height:0;background:rgba(255,255,255,0.06);margin:2.5rem auto 0;animation:gl 3s ease 1.5s forwards}
-@keyframes gl{to{height:100px}}
-.void-after{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.09);text-align:center;margin-top:2rem;opacity:0;transition:opacity 2s}
+/* OUTCOME */
+.outcome{padding:1.4rem;border-radius:8px;margin:1.5rem 0;display:none;animation:rise 0.45s ease;font-size:0.84rem;line-height:1.82}
+.outcome.show{display:block}
+.outcome.bad{background:var(--rdim);border:1px solid rgba(176,48,48,0.25);color:rgba(244,241,235,0.78)}
+.outcome.ok{background:var(--gdim);border:1px solid rgba(46,125,79,0.25);color:rgba(244,241,235,0.78)}
+.outcome-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:0.7rem;opacity:0.55}
 
-/* ── IMPACT ── */
-.impact-item{padding:2.2rem 0;border-bottom:1px solid var(--border2);display:flex;gap:1.4rem;align-items:flex-start}
-.impact-item.no-border{border-bottom:none}
-.ii-em{font-size:1.4rem;flex-shrink:0;width:2rem;opacity:0.9;margin-top:2px}
-.ii-b h4{font-size:0.9rem;font-weight:600;margin-bottom:0.4rem;color:var(--w)}
-.ii-b p{font-size:0.8rem;color:var(--grey);line-height:1.85}
-.ii-detail{font-size:0.73rem;color:rgba(224,101,53,0.58);margin-top:0.5rem;font-style:italic;font-family:'Lora',serif}
+/* TAILGATE */
+.tc-btns{display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0}
+.tcb{padding:1.05rem 1.3rem;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--w);font-family:'DM Sans',sans-serif;font-size:0.85rem;text-align:left;cursor:pointer;transition:all 0.22s;line-height:1.4}
+.tcb:hover:not(:disabled){border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.028)}
+.tcb:disabled{opacity:0.38;cursor:default}
 
-/* ── RECOGNITION ── */
-.recog{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:4rem 2rem;background:var(--black);position:relative}
-.recog-q{font-family:'Lora',serif;font-size:clamp(1.5rem,4.2vw,2.2rem);font-weight:600;font-style:italic;text-align:center;color:rgba(244,241,235,0.38);line-height:1.55;max-width:380px}
-.recog-space{height:8rem}
-.recog-ans{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(244,241,235,0.14);text-align:center}
+/* BREATHE */
+.breathe-wrap{margin:1.5rem 0;padding:1.6rem;background:rgba(46,125,79,0.06);border:1px solid rgba(46,125,79,0.14);border-radius:10px;text-align:center}
+.bl{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gl);margin-bottom:1.1rem;opacity:0.8}
+.borb{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(46,125,79,0.24),rgba(46,125,79,0.05));border:1px solid rgba(77,179,116,0.25);margin:0 auto 0.9rem;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-family:'DM Mono',monospace;color:rgba(77,179,116,0.8);cursor:pointer;text-align:center;padding:0.75rem;line-height:1.5}
+.borb.on{animation:breathe 8s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(77,179,116,0.14)}50%{transform:scale(1.48);box-shadow:0 0 32px 18px rgba(77,179,116,0.08)}}
+.bcap{font-size:0.72rem;color:var(--grey2);line-height:1.65;max-width:270px;margin:0 auto}
 
-/* ── WEEK CARDS ── */
+/* WEEK CARDS */
 .wcard{border:1px solid var(--border);border-bottom:none;overflow:hidden}
 .wcard:last-child{border-bottom:1px solid var(--border);border-radius:0 0 6px 6px}
 .wcard:first-child{border-radius:6px 6px 0 0}
@@ -351,38 +316,30 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .wca{font-size:0.72rem;color:var(--grey2);transition:transform 0.25s;flex-shrink:0}
 .wch.open .wca{transform:rotate(90deg);color:var(--gl)}
 .wcb{max-height:0;overflow:hidden;transition:max-height 0.42s cubic-bezier(0.4,0,0.2,1)}
-.wcb.open{max-height:380px}
+.wcb.open{max-height:480px}
 .wci{padding:0 1.3rem 1.3rem}
 .wcs{font-size:0.81rem;color:var(--grey);line-height:1.88;margin-bottom:0.9rem}
 .wcin{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.14em;color:var(--gl);text-transform:uppercase;border-top:1px solid var(--border);padding-top:0.75rem}
+.skill-inset{background:rgba(46,125,79,0.06);border:1px solid rgba(77,179,116,0.14);border-radius:6px;padding:1rem 1.2rem;margin-top:0.8rem}
+.skill-inset .si-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gl);margin-bottom:0.5rem}
+.skill-inset p{font-size:0.76rem;color:rgba(244,241,235,0.6);line-height:1.72}
 
-/* ── OUTCOME ── */
-.outcome{padding:1.4rem;border-radius:8px;margin:1.5rem 0;display:none;animation:rise 0.45s ease;font-size:0.84rem;line-height:1.82}
-.outcome.show{display:block}
-.outcome.bad{background:var(--rdim);border:1px solid rgba(176,48,48,0.25);color:rgba(244,241,235,0.78)}
-.outcome.ok{background:var(--gdim);border:1px solid rgba(46,125,79,0.25);color:rgba(244,241,235,0.78)}
-.outcome-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:0.7rem;opacity:0.55}
+/* VOID */
+.void{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);position:relative;overflow:hidden}
+.void-stamp{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.36em;text-transform:uppercase;color:rgba(255,255,255,0.12);text-align:center;opacity:0;animation:rise 1.8s ease 0.5s forwards}
+.void-line{width:1px;height:0;background:rgba(255,255,255,0.06);margin:2.5rem auto 0;animation:gl 3s ease 1.5s forwards}
+@keyframes gl{to{height:100px}}
+.void-after{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.09);text-align:center;margin-top:2rem;opacity:0;transition:opacity 2s}
 
-/* ── TAILGATE ── */
-.tc-btns{display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0}
-.tcb{padding:1.05rem 1.3rem;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--w);font-family:'DM Sans',sans-serif;font-size:0.85rem;text-align:left;cursor:pointer;transition:all 0.22s;line-height:1.4}
-.tcb:hover:not(:disabled){border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.028)}
-.tcb:disabled{opacity:0.38;cursor:default}
+/* RECOG */
+.recog{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:4rem 2rem;background:var(--black);position:relative}
+.recog-q{font-family:'Lora',serif;font-size:clamp(1.5rem,4.2vw,2.2rem);font-weight:600;font-style:italic;text-align:center;color:rgba(244,241,235,0.38);line-height:1.55;max-width:380px}
+.recog-space{height:8rem}
+.recog-ans{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(244,241,235,0.14);text-align:center}
 
-/* ── BREATHE ── */
-.breathe-wrap{margin:1.5rem 0;padding:1.6rem;background:rgba(46,125,79,0.06);border:1px solid rgba(46,125,79,0.14);border-radius:10px;text-align:center}
-.bl{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gl);margin-bottom:1.1rem;opacity:0.8}
-.borb{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(46,125,79,0.24),rgba(46,125,79,0.05));border:1px solid rgba(77,179,116,0.25);margin:0 auto 0.9rem;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-family:'DM Mono',monospace;color:rgba(77,179,116,0.8);cursor:pointer;transition:all 0.3s;text-align:center;padding:0.75rem;line-height:1.5}
-.borb.on{animation:breathe 8s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(77,179,116,0.14)}50%{transform:scale(1.48);box-shadow:0 0 32px 18px rgba(77,179,116,0.08)}}
-.bcap{font-size:0.72rem;color:var(--grey2);line-height:1.65;max-width:270px;margin:0 auto}
-
-/* ── LIFELINE DIALER ── */
-.dialer-stage{padding:4rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+/* LIFELINE DIALER */
 .dialer-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#06100a 0%,#020803 100%)}
 .dialer-num{font-family:'Lora',serif;font-size:3rem;font-weight:300;letter-spacing:0.15em;margin-top:80px;text-align:center;min-height:3.8rem;color:rgba(255,255,255,0.9)}
-.dialer-num .typed{animation:numtype 0.1s ease}
-@keyframes numtype{0%{opacity:0;transform:translateY(-4px)}100%{opacity:1;transform:translateY(0)}}
 .dialer-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:8px}
 .dialer-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:0 20px;margin-top:auto;width:100%}
 .dk{aspect-ratio:1.4;background:rgba(255,255,255,0.07);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.12s;user-select:none}
@@ -390,11 +347,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .dk-n{font-size:1.3rem;font-weight:300;line-height:1}
 .dk-l{font-family:'DM Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;color:rgba(255,255,255,0.3);margin-top:2px}
 .dialer-call-row{width:100%;padding:12px 20px 22px;display:flex;justify-content:center}
-.dialer-call-btn{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#27ae60,#1e8449);display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(39,174,96,0.35);transition:transform 0.15s;animation:callpulse 2s ease-in-out infinite}
+.dialer-call-btn{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#27ae60,#1e8449);display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(39,174,96,0.35);animation:callpulse 2s ease-in-out infinite}
 @keyframes callpulse{0%,100%{box-shadow:0 4px 20px rgba(39,174,96,0.35)}50%{box-shadow:0 4px 35px rgba(39,174,96,0.6)}}
-.dialer-call-btn:active{transform:scale(0.9)}
-
-/* CALLING SCREEN */
 .calling-screen{position:absolute;inset:0;background:linear-gradient(180deg,#060f0a 0%,#020804 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.6s}
 .calling-screen.show{opacity:1;pointer-events:auto}
 .calling-name{font-family:'Lora',serif;font-size:2rem;font-weight:400;text-align:center;margin-bottom:0.5rem}
@@ -402,8 +356,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .calling-ring{width:80px;height:80px;border-radius:50%;background:rgba(39,174,96,0.15);display:flex;align-items:center;justify-content:center;font-size:2rem;animation:ringpulse 1.2s ease-in-out infinite}
 @keyframes ringpulse{0%,100%{transform:scale(1);background:rgba(39,174,96,0.15)}50%{transform:scale(1.12);background:rgba(39,174,96,0.25)}}
 .calling-status{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:1rem}
-
-/* HELP SCREEN (after call answered) */
 .help-screen{position:absolute;inset:0;background:#000;display:none;flex-direction:column;overflow:hidden}
 .help-screen.show{display:flex}
 .help-call-bar{background:#1a2e1c;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -414,23 +366,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .help-scroll::-webkit-scrollbar{display:none}
 .help-msg{background:#1c2a1e;border-radius:14px;border-bottom-left-radius:3px;padding:10px 13px;font-size:0.8rem;line-height:1.55;color:rgba(255,255,255,0.8);max-width:88%;opacity:0;transform:translateY(6px);transition:all 0.4s ease}
 .help-msg.show{opacity:1;transform:translateY(0)}
-.help-resource-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.2s;opacity:0;transform:translateY(6px);transition:all 0.4s ease}
+.help-resource-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(6px);transition:all 0.4s ease}
 .help-resource-card.show{opacity:1;transform:translateY(0)}
-.help-resource-card:hover{background:rgba(255,255,255,0.07)}
 .hrc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .hrc-info{flex:1}
 .hrc-name{font-size:0.78rem;font-weight:600;margin-bottom:2px}
 .hrc-num{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--gl)}
 .hrc-desc{font-size:0.62rem;color:rgba(255,255,255,0.35);margin-top:2px}
 
-/* ── FORWARD ── */
-.fwd-opts{display:flex;flex-direction:column;gap:0.82rem;margin:1.5rem 0}
-.fwd-btn{padding:1rem 1.3rem;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--w);font-family:'DM Sans',sans-serif;font-size:0.84rem;text-align:left;cursor:pointer;transition:all 0.24s;line-height:1.45}
-.fwd-btn.unlocked{border-color:rgba(77,179,116,0.28)}
-.fwd-btn.unlocked:hover:not(:disabled){border-color:var(--gl);background:var(--gdim)}
-.fwd-btn:disabled{opacity:0.38;cursor:default}
-
-/* ── REVEAL ── */
+/* REVEAL */
 .rv{opacity:0;transform:translateY(24px);transition:opacity 0.75s ease,transform 0.75s ease}
 .rv.vis{opacity:1;transform:translateY(0)}
 .rv.d1{transition-delay:0.12s}.rv.d2{transition-delay:0.24s}.rv.d3{transition-delay:0.38s}.rv.d4{transition-delay:0.52s}
@@ -439,10 +383,59 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════════════════════════ -->
+<div id="splash">
+  <div class="sp-grain"></div>
+  <div class="sp-glow"></div>
+  <div class="sp-content">
+    <div class="sp-cert">
+      <div class="sp-cert-box">MA</div>
+      <div class="sp-cert-txt">Mature Audiences</div>
+    </div>
+    <div class="sp-warning">Viewer Discretion Advised</div>
+    <div class="sp-title">Contains themes of<br><em>alcohol &amp; mental health</em></div>
+    <div class="sp-themes">
+      <div class="sp-theme">Alcohol misuse</div>
+      <div class="sp-theme">Isolation &amp; rural loneliness</div>
+      <div class="sp-theme">Family impact</div>
+    </div>
+    <div class="sp-divider"></div>
+    <button class="sp-begin" onclick="beginStory()"><span>Begin ↓</span></button>
+  </div>
+  <div class="sp-credit">Made by Calloway</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TRANSITION OVERLAY
+══════════════════════════════════════════════════════ -->
+<div id="tov">
+  <div class="tov-sky"></div>
+  <div class="tov-glow"></div>
+  <div class="tov-horizon"></div>
+  <div class="tov-sun"></div>
+  <div class="tov-dust"></div>
+  <div class="tov-land"></div>
+  <div class="tov-title">
+    <div class="tt-eyebrow">Western Australia · An Interactive Story</div>
+    <div class="tt-h">
+      <span>J</span><span>a</span><span>k</span><span>e</span><span>'</span><span>s</span>
+    </div>
+    <div class="tt-h">
+      <span class="em">S</span><span class="em">t</span><span class="em">o</span><span class="em">r</span><span class="em">y</span>
+    </div>
+  </div>
+  <div class="tov-fade"></div>
+</div>
+
 <div id="prog"></div>
 <div class="tooltip" id="tooltip"></div>
 
-<!-- ═══════════════════════════════════ LANDING -->
+<!-- ═══════════════════════════════════════════════════
+     LANDING
+══════════════════════════════════════════════════════ -->
 <section id="s0">
   <div class="l-sky"></div><div class="l-sun"></div><div class="l-land"></div><div class="l-glow"></div>
   <div class="l-con">
@@ -453,7 +446,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ JAKE'S WORLD -->
+<!-- ═══════════════════════════════════════════════════
+     JAKE'S WORLD
+══════════════════════════════════════════════════════ -->
 <section class="narr" id="s1" style="background:linear-gradient(180deg,#0c0808 0%,#0c1118 100%);min-height:100vh">
   <div class="ni">
     <div class="ch rv">Population: 918</div>
@@ -470,166 +465,89 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="stat"><div class="sn">68%</div><div class="sd">Of remote Western Australians say alcohol is central to their social life</div></div>
     </div>
     <div class="nb rv d4"><p>In towns like Meekatharra, alcohol is woven into the culture of mateship and hard work. Saying no isn't just awkward — it can feel like rejecting the only community you've got.</p></div>
-    <div class="rv d4">
-      <div id="cb-s1" class="cbar">
-        <button class="cbar-btn" onclick="cbClick('s2','cb-s1')">
-          <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s1" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s1">30</div></div>
-          <span>Continue →</span>
-        </button>
-      </div>
-    </div>
+    <div class="rv d4"><div id="cb-s1" class="cbar"><button class="cbar-btn" onclick="cbClick('s2','cb-s1')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s1" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s1">30</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ PHONE 1: FRIDAY -->
+<!-- ═══════════════════════════════════════════════════
+     PHONE 1: FRIDAY
+══════════════════════════════════════════════════════ -->
 <section class="phone-stage" id="s2" style="background:#060606;min-height:100vh">
   <p class="pl rv">Friday · 5:47 PM · Jake's on the red dirt track back into town</p>
-  <div class="phone rv d1" id="phone1">
+  <div class="phone rv d1" id="phone1" style="position:relative">
     <div class="psc">
-      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55">
-        <span class="st">5:47</span>
-        <div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div>
-      </div>
-      <!-- LOCK SCREEN -->
+      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">5:47</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
       <div class="lock" id="lock1">
-        <div style="margin-top:60px;text-align:center">
-          <div class="lt">5:47</div>
-          <div class="ld">Friday, 18 October · Meekatharra WA</div>
-        </div>
+        <div style="margin-top:60px;text-align:center"><div class="lt">5:47</div><div class="ld">Friday, 18 October · Meekatharra WA</div></div>
         <div class="notifs" id="notifs1"></div>
-        <div class="unlock-btn" id="ubtn1" onclick="unlock1()">
-          <div class="ub-bar"></div>
-          <div class="ub-txt">Tap to open</div>
-        </div>
+        <div class="unlock-btn" id="ubtn1" onclick="unlock1()"><div class="ub-bar"></div><div class="ub-txt">Tap to open</div></div>
       </div>
-      <!-- HOME SCREEN -->
       <div class="home" id="home1">
         <div class="home-bg"></div>
         <div class="hw">
-          <div class="weather">
-            <div class="wtl"><div class="wloc">Meekatharra, WA</div><div class="wtemp">41°</div><div class="wfeel">Feels like 46°</div></div>
-            <div class="wtr"><div class="wico">☀️</div>Mostly sunny</div>
-          </div>
+          <div class="weather"><div class="wtl"><div class="wloc">Meekatharra, WA</div><div class="wtemp">41°</div><div class="wfeel">Feels like 46°</div></div><div class="wtr"><div class="wico">☀️</div>Mostly sunny</div></div>
           <div class="agrid">
-            <div class="aico" onclick="openApp('msgs')">
-              <div class="aimg" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬<div class="badge">4</div></div>
-              <div class="albl">Messages</div>
-            </div>
-            <div class="aico" onclick="openApp('insta')">
-              <div class="aimg" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸<div class="badge">7</div></div>
-              <div class="albl">Instagram</div>
-            </div>
+            <div class="aico" onclick="openApp('msgs1')"><div class="aimg" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬<div class="badge">4</div></div><div class="albl">Messages</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div><div class="albl">Instagram</div></div>
             <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div><div class="albl">Phone</div></div>
             <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#2c2c2e,#1c1c1e)">🎵</div><div class="albl">Music</div></div>
           </div>
         </div>
         <div class="dock">
-          <div class="da" onclick="openApp('msgs')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
+          <div class="da" onclick="openApp('msgs1')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
           <div class="da" style="background:#1c1c1e">📷</div>
           <div class="da" style="background:#1c1c1e">🎵</div>
           <div class="da" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
         </div>
-        <div class="ehint" id="ehint"><div class="ehint-txt">check your messages</div><div class="ehint-arr">→</div></div>
-
-        <!-- MESSAGES APP -->
-        <div class="sapp" id="msgsApp">
-          <div class="abar">
-            <span class="abar-back" onclick="closeApp('msgsApp')">‹ Back</span>
-            <div class="abar-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div>
-            <div class="abar-info">
-              <div class="abar-name">Davo + Thommo + Bazza</div>
-              <div class="abar-sub">Group · 3 members</div>
-            </div>
-          </div>
-          <div class="mwrap" id="gmsgs">
-            <div class="tyb" id="gtyp"><div class="tydots"><span></span><span></span><span></span></div></div>
-          </div>
+        <div class="sapp" id="msgs1App">
+          <div class="abar"><span class="abar-back" onclick="closeApp('msgs1App')">‹ Back</span><div class="abar-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div><div class="abar-info"><div class="abar-name">Davo + Thommo + Bazza</div><div class="abar-sub">Group · 3 members</div></div></div>
+          <div class="mwrap" id="gmsgs"><div class="tyb" id="gtyp"><div class="tydots"><span></span><span></span><span></span></div></div></div>
           <div class="cchoices" id="gchoices">
             <div class="cclbl">Jake sees the messages. What does he do?</div>
-            <button class="cc" id="cc-go" onclick="groupPick('go')">"Yeah righto, heading in now 🤙"</button>
-            <div style="position:relative">
-              <button class="cc locked" id="cc-no" onclick="showLockedTip()">"Nah not tonight lads"</button>
-              <div class="locked-note">Jake doesn't have the words for this yet.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- INSTAGRAM APP -->
-        <div class="sapp" id="instaApp">
-          <div class="abar" style="border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span class="abar-back" onclick="closeApp('instaApp')">‹</span>
-            <span class="abar-name" style="flex:1;text-align:center">jake_outback</span>
-          </div>
-          <div class="ig-feed">
-            <div class="ig-ptop">
-              <div class="ig-av">🤠</div>
-              <div class="ig-stats">
-                <div><div class="ig-sn">23</div><div class="ig-sl">posts</div></div>
-                <div><div class="ig-sn">184</div><div class="ig-sl">followers</div></div>
-                <div><div class="ig-sn">67</div><div class="ig-sl">following</div></div>
-              </div>
-            </div>
-            <div class="ig-bio">
-              <div class="ig-name">Jake Harrington</div>
-              <div class="ig-btxt">Jackaroo 🤙 Meekatharra, WA<br>Living the dream or something like that</div>
-            </div>
-            <div class="ig-grid" id="igGrid"></div>
+            <button class="cc" id="cc-go" onclick="groupPick()">"Yeah righto, heading in now 🤙"</button>
+            <div style="position:relative"><button class="cc locked" onclick="showLockedTip()">"Nah not tonight lads"</button><div class="locked-note">Jake doesn't have the words for this yet.</div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <p class="rv d3" style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.18);max-width:300px;line-height:1.8">Explore Jake's phone — then keep scrolling when you're ready</p>
+  <p class="rv d3" style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.18);max-width:300px;line-height:1.8">Check Jake's messages, then keep scrolling</p>
 </section>
 
-<!-- ═══════════════════════════════════ TRANSITION: FRIDAY NIGHT -->
-<div style="height:25vh;background:linear-gradient(180deg,#060606,#050305);display:flex;align-items:center;justify-content:center">
-  <span style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.36em;text-transform:uppercase;color:rgba(255,255,255,0.06)">Friday night</span>
+<!-- ═══════════════════════════════════════════════════
+     FRIDAY NIGHT TRANSITION
+══════════════════════════════════════════════════════ -->
+<div style="height:25vh;background:linear-gradient(180deg,#060606,#020202);display:flex;align-items:center;justify-content:center">
+  <span style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.36em;text-transform:uppercase;color:rgba(255,255,255,0.06)">Friday night → Saturday 2:17 AM</span>
 </div>
 
-<!-- ═══════════════════════════════════ MUM CALLS: 2AM -->
-<section id="s_mum" class="mum-night" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:5rem">
-  <div class="night-label rv">Saturday · 2:17 AM</div>
-  <div class="face-down-caption rv d1">The phone is face-down on the floor beside the bed.<br>Jake is asleep. He doesn't see any of this.</div>
-  <div class="phone rv d2" id="phone_mum" style="margin-top:0">
+<!-- ═══════════════════════════════════════════════════
+     MUM'S CALL: 2:17 AM (face-down phone)
+══════════════════════════════════════════════════════ -->
+<section id="s_mum" style="background:linear-gradient(180deg,#010303 0%,#02050a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:5rem">
+  <p class="rv" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.15);text-align:center;padding:3rem 2rem 0">Saturday · 2:17 AM</p>
+  <p class="rv d1" style="font-family:'Lora',serif;font-size:0.95rem;font-style:italic;color:rgba(255,255,255,0.25);text-align:center;max-width:300px;margin:1.5rem auto 2rem;line-height:1.7;padding:0 2rem">The phone is face-down on the floor beside the bed.<br>Jake is asleep. He doesn't see any of this.</p>
+  <div class="phone rv d2" id="phone_mum" style="margin-top:0;position:relative">
     <div class="psc" style="background:#010a02">
-      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55">
-        <span class="st">2:17</span>
-        <div class="si"><div class="sig"><div class="sb"></div><div class="sb" style="opacity:0.3"></div><div class="sb" style="opacity:0.1"></div></div><span style="opacity:0.4">🔋</span></div>
-      </div>
-      <!-- INCOMING CALL SCREEN -->
+      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">2:17</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb" style="opacity:0.3"></div><div class="sb" style="opacity:0.1"></div></div><span style="opacity:0.4">🔋</span></div></div>
       <div class="call-screen" id="callScreen">
         <div class="call-avatar">👩‍👦</div>
         <div class="call-name">Mum</div>
-        <div class="call-label" id="callStatus">mobile · calling...</div>
-        <div class="call-btns">
-          <div class="cb-decline">📵</div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.2);text-align:center">Rings out...<br>No answer.</div>
-          <div class="cb-accept">📞</div>
-        </div>
+        <div class="call-label" id="callStatus">mobile · ringing...</div>
+        <div class="call-btns"><div class="cb-decline">📵</div><div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.7">No answer.</div><div class="cb-accept">📞</div></div>
       </div>
-      <!-- MUM MESSAGES AFTER CALL -->
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#010a02;opacity:0;transition:opacity 0.8s" id="mumMsgsScreen">
-        <div style="padding:50px 0 0;background:#000;flex-shrink:0">
-          <div style="display:flex;gap:10px;align-items:center;padding:10px 15px">
-            <div class="mum-av">👩‍👦</div>
-            <div>
-              <div class="mum-hname">Mum</div>
-              <div class="mum-hsub">Geraldton · 3 hrs south</div>
-            </div>
-            <div class="call-missed-badge" id="missedBadge">Missed call 2:17 AM</div>
-          </div>
-        </div>
-        <div class="mum-msg-wrap" id="mumMsgs">
-          <div class="tyb" id="mumTyp" style="background:#1c2a3a"><div class="tydots"><span></span><span></span><span></span></div></div>
-        </div>
-        <div class="mum-unseen" id="mumUnseen"></div>
+        <div style="padding:50px 0 0;background:#000;flex-shrink:0"><div style="display:flex;gap:10px;align-items:center;padding:10px 15px"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a4a6a,#1a2a4a);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0">👩‍👦</div><div><div style="font-size:0.82rem;font-weight:600">Mum</div><div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">Geraldton · 3 hrs south</div></div><div style="margin-left:auto;background:rgba(192,57,43,0.9);border-radius:12px;padding:4px 10px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:white" id="missedBadge" style="display:none">Missed call 2:17 AM</div></div></div>
+        <div style="flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none;background:linear-gradient(180deg,#0a0a10 0%,#060610 100%)" id="mumMsgs"><div class="tyb" id="mumTyp" style="background:#1c2a3a"><div class="tydots"><span></span><span></span><span></span></div></div></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:rgba(255,255,255,0.15);text-align:center;text-transform:uppercase;padding:12px" id="mumUnseen"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ SATURDAY MORNING -->
+<!-- ═══════════════════════════════════════════════════
+     SATURDAY MORNING
+══════════════════════════════════════════════════════ -->
 <section class="narr" id="s3a" style="background:linear-gradient(180deg,#050305 0%,#080808 100%);min-height:80vh">
   <div class="ni">
     <div class="ch rv">Saturday morning</div>
@@ -640,109 +558,263 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <p>Four missed messages from Mum. 2:18 AM. 2:19. 2:20. 2:47.</p>
     </div>
     <div class="inner-voice rv d3">
-      <p>He stared at the screen for a long time. She'd rung at 2am and he'd been asleep in the car somewhere. She'd been awake in Geraldton, three hours south, not knowing if he was okay.</p>
-      <p>This happened last week too. And the week before.</p>
+      <p>She'd rung at 2am and he'd been asleep in the car somewhere. She'd been awake in Geraldton, three hours south, not knowing if he was okay. He stared at the screen for a long time.</p>
+      <p>This happened last week too. And the week before. And he still can't name the thing sitting on his chest — but he can't pretend it isn't there anymore either.</p>
     </div>
-    <div class="outcome show bad rv d3" style="margin-top:1.5rem">
-      <div class="outcome-lbl">What happened last night</div>
-      <p>One beer turned into eight. He got home just before 2am. The loop is smooth and familiar and almost impossible to see from inside it. The boys will message again next Friday. And he'll go again.</p>
-    </div>
-    <div class="rv d4">
-      <div id="cb-s3a" class="cbar">
-        <button class="cbar-btn" onclick="cbClick('s3b','cb-s3a')">
-          <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3a" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3a">30</div></div>
-          <span>Continue →</span>
-        </button>
-      </div>
-    </div>
+    <div class="outcome show bad rv d3" style="margin-top:1.5rem"><div class="outcome-lbl">What happened last night</div><p>One beer turned into eight. He got home just before 2am. The loop is smooth and familiar and almost impossible to see from inside it. The boys will message again. And he'll go again.</p></div>
+    <div class="rv d4"><div id="cb-s3a" class="cbar"><button class="cbar-btn" onclick="cbClick('s_ripple','cb-s3a')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3a" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3a">30</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ ASSERTIVENESS SKILL -->
+<!-- ═══════════════════════════════════════════════════
+     RIPPLE EFFECT: INTERACTIVE PHONE DISCOVERY
+══════════════════════════════════════════════════════ -->
+<section id="s_ripple" style="background:linear-gradient(180deg,#080808 0%,#060809 100%);min-height:100vh;padding:5rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem">
+  <p class="pl rv">Jake's phone doesn't show the whole picture</p>
+  <h2 class="rv d1" style="font-family:'Lora',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;text-align:center;max-width:440px;line-height:1.2">Heavy drinking doesn't stay private.<br><span style="color:var(--ember);font-style:italic">It spreads.</span></h2>
+  <p class="rv d2" style="font-size:0.84rem;color:var(--grey2);text-align:center;max-width:360px;line-height:1.85">Before we go further — take a look at what Jake can't see from where he's lying.</p>
+  <div class="phone rv d2" id="phone_ripple" style="position:relative">
+    <div class="psc" style="background:#080c0a">
+      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">9:14</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
+      <!-- DISCOVERY TOAST -->
+      <div class="disc-toast" id="discToast">
+        <span style="font-size:1.1rem">👀</span>
+        <p>Tap the apps — see who else is affected by Jake's Fridays.</p>
+      </div>
+      <!-- LOCK SCREEN -->
+      <div class="lock" id="lock_ripple">
+        <div style="margin-top:60px;text-align:center"><div class="lt">9:14</div><div class="ld">Saturday · Meekatharra WA</div></div>
+        <div class="notifs" id="rNotifs"></div>
+        <div class="unlock-btn" id="ubtn_ripple" onclick="unlockRipple()"><div class="ub-bar"></div><div class="ub-txt">Tap to open</div></div>
+      </div>
+      <!-- HOME SCREEN -->
+      <div class="home" id="home_ripple">
+        <div class="home-bg"></div>
+        <!-- DISCOVERY COUNTER -->
+        <div style="position:absolute;top:44px;right:14px;z-index:80;display:flex;gap:5px" id="discDots">
+          <div class="disc-d" id="dd0" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+          <div class="disc-d" id="dd1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+          <div class="disc-d" id="dd2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+        </div>
+        <div class="hw">
+          <div class="weather"><div class="wtl"><div class="wloc">Meekatharra, WA</div><div class="wtemp">38°</div><div class="wfeel">Feels like 42°</div></div><div class="wtr"><div class="wico">☀️</div>Saturday</div></div>
+          <div class="agrid">
+            <div class="aico" onclick="openRipple('insta')"><div class="aimg" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸<div class="badge" id="r-insta-badge">8</div></div><div class="albl">Instagram</div></div>
+            <div class="aico" onclick="openRipple('msgs')"><div class="aimg" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬<div class="badge" id="r-msgs-badge">3</div></div><div class="albl">Messages</div></div>
+            <div class="aico" onclick="openRipple('phone')"><div class="aimg" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱<div class="badge" id="r-phone-badge">1</div></div><div class="albl">Phone</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#2c2c2e,#1c1c1e)">⚙️</div><div class="albl">Settings</div></div>
+          </div>
+        </div>
+        <div class="dock">
+          <div class="da" onclick="openRipple('insta')" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div>
+          <div class="da" onclick="openRipple('msgs')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
+          <div class="da" onclick="openRipple('phone')" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
+          <div class="da" style="background:#1c1c1e">🎵</div>
+        </div>
+
+        <!-- INSTAGRAM: LIAM'S VIEW -->
+        <div class="sapp" id="ripple_insta">
+          <div class="abar" style="border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span class="abar-back" onclick="closeRipple('ripple_insta',0)">‹</span>
+            <span class="abar-name" style="flex:1;text-align:center">jake_outback</span>
+          </div>
+          <div class="ig-feed">
+            <div class="ig-ptop"><div class="ig-av">🤠</div><div class="ig-stats"><div><div class="ig-sn">23</div><div class="ig-sl">posts</div></div><div><div class="ig-sn">184</div><div class="ig-sl">followers</div></div><div><div class="ig-sn">67</div><div class="ig-sl">following</div></div></div></div>
+            <div class="ig-bio"><div class="ig-name">Jake Harrington</div><div class="ig-btxt">Jackaroo 🤙 Meekatharra, WA<br>Living the dream or something like that</div></div>
+            <!-- Post 1: recent beer post -->
+            <div class="ig-post">
+              <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">Friday · 10:41 PM</div></div>
+              <div class="ig-post-img" style="background:#160b04">🍺</div>
+              <div class="ig-post-actions">❤️ 💬 ✈️</div>
+              <div class="ig-post-likes">52 likes</div>
+              <div class="ig-post-caption"><strong>jake_outback</strong> Friday sorted 🍺🍺</div>
+              <div class="ig-post-comment"><strong>liam_harrington</strong> big dog 🔥🔥🔥</div>
+              <div class="ig-post-comment"><strong>liam_harrington</strong> shared to his story: <em style="color:rgba(255,255,255,0.4)">"my bro 🤙 living the life"</em></div>
+              <div class="ig-post-shared"><span style="font-size:0.7rem">📤</span><div class="ig-post-shared-txt">Shared by liam_harrington to his story · 47 viewers</div></div>
+            </div>
+            <!-- Post 2: earlier beer post -->
+            <div class="ig-post">
+              <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">2 weeks ago</div></div>
+              <div class="ig-post-img" style="background:#1a1005">🍺</div>
+              <div class="ig-post-actions">❤️ 💬 ✈️</div>
+              <div class="ig-post-likes">41 likes</div>
+              <div class="ig-post-caption"><strong>jake_outback</strong> Weekend</div>
+              <div class="ig-post-comment"><strong>liam_harrington</strong> this is so cool haha</div>
+              <div class="ig-post-comment"><strong>liam_harrington</strong> 💬 <em style="color:rgba(255,255,255,0.4)">replied to liam's story: "your brother is sick bro"</em></div>
+              <div class="ig-post-comment"><strong>jake_mate_pete</strong> <em style="color:rgba(255,255,255,0.4)">goals honestly</em></div>
+            </div>
+            <!-- Post 3: station life -->
+            <div class="ig-post">
+              <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">4 weeks ago</div></div>
+              <div class="ig-post-img" style="background:#0d1808">🌅</div>
+              <div class="ig-post-actions">❤️ 💬 ✈️</div>
+              <div class="ig-post-likes">31 likes</div>
+              <div class="ig-post-caption"><strong>jake_outback</strong> Red dirt never gets old. Big week but this makes it worth it</div>
+              <div class="ig-post-comment"><strong>liam_harrington</strong> i wanna come out there so bad</div>
+            </div>
+            <div style="padding:16px;background:#000"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.22);line-height:1.75;text-align:center">Liam is 16. He shows these posts to his mates at school. He's started hanging around older guys on weekends. He's had his first few drinks. He thinks Jake is living the dream. He doesn't know he's being taught something — he thinks he's just living. He's watching Jake for what being a man looks like.</p></div>
+          </div>
+        </div>
+
+        <!-- MESSAGES: MUM'S THREAD + THOMMO -->
+        <div class="sapp" id="ripple_msgs">
+          <div class="abar"><span class="abar-back" onclick="closeRipple('ripple_msgs',1)">‹ Messages</span></div>
+          <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+            <div style="padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer" onclick="openRipple('mum_thread')">
+              <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#2a4a6a,#1a2a4a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">👩‍👦</div>
+              <div style="flex:1"><div style="font-size:0.84rem;font-weight:600;color:#e06060">Mum</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px">I love you. Just let me know you're safe.</div></div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(192,57,43,0.8)">2:47 AM</div>
+            </div>
+            <div style="padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.05)">
+              <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#2d4a7a,#1a2a5a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🤜</div>
+              <div style="flex:1"><div style="font-size:0.84rem;font-weight:600">Thommo</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px">You get home ok? You were pretty gone mate</div></div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.25)">2:31 AM</div>
+            </div>
+            <div style="padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.05)">
+              <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#1a8a2e,#0d5a1e);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🤙</div>
+              <div style="flex:1"><div style="font-size:0.84rem;font-weight:600">Davo + Thommo + Bazza</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px">GET AROUND IT 🍺🍺</div></div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.25)">10:48 PM</div>
+            </div>
+            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Thommo has noticed Jake drinks differently now — not for fun, but to get somewhere. He wants to say something but the moment never seems right. So they just keep going to the pub. He's waiting for a sign that Jake would want him to ask.</p></div>
+          </div>
+        </div>
+
+        <!-- MUM'S THREAD DEEP VIEW -->
+        <div class="sapp" id="ripple_mum">
+          <div class="abar"><span class="abar-back" onclick="closeRipple('ripple_mum',-1);openRipple('msgs')">‹ Messages</span><div class="abar-av" style="background:linear-gradient(135deg,#2a4a6a,#1a2a4a)">👩‍👦</div><div class="abar-info"><div class="abar-name">Mum</div><div class="abar-sub">Geraldton · 3 hrs south</div></div></div>
+          <div class="mwrap">
+            <div style="background:rgba(192,57,43,0.1);border-radius:10px;padding:8px 12px;margin:4px 0;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(192,57,43,0.6);align-self:center">Missed call · 2:17 AM</div>
+            <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">Jake?</div><div class="bt">2:18 AM</div></div>
+            <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">Hello?</div><div class="bt">2:19 AM</div></div>
+            <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">Just making sure you got home okay. Ring me when you see this xx</div><div class="bt">2:20 AM</div></div>
+            <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">I love you. Just let me know you're safe.</div><div class="bt">2:47 AM</div></div>
+          </div>
+          <div style="padding:12px 14px;background:#050510;flex-shrink:0"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.76rem;color:rgba(255,255,255,0.22);line-height:1.7">She bought a new kettle last month and keeps meaning to tell Jake. She calls on Sundays. She's noticed he picks up less. She doesn't sleep well on Friday nights. She's terrified of being the reason he stops picking up altogether — so she keeps the calls short and cheerful and doesn't push too hard.</p></div>
+        </div>
+
+        <!-- PHONE RECENTS -->
+        <div class="sapp" id="ripple_phone">
+          <div class="abar"><span class="abar-back" onclick="closeRipple('ripple_phone',2)">‹ Back</span><div class="abar-info" style="text-align:center"><div class="abar-name">Recents</div></div></div>
+          <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+            <div style="padding:8px 14px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);background:#0a0a0a">Missed</div>
+            <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1a3a5a,#0d2040);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">👩‍👦</div>
+              <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#e06060">Mum ↙</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">mobile · 2:17 AM · Saturday</div></div>
+              <div style="font-size:0.6rem;color:rgba(255,255,255,0.28);font-family:'DM Mono',monospace">2:17 AM</div>
+            </div>
+            <div style="padding:8px 14px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);background:#0a0a0a;margin-top:4px">All</div>
+            <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2a4a2a,#1a3a1a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">👷</div>
+              <div style="flex:1"><div style="font-size:0.82rem;font-weight:600">Macca — Station Boss</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">mobile · Monday 6:48 AM · outgoing</div></div>
+            </div>
+            <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2d4a7a,#1a2a5a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🤜</div>
+              <div style="flex:1"><div style="font-size:0.82rem;font-weight:600">Thommo</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">Friday 2:31 AM · missed</div></div>
+              <div style="font-size:0.6rem;color:rgba(192,57,43,0.8);font-family:'DM Mono',monospace">↙</div>
+            </div>
+            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Jake's been late twice this month. Macca — the station manager — has watched Friday absences bleeding into Mondays. He was raised in the same culture. He doesn't know how to start.<br><br>"He's a good kid" is as far as he's got.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Discovery complete message -->
+  <div id="disc-complete" style="display:none;max-width:460px;width:100%;padding:0 1rem">
+    <div class="outcome ok show" style="text-align:center">
+      <div class="outcome-lbl">All perspectives discovered</div>
+      <p>Before Jake even wakes up on Saturday morning, his mum has been awake for hours. His 16-year-old brother is showing his mates the posts. Thommo is wondering how to say something. His boss is keeping count. And none of them know how to start that conversation.</p>
+    </div>
+    <div id="cb-s_ripple" class="cbar"><button class="cbar-btn" onclick="cbClick('s3b','cb-s_ripple')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s_ripple" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s_ripple">40</div></div><span>Continue →</span></button></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ASSERTIVENESS SKILL — with purpose from what just happened
+══════════════════════════════════════════════════════ -->
 <section class="narr" id="s3b" style="background:linear-gradient(180deg,#080808,#08100d);min-height:100vh">
   <div class="ni">
     <div class="ch rv">What could have been different</div>
     <h2 class="nh rv d1">Jake didn't have<br>the words.</h2>
     <div class="nb rv d2">
-      <p>When the boys messaged, there was only one answer in Jake's head. He didn't even question it. Going to the pub wasn't a decision — it was just what happened next. The alternative wasn't available to him. That's not weakness. That's not a character flaw. It's a skill he was never taught.</p>
+      <p>You just saw what last Friday cost. His mum awake at 2am. His brother reposting it like it was aspirational. Thommo typing a message and deleting it.</p>
+      <p>Jake knows none of this on Saturday morning. But you do. And the thing is — it could have gone differently. Not with willpower. Not with him being a different person. With one thing he was never taught.</p>
     </div>
     <div class="inner-voice rv d2">
       <p>He thought about it later. What would he have even said? "Nah not tonight"? They'd think something was wrong. They'd take the piss. It was easier to just go.</p>
       <p>But was it? He's lying here on a Saturday morning feeling hollow and broke, same as last week. So what was easier, exactly?</p>
     </div>
+    <!-- CLUMSY ATTEMPT FIRST — shows WHY the skill matters -->
+    <div class="rv d3" style="margin:2rem 0">
+      <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--grey2);margin-bottom:0.8rem">What Jake actually tried saying once</div>
+      <div style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:8px 12px;display:flex;gap:8px;align-items:center;background:#111;border-bottom:1px solid rgba(255,255,255,0.05)"><div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#1a8a2e,#0d5a1e);display:flex;align-items:center;justify-content:center;font-size:0.65rem">🤙</div><div style="font-size:0.75rem;font-weight:600">Davo + Thommo + Bazza</div></div>
+        <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px">
+          <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">You coming in mate?</div>
+          <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%;align-self:flex-start">Bazza's shouting first round</div>
+          <div style="align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <div style="background:rgba(60,80,60,0.8);border-radius:14px;border-bottom-right-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:82%;color:rgba(255,255,255,0.7);font-style:italic">Sorry lads, I'm kind of tired and I'm not sure if I should and also I've got things to do tomorrow early so maybe not tonight if that's okay, no offence</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.53rem;color:rgba(255,255,255,0.25)">Sent 5:49 PM</div>
+          </div>
+          <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">Bro 💀💀 just come for one</div>
+          <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">don't be soft mate 😂</div>
+          <div style="align-self:flex-end;background:#2e7d4f;border-radius:14px;border-bottom-right-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">Ok yeah righto 🤙</div>
+        </div>
+      </div>
+      <p style="font-size:0.76rem;color:rgba(224,101,53,0.55);font-style:italic;font-family:'Lora',serif;margin-top:0.8rem;padding:0 0.2rem">He over-explained. He apologised before he needed to. He gave them a reason to push back. They pushed back. He folded. The door he opened invited them through it.</p>
+    </div>
     <div style="margin:2.2rem 0" class="rv d3">
       <div class="skill-pill o">Skill One — Assertiveness</div>
-      <div class="insight" style="margin-top:0.8rem">
-        <div class="il o">What it actually is</div>
-        <p>Assertiveness isn't aggression, and it's not confidence. It's the ability to say what you need — clearly, calmly, without excessive apology — and let the response be what it is. In rural WA, this skill is almost never taught. It gets read as weakness. It's the opposite.</p>
-      </div>
+      <div class="insight" style="margin-top:0.8rem"><div class="il o">What it actually is</div><p>Assertiveness isn't aggression, and it's not confidence. It's the ability to say what you need — clearly, calmly, without excessive apology — and let the response be what it is. Jake's clumsy message above shows exactly what happens without it: over-explaining creates the opening for pushback. Short and direct closes it.</p></div>
     </div>
     <div class="steps rv d3">
       <div class="step" data-n="1"><h4>Decide before the pressure hits</h4><p>Plan it when you're calm: "I'll have two drinks" or "not tonight." Having a position means you're not making the call when the boys are already three in and the pressure is on.</p></div>
-      <div class="step" data-n="2"><h4>"I" not "you"</h4><p>"I'm not feeling it tonight" is very different from "you lot drink too much." One is about you. One starts a fight. Real mates will cop the first one.</p></div>
-      <div class="step" data-n="3"><h4>You don't owe anyone an explanation</h4><p>"Nah not tonight" is a full sentence. Short, direct, no apology. The more you explain, the more you invite pushback. Say it once, mean it, and let the silence land.</p></div>
-      <div class="step" data-n="4"><h4>Offer the alternative</h4><p>"Not the pub tonight but down for a drive tomorrow." You're not rejecting them — just the drinking. That distinction matters, and they'll feel it.</p></div>
+      <div class="step" data-n="2"><h4>"I" not "you" — and no novel</h4><p>"I'm not feeling it tonight" is a full sentence. Jake's message was 40 words. Every extra word is an invitation. The more you explain, the more you invite pushback. Say it once, mean it, let the silence land.</p></div>
+      <div class="step" data-n="3"><h4>Offer the alternative</h4><p>"Not the pub tonight but down for a drive tomorrow." You're not rejecting them — just the drinking. Real mates will feel that distinction.</p></div>
     </div>
-    <div class="nb rv d4" style="margin-top:1.8rem"><p>Jake can't go back and use this on last Friday. But it's Saturday evening. And the boys have just messaged again.</p></div>
-    <div class="rv d4">
-      <div id="cb-s3b" class="cbar">
-        <button class="cbar-btn" onclick="cbClick('s3c','cb-s3b')">
-          <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3b" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3b">35</div></div>
-          <span>Continue →</span>
-        </button>
-      </div>
-    </div>
+    <div class="nb rv d4" style="margin-top:1.8rem"><p>Jake can't go back and use this on last Friday. But it's Saturday evening. The boys are messaging again. This time, he knows the difference between the message that invites pushback — and the one that closes the door cleanly.</p></div>
+    <div class="rv d4"><div id="cb-s3b" class="cbar"><button class="cbar-btn" onclick="cbClick('s3c','cb-s3b')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3b" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3b">35</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ PHONE: SATURDAY NIGHT - ASSERTIVENESS PRACTICED -->
+<!-- ═══════════════════════════════════════════════════
+     SATURDAY NIGHT GC — ASSERTIVENESS PRACTICED
+══════════════════════════════════════════════════════ -->
 <section class="phone-stage" id="s3c" style="background:linear-gradient(180deg,#080d08 0%,#060606 100%);min-height:100vh">
-  <p class="pl rv">Saturday · 5:31 PM · The boys are heading out again</p>
-  <div class="phone rv d1" id="phone_sat">
+  <p class="pl rv">Saturday · 5:31 PM · Same boys. Different Jake.</p>
+  <div class="phone rv d1" id="phone_sat" style="position:relative">
     <div class="psc" style="background:#000">
-      <div class="sbar" style="background:#1c1c1e;position:relative">
-        <span class="st">5:31</span>
-        <div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div>
-      </div>
-      <div class="abar">
-        <div style="width:20px"></div>
-        <div class="abar-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div>
-        <div class="abar-info">
-          <div class="abar-name">Davo + Thommo + Bazza</div>
-          <div class="abar-sub">Group · 3 members</div>
-        </div>
-      </div>
-      <div class="mwrap" id="satmsgs">
-        <div class="tyb" id="sattyp"><div class="tydots"><span></span><span></span><span></span></div></div>
-      </div>
+      <div class="sbar" style="background:#1c1c1e;position:relative"><span class="st">5:31</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
+      <div class="abar"><div style="width:20px"></div><div class="abar-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div><div class="abar-info"><div class="abar-name">Davo + Thommo + Bazza</div><div class="abar-sub">Group · 3 members</div></div></div>
+      <div class="mwrap" id="satmsgs"><div class="tyb" id="sattyp"><div class="tydots"><span></span><span></span><span></span></div></div></div>
       <div class="cchoices" id="satchoices">
-        <div class="cclbl">Jake's read the assertiveness skill. Now what?</div>
+        <div class="cclbl">Jake's read the skill. Now what?</div>
         <button class="cc" id="sc-go" onclick="satPick('go')">"Yeah nah righto 🍺"</button>
-        <div style="position:relative">
-          <button class="cc unlocked" id="sc-no" onclick="satPick('no')">"Nah not tonight lads. Down for a drive tomorrow tho 👍"</button>
-          <div class="unlocked-note">✓ Assertiveness skill unlocked</div>
-        </div>
+        <div style="position:relative"><button class="cc unlocked-opt" id="sc-no" onclick="satPick('no')">"Nah not tonight lads. Down for a drive tomorrow tho 👍"</button><div class="unlocked-note">✓ Assertiveness skill — short, direct, offers alternative</div></div>
       </div>
     </div>
   </div>
   <div class="outcome" id="sat-outcome" style="max-width:480px;width:calc(100% - 4rem);margin-top:0"></div>
 </section>
 
-<!-- ═══════════════════════════════════ VOID: SUNDAY -->
+<!-- ═══════════════════════════════════════════════════
+     VOID: SUNDAY
+══════════════════════════════════════════════════════ -->
 <div class="void" id="s4">
   <div class="void-stamp">Sunday · 2:14 PM · No signal · Flat red country going north</div>
   <div class="void-line"></div>
   <div class="void-after" id="void-after">keep going ↓</div>
 </div>
 
-<!-- ═══════════════════════════════════ TAILGATE: STRESS MANAGEMENT -->
+<!-- ═══════════════════════════════════════════════════
+     TAILGATE — STRESS MANAGEMENT (now after ripple — Thursday hits harder)
+══════════════════════════════════════════════════════ -->
 <section class="narr" id="s5" style="background:linear-gradient(180deg,#060808,#080808);min-height:100vh">
   <div class="ni">
     <div class="ch rv">Thursday evening</div>
     <h2 class="nh rv d1">The quiet is the loudest<br>it's ever been.</h2>
     <div class="nb rv d2">
-      <p>He gets home before the sun drops. Parks the ute. Sits on the tailgate. The station is still. No messages. Mum called earlier — he let it ring out. There's a specific kind of weight that builds when you've got nothing to do, nowhere to go, and you're not okay and you don't know how to say it.</p>
-      <p>The solitude that feels fine on Monday is different by Thursday. He's been up since four. His shoulders ache. And there's no gym, no counsellor, no footpath to walk. The pub is the only place that makes the noise quieter. Or at least, that's what he's told himself.</p>
+      <p>He parks the ute. Sits on the tailgate. The station is still. The solitude that feels fine on Monday is different by Thursday. He's been up since four. His shoulders ache. And there's no gym, no counsellor, no footpath to walk.</p>
+      <p>He called his mum back earlier in the week and it helped — briefly. But the weight is back. He thinks about what you saw on his phone: the messages she sent at 2am, Liam sharing his posts to 47 people. The thought sits in him differently now. It has a name. It has a face.</p>
       <p>He's got the ute keys in his hand.</p>
     </div>
     <div class="rv d2" id="tailgate-choice">
@@ -754,289 +826,116 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="outcome" id="tailgate-outcome"></div>
     </div>
     <div id="breathe-block" style="display:none">
-      <div class="inner-voice rv">
-        <p>He'd heard someone mention box breathing once. Something first responders used. He'd laughed it off. But he was alone in a paddock, it was Thursday, and there was nothing to lose.</p>
-      </div>
+      <div class="inner-voice rv"><p>He'd heard someone mention box breathing once. Something first responders used. He'd laughed it off. But he was alone in a paddock, it was Thursday, and there was nothing to lose.</p></div>
       <div class="breathe-wrap rv d1">
         <div class="bl">Box breathing — Jake in the paddock</div>
         <div class="borb" id="borb" onclick="startBreath()"><span id="btxt">Tap to try<br>alongside him</span></div>
         <div class="bcap" id="bcap">In for 4. Hold for 4. Out for 4. Hold for 4. Used by first responders, athletes, and anyone who needs the quiet back.</div>
       </div>
-      <div class="nb rv d1" style="margin-top:1.8rem">
-        <p>He came back different. Not fixed. Not even close. But the thing pressing on his chest — lighter. He called his mum back. Didn't say much. She talked about the dog. He listened. When he hung up, he made dinner instead of driving to town.</p>
-      </div>
+      <div class="nb rv d1" style="margin-top:1.8rem"><p>He came back different. Not fixed. But the thing pressing on his chest — lighter. He called his mum back. Didn't say much. She talked about the dog. He listened. When he hung up, he made dinner instead of driving to town.</p><p>The difference tonight wasn't willpower. It was having <em>somewhere else to put it</em> before the pub became the only option.</p></div>
       <div style="margin:1.8rem 0" class="rv d2">
         <div class="skill-pill o">Skill Two — Stress Management</div>
-        <div class="insight" style="margin-top:0.8rem">
-          <div class="il o">What Jake found out</div>
-          <p>Stress management isn't a gym routine or a meditation app. It's having <em>something</em> to reach for before alcohol becomes the only thing. Name the feeling out loud. Move your body. Change the scene. Have three alternatives written when you're calm — not when you're not. The land out there is free and it always works.</p>
-        </div>
+        <div class="insight" style="margin-top:0.8rem"><div class="il o">What Jake found out — and what you saw on his phone</div><p>You saw who Liam is watching. You saw Mum awake at 2am. That context is exactly why this skill matters: stress doesn't disappear when you drink — it transfers. It moves to the people around you while you're temporarily not feeling it. Having <em>something</em> to reach for before alcohol — a walk, a call, a breath, a 10-minute drive into the paddock — isn't weakness. It's the only thing that actually reduces the load instead of shifting it.</p></div>
       </div>
-      <div class="rv d2">
-        <div id="cb-s5" class="cbar">
-          <button class="cbar-btn" onclick="cbClick('s6','cb-s5')">
-            <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s5" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s5">30</div></div>
-            <span>Continue →</span>
-          </button>
-        </div>
-      </div>
+      <div class="rv d2"><div id="cb-s5" class="cbar"><button class="cbar-btn" onclick="cbClick('s8','cb-s5')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s5" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s5">30</div></div><span>Continue →</span></button></div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ RIPPLE EFFECT: AUTOMATED PHONE CAROUSEL -->
-<section class="ripple-stage" id="s6">
-  <p class="pl rv">It doesn't just affect Jake</p>
-  <h2 style="font-family:'Lora',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;text-align:center;margin-bottom:0.5rem" class="rv d1">The ripple effect.</h2>
-  <p style="font-size:0.85rem;color:var(--grey2);text-align:center;max-width:380px;line-height:1.8" class="rv d2">Heavy drinking in remote WA doesn't stay private. It moves through families and friendships — usually long before anyone has named it out loud.</p>
-  <div class="ripple-phone-wrap rv d2" id="rippleWrap">
-    <div class="ripple-perspective">
-      <div class="rsc">
-        <div class="sbar" style="background:rgba(0,0,0,0.7);position:relative;flex-shrink:0">
-          <span class="st" id="rsc-time">2:19</span>
-          <div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div>
-        </div>
-        <!-- SLIDE 1: Jake's call log -->
-        <div class="rp-slide active" id="rslide-0">
-          <div class="rp-perspective-tag">Jake's phone</div>
-          <div style="padding:8px 14px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);background:#0a0a0a;flex-shrink:0">Recents</div>
-          <div class="clog-item">
-            <div class="cli-av" style="background:linear-gradient(135deg,#1a3a5a,#0d2040)">👩‍👦</div>
-            <div class="cli-info"><div class="cli-name missed">Mum <span class="cli-missed-icon">↙</span></div><div class="cli-sub">Missed call · 2:17 AM · Saturday</div></div>
-            <div class="cli-t">2:17 AM</div>
-          </div>
-          <div class="clog-item">
-            <div class="cli-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div>
-            <div class="cli-info"><div class="cli-name">Davo + Thommo + Bazza</div><div class="cli-sub">Last Friday · 10 messages</div></div>
-            <div class="cli-t">Friday</div>
-          </div>
-          <div class="clog-item">
-            <div class="cli-av" style="background:linear-gradient(135deg,#2a4a6a,#1a2a4a)">🤜</div>
-            <div class="cli-info"><div class="cli-name">Thommo</div><div class="cli-sub">You up? You get home okay?</div></div>
-            <div class="cli-t">2:31 AM</div>
-          </div>
-          <div style="padding:18px 14px;flex:1">
-            <p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.7">She called at 2:17 AM. He doesn't see the missed call until 9 the next morning. By then, she's already sent the texts.</p>
-          </div>
-        </div>
-        <!-- SLIDE 2: Mum's texts -->
-        <div class="rp-slide" id="rslide-1">
-          <div class="rp-perspective-tag">Mum's phone · Geraldton</div>
-          <div class="mum-header" style="flex-shrink:0">
-            <div class="mum-av">🤠</div>
-            <div>
-              <div class="mum-hname">Jake</div>
-              <div class="mum-hsub" id="mum-last-seen">Last seen Friday 11:48 PM</div>
-            </div>
-          </div>
-          <div style="flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none" id="mumRippleMsgs">
-            <div class="mum-bub show" style="opacity:1;transform:none">Jake?</div>
-            <div class="mum-bub-t">2:18 AM</div>
-            <div class="mum-bub show" style="opacity:1;transform:none">Hello?</div>
-            <div class="mum-bub-t">2:19 AM</div>
-            <div class="mum-bub show" style="opacity:1;transform:none">Just making sure you got home okay. Ring me when you see this xx</div>
-            <div class="mum-bub-t">2:20 AM</div>
-            <div class="mum-bub show" style="opacity:1;transform:none">I love you, just let me know you're safe.</div>
-            <div class="mum-bub-t">2:47 AM</div>
-          </div>
-          <div style="padding:10px 14px;background:#0a0a0a;flex-shrink:0">
-            <p style="font-family:'Lora',serif;font-style:italic;font-size:0.74rem;color:rgba(255,255,255,0.22);line-height:1.65">She bought a new kettle last month and keeps meaning to tell Jake. She calls on Sundays. She's noticed he picks up less. She doesn't sleep well on Friday nights.</p>
-          </div>
-        </div>
-        <!-- SLIDE 3: Brother's Instagram -->
-        <div class="rp-slide" id="rslide-2">
-          <div class="rp-perspective-tag">Liam's phone · Perth</div>
-          <div class="ig-stories">
-            <div class="ig-story-row">
-              <div class="ig-story"><div class="ig-story-ring"><div class="ig-story-av">🤠</div></div><div class="ig-story-name">jake_outback</div></div>
-              <div class="ig-story"><div class="ig-story-ring" style="background:linear-gradient(135deg,#444,#222)"><div class="ig-story-av" style="font-size:0.9rem">😴</div></div><div class="ig-story-name">thommo99</div></div>
-              <div class="ig-story"><div class="ig-story-ring" style="background:linear-gradient(135deg,#333,#111)"><div class="ig-story-av" style="font-size:0.9rem">🎮</div></div><div class="ig-story-name">davo_mka</div></div>
-            </div>
-            <div class="ig-post">
-              <div class="ig-post-hdr">
-                <div class="ig-post-av">🤠</div>
-                <div class="ig-post-name">jake_outback</div>
-                <div class="ig-post-time">Friday · 10:41 PM</div>
-              </div>
-              <div class="ig-post-img">🍺</div>
-              <div class="ig-post-actions">❤️ 💬 ✈️</div>
-              <div class="ig-post-caption"><strong>jake_outback</strong> Friday sorted 🍺🍺</div>
-            </div>
-            <div class="brother-thought">
-              <p>Liam is 16. He shows his mates Jake's stories at school. He's started hanging around older guys on weekends. He thinks Jake is cool. He doesn't know he's being taught something. He's watching Jake for what being a man looks like.</p>
-            </div>
-          </div>
-        </div>
-        <!-- SLIDE 4: Thommo's unsent message -->
-        <div class="rp-slide" id="rslide-3">
-          <div class="rp-perspective-tag">Thommo's phone</div>
-          <div class="thommo-draft">
-            <div class="draft-chip">✏️ Unsent draft · Saturday 10:22 AM</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-              <div class="mum-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤠</div>
-              <div>
-                <div style="font-size:0.82rem;font-weight:600">Jake</div>
-                <div style="font-size:0.6rem;color:rgba(255,255,255,0.3)">Last message Thursday</div>
-              </div>
-            </div>
-            <div class="draft-bub">"Hey mate, you okay? You seemed off last night."</div>
-            <div class="draft-del">— Draft not sent. Deleted at 10:26 AM.</div>
-            <div class="thommo-thought">
-              <p>Thommo has noticed Jake drinks differently now — not for fun, but to get somewhere. He wants to say something but the moment never seems right, and he's not sure Jake would want him to. He's waiting for a sign that Jake would want him to ask.</p>
-              <p style="margin-top:0.8rem">So they just keep going to the pub. The weeks pass.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="rp-dots" id="rpDots">
-      <div class="rp-dot active" onclick="goSlide(0)"></div>
-      <div class="rp-dot" onclick="goSlide(1)"></div>
-      <div class="rp-dot" onclick="goSlide(2)"></div>
-      <div class="rp-dot" onclick="goSlide(3)"></div>
-    </div>
-  </div>
-  <div class="rv d3" style="max-width:480px;text-align:center">
-    <div id="cb-s6" class="cbar">
-      <button class="cbar-btn" onclick="cbClick('s7','cb-s6')">
-        <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s6" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s6">40</div></div>
-        <span>Continue →</span>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════ RECOGNITION -->
-<section class="recog" id="s7">
+<!-- ═══════════════════════════════════════════════════
+     RECOGNITION
+══════════════════════════════════════════════════════ -->
+<section class="recog" id="s_recog">
   <div class="recog-q rv">Does any part of this feel familiar?</div>
   <div class="recog-space"></div>
   <div class="recog-ans rv d2">You don't have to answer that.</div>
   <div style="position:absolute;bottom:3rem;left:0;right:0;display:flex;justify-content:center" class="rv d3">
-    <div id="cb-s7" class="cbar" style="margin-top:0">
-      <button class="cbar-btn" onclick="cbClick('s8','cb-s7')">
-        <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s7" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s7">40</div></div>
-        <span>Continue →</span>
-      </button>
-    </div>
+    <div id="cb-s_recog" class="cbar" style="margin-top:0"><button class="cbar-btn" onclick="cbClick('s8','cb-s_recog')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s_recog" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s_recog">40</div></div><span>Continue →</span></button></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ THOMMO'S MESSAGE -->
+<!-- ═══════════════════════════════════════════════════
+     THOMMO'S MESSAGE
+══════════════════════════════════════════════════════ -->
 <section class="phone-stage" id="s8" style="background:#060609;min-height:100vh">
   <p class="pl rv">Three weeks later · Sunday night · Thommo finally sends it</p>
-  <div class="phone rv d1" id="phone2">
+  <div class="phone rv d1" id="phone2" style="position:relative">
     <div class="psc" style="background:#000">
-      <div class="sbar" style="background:#1c1c1e;position:relative">
-        <span class="st">7:22</span>
-        <div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div>
-      </div>
-      <div class="abar">
-        <div style="width:20px"></div>
-        <div class="abar-av" style="background:linear-gradient(135deg,#2d4a7a,#1a2a5a)">🤜</div>
-        <div class="abar-info"><div class="abar-name">Thommo</div><div class="abar-sub">Active now</div></div>
-      </div>
-      <div class="mwrap" id="tmsgs">
-        <div class="tyb" id="ttyp"><div class="tydots"><span></span><span></span><span></span></div></div>
-      </div>
-      <div class="compose" id="tcompose" style="display:none">
-        <textarea class="compose-input" id="tcinput" placeholder="Type Jake's response..." rows="1" oninput="onComposeInput(this)" onkeydown="onComposeKey(event)"></textarea>
-        <button class="compose-send" id="tcsend" onclick="sendJake()">↑</button>
-      </div>
+      <div class="sbar" style="background:#1c1c1e;position:relative"><span class="st">7:22</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
+      <div class="abar"><div style="width:20px"></div><div class="abar-av" style="background:linear-gradient(135deg,#2d4a7a,#1a2a5a)">🤜</div><div class="abar-info"><div class="abar-name">Thommo</div><div class="abar-sub">Active now</div></div></div>
+      <div class="mwrap" id="tmsgs"><div class="tyb" id="ttyp"><div class="tydots"><span></span><span></span><span></span></div></div></div>
+      <div class="compose" id="tcompose" style="display:none"><textarea class="compose-input" id="tcinput" placeholder="Type Jake's response..." rows="1" oninput="onComposeInput(this)" onkeydown="onComposeKey(event)"></textarea><button class="compose-send" id="tcsend" onclick="sendJake()">↑</button></div>
     </div>
   </div>
   <p class="rv d2" id="thommo-note" style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.2);max-width:320px;line-height:1.8;display:none;margin-top:0.5rem"></p>
 </section>
 
-<!-- ═══════════════════════════════════ JAKE'S WEEK: RESILIENCE -->
-<section class="narr" id="s9" style="background:linear-gradient(180deg,#060609,#080d08);min-height:100vh">
+<!-- ═══════════════════════════════════════════════════
+     INTERIOR MONOLOGUE BRIDGE — after Thommo, before Jake's week
+══════════════════════════════════════════════════════ -->
+<section class="narr" id="s_bridge" style="background:linear-gradient(180deg,#060609,#080d08);min-height:60vh">
   <div class="ni">
-    <div class="ch rv">The week after Thommo's message</div>
-    <h2 class="nh rv d1">Small things.<br>Every day.</h2>
-    <div class="nb rv d2">
-      <p>Jake doesn't suddenly get better. He doesn't have a breakthrough. There's no single moment where everything shifts. But he starts doing one small thing differently each day. None of them look like much from the outside.</p>
-      <p style="font-size:0.84rem;color:var(--grey2);font-style:italic;font-family:'Lora',serif">Tap each day to see what he did.</p>
-    </div>
-    <div class="rv d2" style="margin:1.8rem 0">
-      <div class="wcard" id="wc-mon">
-        <div class="wch" onclick="toggleDay('wc-mon')"><span class="wcd">Mon</span><span class="wct">Calls his mum on the drive in</span><span class="wca">›</span></div>
-        <div class="wcb"><div class="wci">
-          <div class="wcs">She picks up first ring. He doesn't say much. She talks about the dog knocking over the new kettle. He laughs — properly, not performed. When he hangs up, the thing that's been sitting on his chest since Friday is a fraction lighter. He notices that.</div>
-          <div class="wcin">Resilience — Connection built before crisis is the best kind. Not grand gestures. A ten-minute drive, a phone call.</div>
-        </div></div>
-      </div>
-      <div class="wcard" id="wc-tue">
-        <div class="wch" onclick="toggleDay('wc-tue')"><span class="wcd">Tue</span><span class="wct">Doesn't drive to town. Sits with it.</span><span class="wca">›</span></div>
-        <div class="wcb"><div class="wci">
-          <div class="wcs">The urge comes around 5:30, same as always. He sits on the step and watches the sky go orange. It's uncomfortable. He stays anyway. After twenty minutes, the feeling hasn't gone — but it's different. He makes dinner. Goes to sleep before ten.</div>
-          <div class="wcin">Resilience — You can't outrun a feeling. But if you don't numb it, it moves. Sitting with discomfort is a trainable skill.</div>
-        </div></div>
-      </div>
-      <div class="wcard" id="wc-wed">
-        <div class="wch" onclick="toggleDay('wc-wed')"><span class="wcd">Wed</span><span class="wct">Books a telehealth appointment</span><span class="wca">›</span></div>
-        <div class="wcb"><div class="wci">
-          <div class="wcs">Three minutes to fill in the form. He almost closes the tab twice. He books it. He doesn't tell anyone — not Thommo, not his mum. It's just for him. The appointment isn't for another week but already something has loosened. It's the act of deciding, not the appointment itself.</div>
-          <div class="wcin">Resilience — Asking for help is preparation, not weakness. Getting support before crisis is like checking your ute before a long drive, not after it breaks down.</div>
-        </div></div>
-      </div>
-      <div class="wcard" id="wc-thu">
-        <div class="wch" onclick="toggleDay('wc-thu')"><span class="wcd">Thu</span><span class="wct">Goes for a walk before dark</span><span class="wca">›</span></div>
-        <div class="wcb"><div class="wci">
-          <div class="wcs">Twenty minutes out past the fence line. No phone, no podcast. Just the red dirt and the spinifex and whatever is in his chest. He's sweating by the time he gets back. He notices his shoulders were up near his ears. He's been carrying them there for months without realising.</div>
-          <div class="wcin">Resilience — Physical movement processes stress that sitting still can't touch. No gym required. The land out there is free and always available.</div>
-        </div></div>
-      </div>
-      <div class="wcard" id="wc-fri">
-        <div class="wch" onclick="toggleDay('wc-fri')"><span class="wcd">Fri</span><span class="wct">The boys message. He reads it differently.</span><span class="wca">›</span></div>
-        <div class="wcb"><div class="wci">
-          <div class="wcs">5:31 PM. "Jakeyyyy you coming in tonight?" He's parked at the bore, still in his work shirt, eating an apple from the esky. He reads it. He doesn't feel the old jolt of obligation — the automatic yes. He actually pauses. He thinks about Monday morning. He puts the phone down and finishes the apple first. Then he decides.</div>
-          <div class="wcin">Resilience — The goal isn't to never go to the pub. It's to make the choice consciously. That pause — that's what a week of small things built.</div>
-        </div></div>
-      </div>
-    </div>
-    <div style="margin:2.2rem 0" class="rv d3">
-      <div class="skill-pill g">Skill Three — Resilience</div>
-      <div class="insight" style="margin-top:0.8rem">
-        <div class="il g">What the week taught him</div>
-        <p>Resilience isn't bouncing back. It's building the things that give you somewhere to put the weight — <em>before</em> Friday arrives. A phone call on Monday. A walk on Thursday. Booking one appointment. These aren't big acts. They're the structure that makes the next choice possible.</p>
-      </div>
-    </div>
-    <div class="rv d3">
-      <div id="cb-s9" class="cbar">
-        <button class="cbar-btn" onclick="cbClick('s12','cb-s9')">
-          <div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s9" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s9">45</div></div>
-          <span>Continue →</span>
-        </button>
-      </div>
+    <div class="ch rv">Sunday night. After the message.</div>
+    <div class="inner-voice rv d1">
+      <p>He put the phone down on the bench and stood there for a minute. He could hear the generator. The fly screen was rattling in the wind. Thommo knew. Of course Thommo knew.</p>
+      <p>He'd been carrying the thing that was sitting on him like it was invisible. Like everyone around him couldn't tell. Thommo just said it out loud and that changed something. Not fixed. Not even close. But it was like being in the dark for a long time and someone cracking a window — not much, but enough to tell you the sun still exists.</p>
+      <p>He went to bed early. He didn't drive to town. He didn't know yet whether he was going to do anything differently. But something had shifted — in the quiet, without anyone seeing it happen. He woke up Monday and made a decision. One small one. Then another one on Tuesday. Then another.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ ENDING: JAKE DIALS LIFELINE -->
+<!-- ═══════════════════════════════════════════════════
+     JAKE'S WEEK — RESILIENCE (skill placed between Thu + Fri for purpose)
+══════════════════════════════════════════════════════ -->
+<section class="narr" id="s9" style="background:linear-gradient(180deg,#080d08,#080808);min-height:100vh">
+  <div class="ni">
+    <div class="ch rv">The week after Thommo's message</div>
+    <h2 class="nh rv d1">Small things.<br>Every day.</h2>
+    <div class="nb rv d2">
+      <p>Jake doesn't suddenly get better. There's no breakthrough. But he starts doing one thing differently each day. None of them look like much from the outside. Each one just makes the next choice slightly more possible.</p>
+      <p style="font-size:0.84rem;color:var(--grey2);font-style:italic;font-family:'Lora',serif">Tap each day to see what he did.</p>
+    </div>
+    <div class="rv d2" style="margin:1.8rem 0">
+      <div class="wcard" id="wc-mon"><div class="wch" onclick="toggleDay('wc-mon')"><span class="wcd">Mon</span><span class="wct">Calls his mum on the drive in</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">She picks up first ring. He doesn't say much. She talks about the dog knocking over the new kettle. He laughs — properly, not performed. The thing sitting on his chest since Friday is a fraction lighter. He notices that. He files it away.</div><div class="wcin">Connection before crisis is the best kind. Not grand gestures. A ten-minute drive, a phone call.</div></div></div></div>
+      <div class="wcard" id="wc-tue"><div class="wch" onclick="toggleDay('wc-tue')"><span class="wcd">Tue</span><span class="wct">Doesn't drive to town. Sits with it.</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">The urge comes around 5:30, same as always. He sits on the step and watches the sky go orange. It's uncomfortable. He stays anyway. After twenty minutes, the feeling hasn't gone — but it's different. He makes dinner. Goes to sleep before ten.</div><div class="wcin">You can't outrun a feeling. But if you don't numb it, it moves. Sitting with discomfort is a trainable skill.</div></div></div></div>
+      <div class="wcard" id="wc-wed"><div class="wch" onclick="toggleDay('wc-wed')"><span class="wcd">Wed</span><span class="wct">Books a telehealth appointment</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">Three minutes to fill in the form. He almost closes the tab twice. He books it. He doesn't tell anyone. It's just for him. The appointment isn't for another week but already something has loosened. It's the act of deciding, not the appointment itself.</div><div class="wcin">Asking for help is preparation, not weakness. Getting support before crisis is like checking your ute before a long drive, not after it breaks down.</div></div></div></div>
+      <div class="wcard" id="wc-thu"><div class="wch" onclick="toggleDay('wc-thu')"><span class="wcd">Thu</span><span class="wct">Goes for a walk before dark</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">Twenty minutes out past the fence line. No phone. Just the red dirt and the spinifex and whatever is in his chest. He's sweating by the time he gets back. He notices his shoulders were up near his ears. He's been carrying them there for months without realising.</div><div class="wcin">Physical movement processes stress that sitting still can't touch. No gym required. The land out there is free and always available.</div>
+              <!-- SKILL BOX BETWEEN THURSDAY AND FRIDAY — primes the Friday moment -->
+              <div class="skill-inset">
+                <div class="si-lbl">Skill Three — Resilience — what this week is building</div>
+                <p>Resilience isn't bouncing back. It's building the things that give you somewhere to put the weight before Friday arrives. A phone call on Monday. A walk on Thursday. One booked appointment. These aren't big acts. They're the structure that makes the next choice possible — and makes it possible to pause for long enough to actually choose.</p>
+              </div>
+            </div></div></div>
+      <div class="wcard" id="wc-fri"><div class="wch" onclick="toggleDay('wc-fri')"><span class="wcd">Fri</span><span class="wct">The boys message. He reads it differently.</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">5:31 PM. "Jakeyyyy you coming in tonight?" He's parked at the bore, still in his work shirt, eating an apple from the esky. He reads it. He doesn't feel the old jolt of obligation — the automatic yes. He actually pauses. He thinks about Monday morning and what he wants it to feel like. He puts the phone down and finishes the apple first.<br><br>That pause — that four-second gap between the message arriving and him responding — that's the whole week in one moment. That's what Monday, Tuesday, Wednesday and Thursday built. Not willpower. Structure.</div><div class="wcin">The goal isn't to never go to the pub. It's to make the choice consciously, not by default. That pause — that's what a week of small things built.</div></div></div></div>
+    </div>
+    <div class="rv d3"><div id="cb-s9" class="cbar"><button class="cbar-btn" onclick="cbClick('s12','cb-s9')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s9" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s9">45</div></div><span>Continue →</span></button></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ENDING: JAKE DIALS LIFELINE
+══════════════════════════════════════════════════════ -->
 <section id="s12" style="background:#040404;min-height:100vh">
   <div class="narr" style="min-height:50vh;padding-bottom:2rem">
     <div class="ni">
       <div class="ch rv">A few weeks later</div>
       <h2 class="nh rv d1" style="color:rgba(244,241,235,0.7)">Jake made one<br>more call.</h2>
       <div class="nb rv d2">
-        <p>Not to the boys. Not to Thommo. He sat in the ute one Thursday night with the engine running and the number on his screen. He'd saved it three weeks earlier but hadn't dialled. He thought he didn't need it. He thought it was for people in worse shape than him.</p>
-        <p>Then he thought about his mum awake at 2am. He thought about Liam. He thought about how many Thursdays he'd told himself he was fine.</p>
+        <p>Not to the boys. Not to Thommo. He sat in the ute one Thursday night with the number on his screen. He'd saved it three weeks earlier but hadn't dialled. He thought he didn't need it. He thought it was for people in worse shape than him.</p>
+        <p>Then he thought about his mum awake at 2am. He thought about Liam sharing the posts. He thought about how many Thursdays he'd told himself he was fine.</p>
         <p style="font-family:'Lora',serif;font-style:italic;color:rgba(244,241,235,0.45)">He made the call.</p>
       </div>
     </div>
   </div>
   <div class="phone-stage" style="padding-top:0;padding-bottom:6rem">
-    <p class="pl rv" id="lifeline-label">Jake's phone · Thursday · 8:41 PM</p>
-    <div class="phone rv d1" id="phone_end">
+    <p class="pl rv">Jake's phone · Thursday · 8:41 PM</p>
+    <div class="phone rv d1" id="phone_end" style="position:relative">
       <div class="psc" style="background:#000">
-        <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55">
-          <span class="st">8:41</span>
-          <div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div>
-        </div>
-        <!-- DIALER -->
+        <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">8:41</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
         <div class="dialer-wrap" id="dialerWrap">
           <div class="dialer-num" id="dialerNum">&#8203;</div>
           <div class="dialer-label" id="dialerLbl">Lifeline — 13 11 14</div>
-          <div class="dialer-keys" id="dialerKeys">
+          <div class="dialer-keys">
             <div class="dk" data-d="1"><div class="dk-n">1</div><div class="dk-l"></div></div>
             <div class="dk" data-d="2"><div class="dk-n">2</div><div class="dk-l">ABC</div></div>
             <div class="dk" data-d="3"><div class="dk-n">3</div><div class="dk-l">DEF</div></div>
@@ -1050,247 +949,193 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="dk" data-d="0"><div class="dk-n">0</div><div class="dk-l">+</div></div>
             <div class="dk"><div class="dk-n" style="font-size:0.9rem;opacity:0.3">#</div></div>
           </div>
-          <div class="dialer-call-row">
-            <div class="dialer-call-btn" id="dialCallBtn" onclick="dialCall()">📞</div>
-          </div>
+          <div class="dialer-call-row"><div class="dialer-call-btn" onclick="dialCall()">📞</div></div>
         </div>
-        <!-- CALLING SCREEN -->
-        <div class="calling-screen" id="callingScreen">
-          <div class="calling-name">Lifeline</div>
-          <div class="calling-num">13 11 14</div>
-          <div class="calling-ring" id="callingRing">📞</div>
-          <div class="calling-status" id="callingStatus">calling...</div>
-        </div>
-        <!-- HELP SCREEN -->
+        <div class="calling-screen" id="callingScreen"><div class="calling-name">Lifeline</div><div class="calling-num">13 11 14</div><div class="calling-ring" id="callingRing">📞</div><div class="calling-status" id="callingStatus">calling...</div></div>
         <div class="help-screen" id="helpScreen">
-          <div class="help-call-bar">
-            <div>
-              <div class="help-call-name">Lifeline</div>
-              <div class="help-call-status">Connected · 24/7</div>
-            </div>
-            <div class="help-call-dur" id="callDur">0:00</div>
-          </div>
-          <div class="help-scroll" id="helpScroll">
-            <div class="tyb" id="helpTyp" style="background:#1c2a1e;display:flex"><div class="tydots"><span></span><span></span><span></span></div></div>
-          </div>
+          <div class="help-call-bar"><div><div class="help-call-name">Lifeline</div><div class="help-call-status">Connected · 24/7</div></div><div class="help-call-dur" id="callDur">0:00</div></div>
+          <div class="help-scroll" id="helpScroll"><div class="tyb" id="helpTyp" style="background:#1c2a1e;display:flex"><div class="tydots"><span></span><span></span><span></span></div></div></div>
         </div>
       </div>
     </div>
-    <div class="rv d2" style="max-width:460px;text-align:center;margin-top:1rem">
-      <p style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.18);line-height:1.9" id="dialer-hint">The number is pre-loaded. Tap the green button when you're ready.</p>
-    </div>
-    <div class="rv d3" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(255,255,255,0.1);text-transform:uppercase;margin-top:3rem;text-align:center;max-width:400px;line-height:1.9">Jake's Story · Created for rural &amp; remote Western Australians<br>Statistics from AIHW and ABS WA Regional Health Data</div>
+    <p class="rv d2" id="dialer-hint" style="text-align:center;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.18);line-height:1.9;max-width:340px">The number is loading. Tap the green button when ready.</p>
+    <div class="rv d3" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:rgba(255,255,255,0.1);text-transform:uppercase;margin-top:3rem;text-align:center;max-width:400px;line-height:1.9">Jake's Story · Created for rural &amp; remote Western Australians<br>Statistics from AIHW and ABS WA Regional Health Data<br><span style="color:rgba(224,101,53,0.3)">Made by Calloway</span></div>
   </div>
 </section>
 
 <script>
-// ═══════════════════════════════════════════════
-// SAFE SCROLL — only scrolls forward
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// SPLASH + TRANSITION
+// ════════════════════════════════════════════════
+function beginStory() {
+  const splash = document.getElementById('splash');
+  const tov = document.getElementById('tov');
+  splash.classList.add('gone');
+  setTimeout(() => {
+    splash.style.display = 'none';
+    tov.style.display = 'block';
+    runTransition();
+  }, 900);
+}
+
+function runTransition() {
+  const tov = document.getElementById('tov');
+  // Step 1: horizon line
+  setTimeout(() => tov.querySelector('.tov-horizon').classList.add('show'), 400);
+  // Step 2: sky glow
+  setTimeout(() => {
+    tov.querySelector('.tov-sky').classList.add('lit');
+    tov.querySelector('.tov-glow').classList.add('show');
+    tov.querySelector('.tov-dust').classList.add('show');
+  }, 900);
+  // Step 3: sun
+  setTimeout(() => tov.querySelector('.tov-sun').classList.add('show'), 1600);
+  // Step 4: land rises
+  setTimeout(() => tov.querySelector('.tov-land').classList.add('show'), 2100);
+  // Step 5: eyebrow
+  setTimeout(() => tov.querySelector('.tt-eyebrow').classList.add('show'), 2800);
+  // Step 6: title letters
+  const spans = tov.querySelectorAll('.tt-h span');
+  spans.forEach((s, i) => setTimeout(() => s.classList.add('show'), 3200 + i * 90));
+  // Step 7: fade out
+  setTimeout(() => {
+    tov.querySelector('.tov-fade').classList.add('show');
+    setTimeout(() => {
+      tov.style.display = 'none';
+      document.body.classList.add('story-started');
+      document.getElementById('s0').scrollIntoView();
+    }, 1500);
+  }, 5400);
+}
+
+// ════════════════════════════════════════════════
+// SAFE SCROLL — forward only
+// ════════════════════════════════════════════════
 function safeScrollTo(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const rect = el.getBoundingClientRect();
-  if (rect.top > -100) {
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
+  if (el.getBoundingClientRect().top > -100) el.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // PROGRESS BAR
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.documentElement.scrollHeight - innerHeight);
   document.getElementById('prog').style.width = (pct * 100) + '%';
 });
 
-// ═══════════════════════════════════════════════
-// REVEAL ON SCROLL
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// REVEAL
+// ════════════════════════════════════════════════
 const ro = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.rv').forEach(el => ro.observe(el));
 
-// ═══════════════════════════════════════════════
-// COUNTDOWN BAR SYSTEM
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// COUNTDOWN BARS
+// ════════════════════════════════════════════════
 const cbState = {};
-
 function startCountdown(barId, targetId, seconds) {
   const bar = document.getElementById(barId);
   if (!bar || cbState[barId]?.started) return;
   cbState[barId] = { started: true, interval: null };
   bar.classList.add('show');
-  const circumference = 2 * Math.PI * 18;
+  const C = 2 * Math.PI * 18;
   const fillEl = document.getElementById('crf-' + barId.replace('cb-',''));
   const numEl = document.getElementById('crn-' + barId.replace('cb-',''));
-  if (fillEl) { fillEl.style.strokeDasharray = circumference; fillEl.style.strokeDashoffset = 0; }
+  if (fillEl) { fillEl.style.strokeDasharray = C; fillEl.style.strokeDashoffset = 0; }
   if (numEl) numEl.textContent = seconds;
-  let elapsed = 0;
+  let e = 0;
   const iv = setInterval(() => {
-    elapsed++;
-    const remaining = seconds - elapsed;
-    const progress = elapsed / seconds;
-    if (fillEl) fillEl.style.strokeDashoffset = circumference * progress;
-    if (numEl) numEl.textContent = Math.max(0, remaining);
-    if (elapsed >= seconds) {
-      clearInterval(iv);
-      safeScrollTo(targetId);
-    }
+    e++;
+    if (fillEl) fillEl.style.strokeDashoffset = C * (e / seconds);
+    if (numEl) numEl.textContent = Math.max(0, seconds - e);
+    if (e >= seconds) { clearInterval(iv); safeScrollTo(targetId); }
   }, 1000);
   cbState[barId].interval = iv;
 }
-
 function cbClick(targetId, barId) {
   if (cbState[barId]?.interval) clearInterval(cbState[barId].interval);
   safeScrollTo(targetId);
 }
-
-// Section observers for countdowns — each fires once
-function watchSection(sectionId, barId, targetId, seconds, threshold) {
+function watchSection(sId, barId, tId, secs, thresh) {
   let fired = false;
   const obs = new IntersectionObserver(es => {
-    if (es[0].isIntersecting && !fired) {
-      fired = true;
-      startCountdown(barId, targetId, seconds);
-    }
-  }, { threshold: threshold || 0.55 });
-  const el = document.getElementById(sectionId);
+    if (es[0].isIntersecting && !fired) { fired = true; startCountdown(barId, tId, secs); }
+  }, { threshold: thresh || 0.55 });
+  const el = document.getElementById(sId);
   if (el) obs.observe(el);
 }
-
 watchSection('s1','cb-s1','s2',30);
-watchSection('s3a','cb-s3a','s3b',30);
+watchSection('s3a','cb-s3a','s_ripple',30);
 watchSection('s3b','cb-s3b','s3c',35);
-watchSection('s6','cb-s6','s7',40,0.4);
-watchSection('s7','cb-s7','s8',40,0.6);
+watchSection('s_recog','cb-s_recog','s8',40,0.6);
 watchSection('s9','cb-s9','s12',45,0.4);
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // TOOLTIP
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function showTip(msg) {
   const t = document.getElementById('tooltip');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // PHONE 1: FRIDAY NIGHT
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 const notifData = [
-  { app:'Messages', icon:'💬', bg:'#1a8a2e', title:'Davo + Thommo + Bazza', preview:'Jakeyyyy what time you finishing up bro 🤙', time:'5:31 PM', delay:900 },
+  { app:'Messages', icon:'💬', bg:'#1a8a2e', title:'Davo + Thommo + Bazza', preview:"Jakeyyyy what time you finishing up bro 🤙", time:'5:31 PM', delay:900 },
   { app:'Messages', icon:'💬', bg:'#1a8a2e', title:'Davo + Thommo + Bazza', preview:"Bazza reckons he's shouting first round 💀", time:'5:44 PM', delay:2600 },
   { app:'Messages', icon:'💬', bg:'#1a8a2e', title:'Davo + Thommo + Bazza', preview:"Thommo: don't be soft mate, get in here", time:'5:46 PM', delay:4400 },
 ];
-
 let p1init = false, unlockHintTO;
 new IntersectionObserver(es => {
   if (es[0].isIntersecting && !p1init) { p1init = true; initNotifs(); }
 }, { threshold: 0.3 }).observe(document.getElementById('s2'));
-
 function initNotifs() {
   const stack = document.getElementById('notifs1');
   notifData.forEach(n => {
-    const c = document.createElement('div');
-    c.className = 'nc';
-    c.innerHTML = `<div class="nc-ico" style="background:${n.bg}">${n.icon}</div>
-      <div class="nc-b"><div class="nc-app">${n.app}</div><div class="nc-title">${n.title}</div><div class="nc-prev">${n.preview}</div></div>
-      <div class="nc-t">${n.time}</div>`;
+    const c = document.createElement('div'); c.className = 'nc';
+    c.innerHTML = `<div class="nc-ico" style="background:${n.bg}">${n.icon}</div><div class="nc-b"><div class="nc-app">${n.app}</div><div class="nc-title">${n.title}</div><div class="nc-prev">${n.preview}</div></div><div class="nc-t">${n.time}</div>`;
     c.onclick = () => unlock1();
     stack.insertBefore(c, stack.lastElementChild);
     setTimeout(() => c.classList.add('in'), n.delay);
   });
-  unlockHintTO = setTimeout(() => {
-    document.getElementById('ubtn1').classList.add('pulse');
-    document.getElementById('ehint').classList.add('show');
-  }, 7000);
+  unlockHintTO = setTimeout(() => { document.getElementById('ubtn1').classList.add('pulse'); }, 7000);
 }
-
 function unlock1() {
   clearTimeout(unlockHintTO);
   document.getElementById('ubtn1').classList.remove('pulse');
-  document.getElementById('ehint').classList.remove('show');
   document.getElementById('lock1').classList.add('gone');
-  setTimeout(() => {
-    document.getElementById('ehint').classList.add('show');
-    openApp('msgs');
-  }, 600);
+  setTimeout(() => openApp('msgs1'), 500);
 }
-
-// ═══════════════════════════════════════════════
-// INSTAGRAM DATA
-// ═══════════════════════════════════════════════
-const igPosts = [
-  { emoji:'🌅', bg:'#0d1808', caption:'Another one', time:'4 wks', likes:31 },
-  { emoji:'🐄', bg:'#0a1208', caption:'Mustering season', time:'4 wks', likes:44 },
-  { emoji:'🔥', bg:'#0e1208', caption:'Friday arvo 🤙', time:'3 wks', likes:38 },
-  { emoji:'🍺', bg:'#1a1005', caption:'Friday sorted', time:'2 wks', likes:52 },
-  { emoji:'🍺', bg:'#1a0e05', caption:'Weekend', time:'1 wk', likes:41 },
-  { emoji:'🍺', bg:'#180c04', caption:'', time:'Friday', likes:18 },
-  { emoji:'🤠', bg:'#0f0f0f', caption:'', time:'4 days', likes:14 },
-];
-(function buildGrid() {
-  const g = document.getElementById('igGrid');
-  if (!g) return;
-  igPosts.forEach(p => {
-    const c = document.createElement('div');
-    c.className = 'igc';
-    c.style.background = p.bg;
-    c.textContent = p.emoji;
-    const t = document.createElement('div');
-    t.className = 'igc-t';
-    t.textContent = p.time;
-    c.appendChild(t);
-    g.appendChild(c);
-  });
-})();
-
-// ═══════════════════════════════════════════════
-// APP OPEN / CLOSE
-// ═══════════════════════════════════════════════
 let gChatDone = false;
 function openApp(which) {
-  document.getElementById('ehint').classList.remove('show');
-  if (which === 'msgs') {
-    document.getElementById('msgsApp').classList.add('open');
+  if (which === 'msgs1') {
+    document.getElementById('msgs1App').classList.add('open');
     if (!gChatDone) { gChatDone = true; setTimeout(runGroupChat, 380); }
-  } else if (which === 'insta') {
-    document.getElementById('instaApp').classList.add('open');
   }
 }
 function closeApp(id) { document.getElementById(id).classList.remove('open'); }
-
-// ═══════════════════════════════════════════════
-// MESSAGE HELPER
-// ═══════════════════════════════════════════════
 function addMsg(conId, typId, msg, cb) {
-  const con = document.getElementById(conId);
-  const typ = document.getElementById(typId);
+  const con = document.getElementById(conId), typ = document.getElementById(typId);
   if (!con || !typ) return;
-  typ.style.display = 'flex';
-  con.scrollTop = con.scrollHeight;
-  const dur = msg.side === 'in' || msg.side === 'mum' ? 950 : 1500;
+  typ.style.display = 'flex'; con.scrollTop = con.scrollHeight;
   setTimeout(() => {
     typ.style.display = 'none';
-    const w = document.createElement('div');
-    w.className = 'bw' + (msg.side === 'out' ? ' out' : '');
+    const w = document.createElement('div'); w.className = 'bw' + (msg.side === 'out' ? ' out' : '');
     w.innerHTML = `<div class="bub ${msg.side}">${msg.text}</div><div class="bt">${msg.time}</div>`;
-    con.insertBefore(w, typ);
-    con.scrollTop = con.scrollHeight;
+    con.insertBefore(w, typ); con.scrollTop = con.scrollHeight;
     setTimeout(() => w.querySelector('.bub').classList.add('show'), 30);
     if (cb) setTimeout(cb, 280);
-  }, dur);
+  }, msg.side === 'in' ? 950 : 1500);
 }
-
-// ═══════════════════════════════════════════════
-// GROUP CHAT: FRIDAY
-// ═══════════════════════════════════════════════
 const gMsgs = [
-  { side:'in', text:'Jakeyyyy what time you finishing up bro 🤙', time:'5:31 PM' },
-  { side:'in', text:'Boys are heading to the Roo at 6', time:'5:31 PM' },
+  { side:'in', text:"Jakeyyyy what time you finishing up bro 🤙", time:'5:31 PM' },
+  { side:'in', text:"Boys are heading to the Roo at 6", time:'5:31 PM' },
   { side:'in', text:"Bazza reckons he's shouting the first round 💀", time:'5:44 PM' },
   { side:'in', text:"Thommo: don't be soft mate get in here", time:'5:46 PM' },
 ];
@@ -1305,54 +1150,43 @@ function runGroupChat() {
   });
 }
 function showLockedTip() { showTip('Jake learns this skill later. Keep reading.'); }
-function groupPick(val) {
+function groupPick() {
   document.getElementById('cc-go').disabled = true;
   document.getElementById('cc-go').classList.remove('pulse-hint');
   document.getElementById('gchoices').classList.remove('show');
-  addMsg('gmsgs', 'gtyp', { side:'out', text:'Yeah righto, heading in now 🤙', time:'5:48 PM' }, () => {
-    addMsg('gmsgs', 'gtyp', { side:'in', text:'GET AROUND IT 🍺🍺', time:'5:48 PM' }, null);
+  addMsg('gmsgs', 'gtyp', { side:'out', text:"Yeah righto, heading in now 🤙", time:'5:48 PM' }, () => {
+    addMsg('gmsgs', 'gtyp', { side:'in', text:"GET AROUND IT 🍺🍺", time:'5:48 PM' }, null);
   });
 }
 
-// ═══════════════════════════════════════════════
-// MUM CALL SEQUENCE: 2:17 AM
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// MUM'S CALL
+// ════════════════════════════════════════════════
 let mumInit = false;
 new IntersectionObserver(es => {
-  if (es[0].isIntersecting && !mumInit) {
-    mumInit = true;
-    setTimeout(runMumCall, 800);
-  }
+  if (es[0].isIntersecting && !mumInit) { mumInit = true; setTimeout(runMumCall, 800); }
 }, { threshold: 0.4 }).observe(document.getElementById('s_mum'));
-
-const mumMessages = [
-  { text:'Jake?', time:'2:18 AM' },
-  { text:'Hello?', time:'2:19 AM' },
-  { text:'Just making sure you got home okay. Ring me when you see this xx', time:'2:20 AM' },
-  { text:'I love you. Just let me know you\'re safe.', time:'2:47 AM' },
-];
-
 function runMumCall() {
-  const cs = document.getElementById('callScreen');
   const status = document.getElementById('callStatus');
-  // Ring 3 times then miss
   let rings = 0;
-  const ringInterval = setInterval(() => {
+  const iv = setInterval(() => {
     rings++;
-    status.textContent = rings <= 3 ? `ringing... (${rings})` : 'call missed';
+    status.textContent = rings <= 3 ? `ringing... (${rings})` : 'no answer.';
     if (rings >= 4) {
-      clearInterval(ringInterval);
+      clearInterval(iv);
       setTimeout(() => {
-        cs.classList.add('hidden');
+        document.getElementById('callScreen').classList.add('hidden');
         const ms = document.getElementById('mumMsgsScreen');
         ms.style.opacity = '1';
         document.getElementById('missedBadge').style.display = 'block';
-        // Send mum's messages
+        const msgs = [
+          {text:"Jake?", time:"2:18 AM"},
+          {text:"Hello?", time:"2:19 AM"},
+          {text:"Just making sure you got home okay. Ring me when you see this xx", time:"2:20 AM"},
+          {text:"I love you. Just let me know you're safe.", time:"2:47 AM"},
+        ];
         let d = 1000;
-        mumMessages.forEach(m => {
-          setTimeout(() => addMumMsg(m.text, m.time), d);
-          d += 2200;
-        });
+        msgs.forEach(m => { setTimeout(() => addMumMsg(m.text, m.time), d); d += 2200; });
         setTimeout(() => {
           const u = document.getElementById('mumUnseen');
           u.textContent = 'Jake sees these at 9:14 AM Saturday morning.';
@@ -1361,42 +1195,102 @@ function runMumCall() {
     }
   }, 2000);
 }
-
 function addMumMsg(text, time) {
-  const con = document.getElementById('mumMsgs');
-  const typ = document.getElementById('mumTyp');
+  const con = document.getElementById('mumMsgs'), typ = document.getElementById('mumTyp');
   if (!con || !typ) return;
-  typ.style.display = 'flex';
-  typ.style.background = '#1c2a3a';
-  con.scrollTop = con.scrollHeight;
+  typ.style.display = 'flex'; typ.style.background = '#1c2a3a'; con.scrollTop = con.scrollHeight;
   setTimeout(() => {
     typ.style.display = 'none';
-    const bub = document.createElement('div');
-    bub.className = 'mum-bub';
-    bub.textContent = text;
-    const bt = document.createElement('div');
-    bt.className = 'mum-bub-t';
-    bt.textContent = time;
-    con.insertBefore(bt, typ);
-    con.insertBefore(bub, bt);
+    const bub = document.createElement('div'); bub.className = 'mum-bub'; bub.textContent = text;
+    const bt = document.createElement('div'); bt.className = 'bt'; bt.style.cssText = 'padding:0 3px;font-family:DM Mono,monospace;font-size:0.53rem;color:rgba(255,255,255,0.25)'; bt.textContent = time;
+    con.insertBefore(bt, typ); con.insertBefore(bub, bt);
     con.scrollTop = con.scrollHeight;
     setTimeout(() => bub.classList.add('show'), 30);
   }, 1100);
 }
 
-// ═══════════════════════════════════════════════
-// SATURDAY NIGHT GC: ASSERTIVENESS PRACTICED
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// RIPPLE PHONE — INTERACTIVE DISCOVERY
+// ════════════════════════════════════════════════
+let rippleInit = false, discovered = [false, false, false];
+new IntersectionObserver(es => {
+  if (es[0].isIntersecting && !rippleInit) {
+    rippleInit = true;
+    setTimeout(() => {
+      // Build lock notifs
+      const rNotifs = document.getElementById('rNotifs');
+      const notifItems = [
+        { app:'Instagram', icon:'📸', bg:'linear-gradient(135deg,#833ab4,#fd1d1d)', title:'liam_harrington', prev:'liked your photo · "big dog 🔥🔥🔥"', time:'8:52 AM' },
+        { app:'Messages', icon:'💬', bg:'linear-gradient(135deg,#2a4a6a,#1a2a4a)', title:'Mum', prev:'I love you. Just let me know you\'re safe.', time:'2:47 AM' },
+      ];
+      notifItems.forEach(n => {
+        const c = document.createElement('div'); c.className = 'nc';
+        c.innerHTML = `<div class="nc-ico" style="background:${n.bg}">${n.icon}</div><div class="nc-b"><div class="nc-app">${n.app}</div><div class="nc-title">${n.title}</div><div class="nc-prev">${n.prev}</div></div><div class="nc-t">${n.time}</div>`;
+        c.onclick = unlockRipple;
+        const last = rNotifs.lastElementChild;
+        if (last) rNotifs.insertBefore(c, last); else rNotifs.appendChild(c);
+        setTimeout(() => c.classList.add('in'), 600);
+      });
+      setTimeout(() => { document.getElementById('ubtn_ripple').classList.add('pulse'); }, 3000);
+    }, 800);
+  }
+}, { threshold: 0.3 }).observe(document.getElementById('s_ripple'));
+
+function unlockRipple() {
+  document.getElementById('ubtn_ripple').classList.remove('pulse');
+  document.getElementById('lock_ripple').classList.add('gone');
+  setTimeout(() => {
+    const toast = document.getElementById('discToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4500);
+  }, 600);
+}
+
+function openRipple(which) {
+  const appMap = { insta:'ripple_insta', msgs:'ripple_msgs', phone:'ripple_phone', mum_thread:'ripple_mum' };
+  const id = appMap[which]; if (!id) return;
+  document.querySelectorAll('#home_ripple .sapp').forEach(a => a.classList.remove('open'));
+  document.getElementById(id).classList.add('open');
+  // Mark discovery
+  const discIdx = {insta:0, msgs:1, phone:2};
+  if (discIdx[which] !== undefined) markDiscovered(discIdx[which]);
+}
+
+function closeRipple(id, discIdx) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function markDiscovered(i) {
+  if (discovered[i]) return;
+  discovered[i] = true;
+  // Remove badge
+  const badges = ['r-insta-badge','r-msgs-badge','r-phone-badge'];
+  const b = document.getElementById(badges[i]); if (b) b.remove();
+  // Light up dot
+  const dot = document.getElementById('dd' + i);
+  if (dot) dot.style.background = 'var(--ember)';
+  // Check if all discovered
+  if (discovered.every(Boolean)) {
+    setTimeout(() => {
+      const dc = document.getElementById('disc-complete');
+      dc.style.display = 'block';
+      dc.querySelectorAll('.rv, .cbar').forEach(el => ro.observe(el));
+      dc.querySelector('.cbar').classList.add('show');
+      startCountdown('cb-s_ripple','s3b',40);
+      dc.scrollIntoView({ behavior: 'smooth' });
+    }, 800);
+  }
+}
+
+// ════════════════════════════════════════════════
+// SATURDAY NIGHT CHAT
+// ════════════════════════════════════════════════
 let satInit = false;
 new IntersectionObserver(es => {
-  if (es[0].isIntersecting && !satInit) {
-    satInit = true;
-    setTimeout(runSatChat, 500);
-  }
+  if (es[0].isIntersecting && !satInit) { satInit = true; setTimeout(runSatChat, 500); }
 }, { threshold: 0.35 }).observe(document.getElementById('s3c'));
-
 const satMsgs = [
-  { side:'in', text:'Lads heading to the Roo again tonight, you in? 🍺', time:'5:31 PM' },
+  { side:'in', text:"Lads heading to the Roo again tonight, you in? 🍺", time:'5:31 PM' },
   { side:'in', text:"Bazza's already there. Get in here.", time:'5:33 PM' },
 ];
 function runSatChat() {
@@ -1408,23 +1302,6 @@ function runSatChat() {
     d += 1600;
   });
 }
-
-const satOuts = {
-  go: {
-    cls: 'bad',
-    lbl: 'Jake goes again',
-    body: "He drives to town. He wakes up Sunday feeling the same as last Saturday. The loop continues. He knows this now — he actually knows it. But knowing isn't the same as doing something different. Not yet."
-  },
-  no: {
-    cls: 'ok',
-    lbl: 'Jake uses the skill',
-    body: `He sits with his thumb over send for five seconds. Then he hits it.<br><br>
-    Thommo replies: "Fair enough mate 👍"<br><br>
-    Bazza sends a laughing emoji. Davo doesn't reply at all.<br><br>
-    Jake puts the phone down. His heart is going a little. It felt harder than it should have. But he goes inside and makes dinner. And on Sunday morning, he wakes up with $80 still in his wallet and no hollow feeling. That's new.`
-  }
-};
-
 function satPick(val) {
   document.getElementById('sc-go').disabled = true;
   document.getElementById('sc-no').disabled = true;
@@ -1433,24 +1310,31 @@ function satPick(val) {
     ? { side:'out', text:"Nah not tonight lads. Down for a drive tomorrow tho 👍", time:'5:35 PM' }
     : { side:'out', text:"Yeah nah righto 🍺", time:'5:34 PM' };
   addMsg('satmsgs', 'sattyp', reply, () => {
-    if (val === 'go') {
-      addMsg('satmsgs', 'sattyp', { side:'in', text:'LETS GOOO 🍺🍺🍺', time:'5:34 PM' }, null);
+    if (val === 'no') {
+      addMsg('satmsgs', 'sattyp', { side:'in', text:"Fair enough mate 👍", time:'5:36 PM' }, () => {
+        addMsg('satmsgs', 'sattyp', { side:'in', text:"Down for a drive tomorrow, hit me up", time:'5:36 PM' }, null);
+      });
     } else {
-      addMsg('satmsgs', 'sattyp', { side:'in', text:'Fair enough mate 👍', time:'5:36 PM' }, null);
+      addMsg('satmsgs', 'sattyp', { side:'in', text:"LETS GOOO 🍺🍺🍺", time:'5:34 PM' }, null);
     }
     setTimeout(() => {
       const out = document.getElementById('sat-outcome');
-      const o = satOuts[val];
-      out.className = `outcome ${o.cls} show`;
-      out.innerHTML = `<div class="outcome-lbl">${o.lbl}</div><p>${o.body}</p>`;
+      if (val === 'no') {
+        out.className = 'outcome ok show';
+        out.innerHTML = `<div class="outcome-lbl">Skill One — used</div><p>He typed "Nah not tonight lads. Down for a drive tomorrow tho 👍" and hit send before he could talk himself out of it. Short. Direct. An alternative, not a rejection. No apology.<br><br>Thommo replied "Fair enough mate." Bazza didn't respond. Davo sent a thumbs up.<br><br>Jake put the phone down. His heart was going a little. It felt harder than it should have. But on Sunday morning, he woke up with $80 still in his wallet and no hollow feeling. That was new.</p>`;
+      } else {
+        out.className = 'outcome bad show';
+        out.innerHTML = `<div class="outcome-lbl">The loop continues</div><p>He knows the skill now. But knowing isn't doing. He goes. One beer turns into five. He wakes up Sunday same as always — hollow, broke, the loop unbroken. But somewhere in him, something is different. He knows there was another option. He didn't take it today. There'll be a next Friday.</p>`;
+      }
       ro.observe(out);
-    }, 2000);
+      setTimeout(() => safeScrollTo('s4'), 5500);
+    }, 2200);
   });
 }
 
-// ═══════════════════════════════════════════════
-// VOID SUNDAY
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// VOID
+// ════════════════════════════════════════════════
 let voidFired = false;
 new IntersectionObserver(es => {
   if (es[0].isIntersecting && !voidFired) {
@@ -1461,9 +1345,9 @@ new IntersectionObserver(es => {
   }
 }, { threshold: 0.8 }).observe(document.getElementById('s4'));
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // TAILGATE
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 let tgChosen = false;
 function tailgatePick(val) {
   if (tgChosen) return; tgChosen = true;
@@ -1474,11 +1358,11 @@ function tailgatePick(val) {
   if (val === 'pub') {
     document.getElementById('tcb-pub').style.borderColor = 'rgba(176,48,48,0.4)';
     out.className = 'outcome bad show';
-    out.innerHTML = "<div class='outcome-lbl'>Jake drives to town</div><p>One beer turns into five. The noise in his chest quietens for a couple of hours. On the drive home the spinifex slides past in the headlights and the feeling comes back — duller now, sitting underneath the headache.</p><p style='margin-top:0.7rem;font-style:italic;font-size:0.8rem;color:rgba(224,101,53,0.55)'>But somewhere in him, he knows this isn't working.</p>";
+    out.innerHTML = "<div class='outcome-lbl'>Jake drives to town</div><p>One beer turns into five. The noise in his chest quietens for a couple of hours. On the drive home the feeling comes back — duller now, sitting underneath the headache. His mum is awake in Geraldton. Liam is asleep not knowing any of this.</p><p style='margin-top:0.7rem;font-style:italic;font-size:0.8rem;color:rgba(224,101,53,0.55)'>But somewhere in him, he knows this isn't working.</p>";
   } else {
     document.getElementById('tcb-walk').style.borderColor = 'rgba(77,179,116,0.4)';
     out.className = 'outcome ok show';
-    out.innerHTML = "<div class='outcome-lbl'>Jake walks into the paddock</div><p>Past the fence line. The heat has dropped an hour's worth. The spinifex is making that dry sound it makes in the evening wind. He just walks and lets whatever is in him be in him.</p>";
+    out.innerHTML = "<div class='outcome-lbl'>Jake walks into the paddock</div><p>Past the fence line. The heat has dropped. The spinifex is making that dry sound it makes in the evening wind. He just walks and lets whatever is in him be in him. This is harder than driving to town. But it's not nothing.</p>";
   }
   setTimeout(() => {
     bb.style.display = 'block';
@@ -1486,25 +1370,21 @@ function tailgatePick(val) {
   }, val === 'pub' ? 1200 : 700);
   setTimeout(() => {
     const cb5 = document.getElementById('cb-s5');
-    if (cb5) { ro.observe(cb5); startCountdown('cb-s5','s6',30); }
+    if (cb5) { ro.observe(cb5); startCountdown('cb-s5','s_recog',30); }
+    watchSection('s_recog','cb-s_recog','s8',40,0.6);
   }, 9000);
 }
 
-// ═══════════════════════════════════════════════
-// BREATHING EXERCISE
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// BREATHING
+// ════════════════════════════════════════════════
 let breathing = false, bPhase = 0, bTO;
-const bPhases = [
-  {txt:'Breathe\nin...',dur:4000},{txt:'Hold.',dur:4000},
-  {txt:'Breathe\nout...',dur:4000},{txt:'Hold.',dur:4000}
-];
+const bPhases = [{txt:'Breathe\nin...',dur:4000},{txt:'Hold.',dur:4000},{txt:'Breathe\nout...',dur:4000},{txt:'Hold.',dur:4000}];
 function startBreath() {
   const orb = document.getElementById('borb');
   if (breathing) {
-    breathing = false; clearTimeout(bTO);
-    orb.classList.remove('on');
+    breathing = false; clearTimeout(bTO); orb.classList.remove('on');
     document.getElementById('btxt').textContent = 'Tap to try\nalongside him';
-    document.getElementById('bcap').textContent = 'In for 4. Hold for 4. Out for 4. Hold for 4. Used by first responders, athletes, and anyone who needs the quiet back.';
     return;
   }
   breathing = true; orb.classList.add('on'); runBreath();
@@ -1517,70 +1397,37 @@ function runBreath() {
   bPhase++; bTO = setTimeout(runBreath, p.dur);
 }
 
-// ═══════════════════════════════════════════════
-// RIPPLE EFFECT CAROUSEL
-// ═══════════════════════════════════════════════
-let currentSlide = 0, slideTimer, rippleStarted = false;
-const rscTimes = ['2:19 AM', '2:47 AM', 'Saturday 8:14 AM', 'Saturday 10:22 AM'];
-
-function goSlide(n) {
-  clearTimeout(slideTimer);
-  const slides = document.querySelectorAll('.rp-slide');
-  const dots = document.querySelectorAll('.rp-dot');
-  slides.forEach((s, i) => s.classList.toggle('active', i === n));
-  dots.forEach((d, i) => d.classList.toggle('active', i === n));
-  document.getElementById('rsc-time').textContent = rscTimes[n] || '2:19';
-  currentSlide = n;
-  if (n < slides.length - 1) slideTimer = setTimeout(() => goSlide(n + 1), 5000);
-}
-
-new IntersectionObserver(es => {
-  if (es[0].isIntersecting && !rippleStarted) {
-    rippleStarted = true;
-    setTimeout(() => goSlide(0), 800);
-  }
-}, { threshold: 0.35 }).observe(document.getElementById('s6'));
-
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // THOMMO CHAT
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 let tChatDone = false;
 new IntersectionObserver(es => {
-  if (es[0].isIntersecting && !tChatDone) {
-    tChatDone = true;
-    setTimeout(runThommo, 500);
-  }
+  if (es[0].isIntersecting && !tChatDone) { tChatDone = true; setTimeout(runThommo, 500); }
 }, { threshold: 0.35 }).observe(document.getElementById('s8'));
-
 const tInitMsgs = [
-  { side:'in', text:'Hey mate', time:'7:22 PM' },
+  { side:'in', text:"Hey mate", time:'7:22 PM' },
   { side:'in', text:"Haven't heard from you much lately", time:'7:22 PM' },
-  { side:'in', text:'You good? Like actually', time:'7:23 PM' },
-  { side:'in', text:'No bs', time:'7:23 PM' },
+  { side:'in', text:"You good? Like actually", time:'7:23 PM' },
+  { side:'in', text:"No bs", time:'7:23 PM' },
 ];
 function runThommo() {
   let d = 300;
   tInitMsgs.forEach((m, i) => {
     setTimeout(() => addMsg('tmsgs', 'ttyp', m, i === tInitMsgs.length - 1 ? () => {
       document.getElementById('tcompose').style.display = 'flex';
-      setTimeout(() => {
-        const inp = document.getElementById('tcinput');
-        if (!inp.value.trim()) showTip('Type what Jake would say back — anything.');
-      }, 9000);
+      setTimeout(() => { if (!document.getElementById('tcinput').value.trim()) showTip('Type what Jake would say back — anything.'); }, 9000);
     } : null), d);
     d += 1350;
   });
 }
 function onComposeInput(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   document.getElementById('tcsend').classList.toggle('active', el.value.trim().length > 0);
 }
 function onComposeKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendJake(); } }
 function sendJake() {
   const inp = document.getElementById('tcinput');
-  const msg = inp.value.trim();
-  if (!msg) return;
+  const msg = inp.value.trim(); if (!msg) return;
   inp.value = ''; inp.style.height = 'auto';
   document.getElementById('tcsend').classList.remove('active');
   document.getElementById('tcompose').style.display = 'none';
@@ -1591,160 +1438,117 @@ function sendJake() {
 }
 function detectSentiment(msg) {
   const m = msg.toLowerCase();
-  if (/piss off|leave me|none of your|mind your own|f.{0,2}k off|back off/i.test(m)) return 'angry';
-  if (/not (really|great|good|okay|ok|fine)|pretty (rough|bad|shit)|struggling|tired|flat|heavy|stressed|haven.t been|not sleeping|too much|been rough/i.test(m)) return 'honest';
+  if (/piss off|leave me|none of your|f.{0,2}k off|back off/i.test(m)) return 'angry';
+  if (/not (really|great|good|okay|ok|fine)|struggling|tired|flat|heavy|stressed|been rough|not sleeping|too much/i.test(m)) return 'honest';
   return 'deflect';
 }
 function thommoRespond(sentiment) {
   const t1 = '7:' + (28 + Math.floor(Math.random()*4)).toString().padStart(2,'0') + ' PM';
   const t2 = '7:' + (32 + Math.floor(Math.random()*3)).toString().padStart(2,'0') + ' PM';
-  let note;
-  if (sentiment === 'angry') {
-    addMsg('tmsgs','ttyp',{ side:'in', text:'Alright.', time:t1 }, () => {
-      setTimeout(() => addMsg('tmsgs','ttyp',{ side:'in', text:"I'm here if you need. No pressure.", time:t2 }, () => showThommoNote("Even when Jake pushed back, Thommo didn't push harder. That's the move — stay available without demanding anything.")), 2000);
-    });
-  } else if (sentiment === 'honest') {
-    addMsg('tmsgs','ttyp',{ side:'in', text:'Yeah. That\'s what I thought.', time:t1 }, () => {
-      setTimeout(() => addMsg('tmsgs','ttyp',{ side:'in', text:"I'm here mate. Don't have to talk about it — just wanted you to know.", time:t2 }, () => showThommoNote("Jake let himself be honest. Thommo didn't flinch. Something shifted — not fixed, just... known.")), 2000);
-    });
-  } else {
-    addMsg('tmsgs','ttyp',{ side:'in', text:'Jake.', time:t1 }, () => {
-      setTimeout(() => addMsg('tmsgs','ttyp',{ side:'in', text:'Come on. For real.', time:'7:29 PM' }, () => {
-        setTimeout(() => addMsg('tmsgs','ttyp',{ side:'in', text:"I'm here if things are rough. You know that.", time:t2 }, () => showThommoNote("Jake deflected. Thommo didn't drop it — he pushed once, gently. That one extra message is the whole skill.")), 1800);
-      }), 1500);
-    });
-  }
-}
-function showThommoNote(note) {
-  const n = document.getElementById('thommo-note');
-  n.textContent = note; n.style.display = 'block';
-  setTimeout(() => n.classList.add('vis'), 50);
-  setTimeout(() => safeScrollTo('s9'), 3500);
+  const notes = {
+    angry:"Even when Jake pushed back, Thommo didn't push harder. That's the move — stay available without demanding anything.",
+    honest:"Jake let himself be honest. Thommo didn't flinch. Something shifted — not fixed, just known. That's the whole skill.",
+    deflect:"Jake deflected. Thommo didn't drop it — he pushed once, gently. That one extra message is everything."
+  };
+  const seq = {
+    angry: [{ text:"Alright.", t:t1 }, { text:"I'm here if you need. No pressure.", t:t2 }],
+    honest: [{ text:"Yeah. That's what I thought.", t:t1 }, { text:"I'm here mate. Don't have to talk about it — just wanted you to know.", t:t2 }],
+    deflect: [{ text:"Jake.", t:t1 }, { text:"Come on. For real.", t:'7:29 PM' }, { text:"I'm here if things are rough. You know that.", t:t2 }]
+  };
+  const msgs = seq[sentiment];
+  let d = 800;
+  msgs.forEach((m, i) => {
+    setTimeout(() => addMsg('tmsgs','ttyp',{side:'in',text:m.text,time:m.t}, i === msgs.length - 1 ? () => {
+      const n = document.getElementById('thommo-note');
+      n.textContent = notes[sentiment]; n.style.display = 'block';
+      setTimeout(() => n.classList.add('vis'), 50);
+      setTimeout(() => safeScrollTo('s_bridge'), 3500);
+    } : null), d);
+    d += 2200;
+  });
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // WEEK CARDS
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 function toggleDay(id) {
   const card = document.getElementById(id);
-  const hdr = card.querySelector('.wch');
-  const body = card.querySelector('.wcb');
+  const hdr = card.querySelector('.wch'), body = card.querySelector('.wcb');
   const isOpen = body.classList.contains('open');
   document.querySelectorAll('.wcb').forEach(b => b.classList.remove('open'));
   document.querySelectorAll('.wch').forEach(h => h.classList.remove('open'));
   if (!isOpen) { body.classList.add('open'); hdr.classList.add('open'); }
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════════════
 // LIFELINE DIALER
-// ═══════════════════════════════════════════════
-let dialerInit = false, callTimerIv, callSeconds = 0;
-const lifelineNumber = '131114';
+// ════════════════════════════════════════════════
+let dialerInit = false, callSecs = 0, callIv;
+const lifelineNum = '131114';
 let dialedSoFar = '';
-
 new IntersectionObserver(es => {
-  if (es[0].isIntersecting && !dialerInit) {
-    dialerInit = true;
-    setTimeout(autoTypeNumber, 1200);
-  }
+  if (es[0].isIntersecting && !dialerInit) { dialerInit = true; setTimeout(autoTypeNumber, 1200); }
 }, { threshold: 0.4 }).observe(document.getElementById('s12'));
-
 function autoTypeNumber() {
   let i = 0;
-  const hint = document.getElementById('dialer-hint');
-  const numEl = document.getElementById('dialerNum');
   function typeNext() {
-    if (i >= lifelineNumber.length) {
-      dialedSoFar = lifelineNumber;
-      if (hint) hint.textContent = 'Tap the green button to call.';
-      return;
-    }
-    dialedSoFar = lifelineNumber.slice(0, i + 1);
-    const digit = lifelineNumber[i];
-    // Flash the key
-    const keys = document.querySelectorAll('.dk');
-    keys.forEach(k => { if (k.dataset.d === digit) { k.classList.add('pressed'); setTimeout(() => k.classList.remove('pressed'), 200); } });
-    // Format the display
-    const formatted = dialedSoFar.replace(/^(\d{2})(\d{0,2})(\d{0,2})$/, (_, a, b, c) => [a, b, c].filter(Boolean).join(' '));
-    numEl.innerHTML = formatted;
-    i++;
-    setTimeout(typeNext, 400 + Math.random() * 200);
+    if (i >= lifelineNum.length) { dialedSoFar = lifelineNum; document.getElementById('dialer-hint').textContent = 'Tap the green button when ready.'; return; }
+    dialedSoFar = lifelineNum.slice(0, i + 1);
+    const digit = lifelineNum[i];
+    document.querySelectorAll('.dk').forEach(k => { if (k.dataset.d === digit) { k.classList.add('pressed'); setTimeout(() => k.classList.remove('pressed'), 200); } });
+    const fmt = dialedSoFar.replace(/^(\d{2})(\d{0,2})(\d{0,2})$/, (_,a,b,c) => [a,b,c].filter(Boolean).join(' '));
+    document.getElementById('dialerNum').textContent = fmt;
+    i++; setTimeout(typeNext, 380 + Math.random() * 200);
   }
   typeNext();
 }
-
 function dialCall() {
-  if (dialedSoFar.length < 6) {
-    showTip('Wait for the number to finish loading...');
-    return;
-  }
+  if (dialedSoFar.length < 6) { showTip('Wait for the number to load...'); return; }
   document.getElementById('dialer-hint').textContent = '';
-  const dialer = document.getElementById('dialerWrap');
-  const calling = document.getElementById('callingScreen');
-  dialer.style.transition = 'opacity 0.4s';
-  dialer.style.opacity = '0';
+  const dw = document.getElementById('dialerWrap');
+  dw.style.opacity = '0'; dw.style.transition = 'opacity 0.4s';
   setTimeout(() => {
-    dialer.style.display = 'none';
-    calling.classList.add('show');
-    // Ring for 3 seconds then answer
+    dw.style.display = 'none';
+    const cs = document.getElementById('callingScreen'); cs.classList.add('show');
     setTimeout(() => {
       document.getElementById('callingStatus').textContent = 'connected';
       document.getElementById('callingRing').textContent = '🔊';
       setTimeout(() => {
-        calling.classList.remove('show');
-        const hs = document.getElementById('helpScreen');
-        hs.classList.add('show');
-        startCallTimer();
+        cs.classList.remove('show');
+        const hs = document.getElementById('helpScreen'); hs.classList.add('show');
+        callIv = setInterval(() => { callSecs++; const m=Math.floor(callSecs/60),s=callSecs%60; document.getElementById('callDur').textContent = m+':'+s.toString().padStart(2,'0'); }, 1000);
         runHelpMessages();
       }, 800);
     }, 3200);
   }, 400);
 }
-
-function startCallTimer() {
-  callTimerIv = setInterval(() => {
-    callSeconds++;
-    const m = Math.floor(callSeconds / 60);
-    const s = callSeconds % 60;
-    document.getElementById('callDur').textContent = m + ':' + s.toString().padStart(2,'0');
-  }, 1000);
-}
-
-const helpMsgs = [
-  { type:'msg', text:"Hi, you've reached Lifeline. This is a safe space — take your time.", delay:1500 },
-  { type:'msg', text:"You don't have to be in crisis to call. We're here for anyone who needs someone to talk to.", delay:5000 },
-  { type:'resource', name:'Lifeline', num:'13 11 14', desc:'24/7 crisis support', bg:'#1a3a1c', delay:8500 },
-  { type:'resource', name:'Beyond Blue', num:'1300 22 4636', desc:'24/7 mental health support', bg:'#1a2a3a', delay:9500 },
-  { type:'resource', name:'MensLine Australia', num:'1300 78 99 78', desc:'Support for Australian men · 24/7', bg:'#1a1a3a', delay:10500 },
-  { type:'resource', name:'RFDS Western Ops', num:'rfds.org.au/wa', desc:'Telehealth for remote WA', bg:'#2a1a0a', delay:11500 },
-  { type:'resource', name:'Hello Sunday Morning', num:'hellosundaymorning.org', desc:'Change your relationship with alcohol', bg:'#0a2a1a', delay:12500 },
-  { type:'resource', name:'13YARN', num:'13 92 76', desc:'24/7 · Aboriginal & Torres Strait Islander', bg:'#2a1a0a', delay:13500 },
-  { type:'msg', text:"These are free and confidential. Jake, you made the right call.", delay:15000 },
+const helpContent = [
+  { type:'msg', text:"Hi, you've reached Lifeline. You've done something brave by calling. Take your time.", delay:1500 },
+  { type:'msg', text:"You don't have to be in crisis to call. We're here for anyone carrying something heavy.", delay:5500 },
+  { type:'resource', name:'Lifeline', num:'13 11 14', desc:'24/7 crisis support · free · confidential', bg:'#1a3a1c', delay:9000 },
+  { type:'resource', name:'Beyond Blue', num:'1300 22 4636', desc:'24/7 mental health support', bg:'#1a2a3a', delay:10200 },
+  { type:'resource', name:'MensLine Australia', num:'1300 78 99 78', desc:'Support for Australian men · 24/7', bg:'#1a1a3a', delay:11400 },
+  { type:'resource', name:'RFDS Western Ops', num:'rfds.org.au/wa', desc:'Telehealth for remote WA', bg:'#2a1a0a', delay:12600 },
+  { type:'resource', name:'Hello Sunday Morning', num:'hellosundaymorning.org', desc:'Change your relationship with alcohol', bg:'#0a2a1a', delay:13800 },
+  { type:'resource', name:'13YARN', num:'13 92 76', desc:'24/7 · Aboriginal &amp; Torres Strait Islander', bg:'#2a1a0a', delay:15000 },
+  { type:'msg', text:"These are free, confidential, and available in remote areas. Jake, you made the right call.", delay:17000 },
 ];
-
 function runHelpMessages() {
-  const scroll = document.getElementById('helpScroll');
-  const typ = document.getElementById('helpTyp');
-  helpMsgs.forEach(m => {
+  const scroll = document.getElementById('helpScroll'), typ = document.getElementById('helpTyp');
+  helpContent.forEach(m => {
     setTimeout(() => {
       if (m.type === 'msg') {
-        typ.style.display = 'flex';
-        scroll.scrollTop = scroll.scrollHeight;
+        typ.style.display = 'flex'; scroll.scrollTop = scroll.scrollHeight;
         setTimeout(() => {
           typ.style.display = 'none';
-          const el = document.createElement('div');
-          el.className = 'help-msg';
-          el.textContent = m.text;
-          scroll.insertBefore(el, typ);
-          scroll.scrollTop = scroll.scrollHeight;
+          const el = document.createElement('div'); el.className = 'help-msg'; el.textContent = m.text;
+          scroll.insertBefore(el, typ); scroll.scrollTop = scroll.scrollHeight;
           setTimeout(() => el.classList.add('show'), 30);
         }, 1000);
       } else {
-        const el = document.createElement('div');
-        el.className = 'help-resource-card';
+        const el = document.createElement('div'); el.className = 'help-resource-card';
         el.innerHTML = `<div class="hrc-icon" style="background:${m.bg}">📱</div><div class="hrc-info"><div class="hrc-name">${m.name}</div><div class="hrc-num">${m.num}</div><div class="hrc-desc">${m.desc}</div></div>`;
-        scroll.insertBefore(el, typ);
-        scroll.scrollTop = scroll.scrollHeight;
+        scroll.insertBefore(el, typ); scroll.scrollTop = scroll.scrollHeight;
         setTimeout(() => el.classList.add('show'), 30);
       }
     }, m.delay);
