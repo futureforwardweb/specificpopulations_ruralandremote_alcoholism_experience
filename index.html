@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --black:#060606;--near:#0f0f0f;--panel:#161616;
+  --black:#050505;--near:#0f0f0f;--panel:#161616;
   --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.05);
   --ember:#e06535;--ember-dim:rgba(224,101,53,0.13);
   --green:#2e7d4f;--gl:#4db374;--gdim:rgba(46,125,79,0.13);
@@ -22,7 +22,7 @@ body.story-started{overflow-y:auto}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35;mix-blend-mode:overlay}
 
 /* ═══════════ SPLASH SCREEN ═══════════ */
-#splash{position:fixed;inset:0;z-index:30000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transition:opacity 0.8s ease}
+#splash{position:fixed;inset:0;z-index:40000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;transition:opacity 0.8s ease}
 #splash.gone{opacity:0;pointer-events:none}
 .sp-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");opacity:0.6}
 .sp-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse at 50% 100%,rgba(180,50,10,0.18) 0%,transparent 70%);pointer-events:none}
@@ -40,14 +40,28 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .sp-begin{display:inline-block;padding:1rem 3.2rem;border:1px solid var(--ember);color:var(--w);font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;background:transparent;position:relative;overflow:hidden;opacity:0;animation:sp-rise 0.9s ease 1.5s forwards;transition:all 0.35s}
 .sp-begin::before{content:'';position:absolute;inset:0;background:var(--ember);transform:scaleX(0);transform-origin:left;transition:transform 0.35s ease}
 .sp-begin:hover::before{transform:scaleX(1)}
-.sp-begin:hover{color:#000}
-.sp-begin span{position:relative;z-index:1}
 .sp-begin:hover span{color:#000}
+.sp-begin span{position:relative;z-index:1}
 .sp-credit{position:absolute;bottom:2rem;left:0;right:0;text-align:center;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.12);opacity:0;animation:sp-rise 0.8s ease 1.8s forwards}
 @keyframes sp-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═══════════ CINEMATIC INTRO ═══════════ */
+#cinematic{position:fixed;inset:0;z-index:35000;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem}
+#cinematic.active{display:flex}
+#cinematic.gone{opacity:0;pointer-events:none;transition:opacity 1.2s ease}
+.cin-line{font-family:'Lora',serif;font-size:clamp(1.1rem,3.5vw,1.7rem);font-weight:400;color:#fff;text-align:center;line-height:1.5;opacity:0;transform:translateY(12px);transition:opacity 0.9s ease,transform 0.9s ease;position:absolute;width:100%;max-width:480px;padding:0 2rem}
+.cin-line.em{font-style:italic;color:var(--ember)}
+.cin-line.small{font-family:'DM Mono',monospace;font-size:clamp(0.6rem,2vw,0.78rem);letter-spacing:0.32em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-style:normal}
+.cin-line.show{opacity:1;transform:translateY(0)}
+.cin-line.hide{opacity:0;transform:translateY(-10px)}
+.cin-cursor{display:inline-block;width:2px;height:1.1em;background:var(--ember);vertical-align:middle;margin-left:4px;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cin-skip{position:absolute;bottom:2.5rem;right:2rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.2);cursor:pointer;border:1px solid rgba(255,255,255,0.1);padding:0.5rem 1rem;transition:all 0.3s}
+.cin-skip:hover{color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.25)}
+.cin-progress{position:absolute;bottom:0;left:0;height:1px;background:rgba(255,255,255,0.15);transition:width 0.1s linear}
+
 /* ═══════════ TRANSITION OVERLAY ═══════════ */
-#tov{position:fixed;inset:0;z-index:25000;background:#000;display:none;overflow:hidden}
+#tov{position:fixed;inset:0;z-index:30000;background:#000;display:none;overflow:hidden}
 .tov-sky{position:absolute;inset:0;background:linear-gradient(180deg,#000 0%,#000 100%);transition:background 2s ease}
 .tov-sky.lit{background:linear-gradient(180deg,#020101 0%,#0c0302 20%,#1f0804 40%,#3a1008 58%,#4a1e0d 64%,#1f0804 74%,#0a0302 88%,#020101 100%)}
 .tov-horizon{position:absolute;top:58%;left:0;right:0;height:1px;background:transparent;transition:all 1s ease;transform:scaleX(0)}
@@ -94,7 +108,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .tooltip{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);background:rgba(15,15,15,0.98);border:1px solid rgba(255,255,255,0.12);padding:1rem 1.5rem;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--grey);text-align:center;max-width:280px;line-height:1.6;opacity:0;transition:all 0.25s;pointer-events:none;z-index:2000}
 .tooltip.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-/* ═══════════ LANDING (post-transition) ═══════════ */
+/* ═══════════ LANDING ═══════════ */
 #s0{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#060402}
 .l-sky{position:absolute;inset:0;background:linear-gradient(180deg,#040201 0%,#0b0403 16%,#180705 34%,#341407 52%,#4a1e0d 64%,#341407 74%,#110603 86%,#060503 100%)}
 .l-sun{position:absolute;bottom:31%;left:50%;transform:translateX(-50%);width:165px;height:165px;border-radius:50%;background:radial-gradient(circle,#ffe88a 0%,#ffa040 26%,#e8501a 54%,#8f2010 80%,transparent 100%);box-shadow:0 0 90px 35px rgba(232,80,26,0.22),0 0 200px 90px rgba(143,32,16,0.1);animation:sp2 5s ease-in-out infinite}
@@ -145,7 +159,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .phone-stage{padding:4rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem;position:relative}
 .pl{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey2);text-align:center}
 .phone{width:min(360px,calc(100vw - 2rem));background:#0a0a0a;border-radius:52px;padding:12px;box-shadow:0 60px 120px rgba(0,0,0,0.9),inset 0 0 0 1px rgba(255,255,255,0.12),inset 0 2px 0 rgba(255,255,255,0.06)}
-.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:108px;height:30px;background:#0a0a0a;border-radius:0 0 18px 18px;z-index:10;box-shadow:inset 0 -1px 0 rgba(255,255,255,0.05)}
 .psc{background:#000;border-radius:40px;height:min(700px,calc(100svh - 150px));overflow:hidden;display:flex;flex-direction:column;position:relative}
 .sbar{padding:14px 22px 6px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;position:relative;z-index:5;pointer-events:none}
 .st{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:500}
@@ -247,6 +260,50 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .compose-send{width:34px;height:34px;border-radius:50%;background:var(--green);border:none;color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;opacity:0.5}
 .compose-send.active{opacity:1}
 
+/* MUSIC PLAYER */
+.music-app{position:absolute;inset:0;background:linear-gradient(180deg,#0a0a12 0%,#060608 100%);display:flex;flex-direction:column;overflow:hidden}
+.music-header{padding:50px 16px 12px;background:rgba(0,0,0,0.3);flex-shrink:0;display:flex;align-items:center;gap:10px}
+.music-header-title{font-size:0.9rem;font-weight:700;flex:1;text-align:center}
+.music-lib{flex:1;overflow-y:auto;scrollbar-width:none;padding:8px 0}
+.music-lib::-webkit-scrollbar{display:none}
+.playlist-row{padding:10px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.2s;border-radius:10px;margin:0 8px}
+.playlist-row:active,.playlist-row:hover{background:rgba(255,255,255,0.06)}
+.pl-art{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background:linear-gradient(135deg,#1a1a3a,#2a1a4a)}
+.pl-info{flex:1}
+.pl-name{font-size:0.84rem;font-weight:600}
+.pl-count{font-size:0.62rem;color:rgba(255,255,255,0.38);margin-top:2px;font-family:'DM Mono',monospace}
+.pl-chevron{font-size:0.7rem;color:rgba(255,255,255,0.2)}
+.song-row{padding:9px 16px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:background 0.2s;border-radius:8px;margin:0 6px}
+.song-row:active,.song-row:hover,.song-row.playing{background:rgba(255,255,255,0.06)}
+.song-row.playing .song-name{color:var(--gl)}
+.song-thumb{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background:linear-gradient(135deg,#1a2a1a,#0d1a0d)}
+.song-info{flex:1;min-width:0}
+.song-name{font-size:0.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-artist{font-size:0.62rem;color:rgba(255,255,255,0.38);margin-top:1px;font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-dur{font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25)}
+.now-playing-bar{background:rgba(20,20,30,0.95);border-top:1px solid rgba(255,255,255,0.08);padding:0;flex-shrink:0;overflow:hidden;max-height:0;transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1)}
+.now-playing-bar.open{max-height:200px}
+.np-mini{padding:10px 14px 14px;display:flex;flex-direction:column;gap:10px}
+.np-top{display:flex;align-items:center;gap:10px}
+.np-thumb{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#1a2a1a,#0d1a0d);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;animation:none}
+.np-thumb.spin{animation:albumspin 8s linear infinite}
+@keyframes albumspin{from{border-radius:50%}25%{border-radius:30%}50%{border-radius:50%}75%{border-radius:30%}to{border-radius:50%}}
+.np-song{flex:1;min-width:0}
+.np-sn{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-sa{font-size:0.6rem;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace}
+.np-controls{display:flex;align-items:center;gap:6px}
+.np-btn{width:30px;height:30px;border-radius:50%;border:none;background:transparent;color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.12s}
+.np-btn:active{transform:scale(0.88)}
+.np-play{width:36px;height:36px;background:white;border-radius:50%;color:#000;font-size:1rem}
+.np-progress{display:flex;align-items:center;gap:8px}
+.np-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;cursor:pointer;position:relative}
+.np-bar-fill{height:100%;background:white;border-radius:2px;width:0%;transition:width 1s linear}
+.np-time{font-family:'DM Mono',monospace;font-size:0.52rem;color:rgba(255,255,255,0.3);white-space:nowrap}
+.waveform{display:flex;align-items:center;gap:2px;height:20px}
+.wf-bar{width:3px;background:var(--gl);border-radius:2px;opacity:0.6}
+.wf-bar.active{opacity:1;animation:wfpulse 0.8s ease-in-out infinite}
+@keyframes wfpulse{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}
+
 /* INSTAGRAM */
 .ig-feed{flex:1;overflow-y:auto;scrollbar-width:none}
 .ig-feed::-webkit-scrollbar{display:none}
@@ -266,12 +323,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ig-post-likes{padding:0 10px 4px;font-size:0.75rem;font-weight:700}
 .ig-post-caption{padding:0 10px 4px;font-size:0.73rem;line-height:1.55;color:rgba(255,255,255,0.8)}
 .ig-post-caption strong{color:white}
-.ig-post-comment{padding:4px 10px;font-size:0.71rem;line-height:1.5;color:rgba(255,255,255,0.55);border-top:none}
+.ig-post-comment{padding:4px 10px;font-size:0.71rem;line-height:1.5;color:rgba(255,255,255,0.55)}
 .ig-post-comment strong{color:rgba(255,255,255,0.75)}
 .ig-post-shared{padding:3px 10px 8px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03)}
 .ig-post-shared-txt{font-size:0.62rem;color:rgba(255,255,255,0.28);font-style:italic}
 
-/* INCOMING CALL SCREEN */
+/* INCOMING CALL */
 .call-screen{position:absolute;inset:0;background:linear-gradient(180deg,#0a1a0a 0%,#050c05 100%);z-index:80;display:flex;flex-direction:column;align-items:center;padding-top:70px;transition:opacity 0.5s}
 .call-screen.hidden{opacity:0;pointer-events:none}
 .call-name{font-family:'Lora',serif;font-size:2.2rem;font-weight:400;letter-spacing:-0.02em;margin-top:1.5rem;text-align:center}
@@ -291,13 +348,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .outcome.ok{background:var(--gdim);border:1px solid rgba(46,125,79,0.25);color:rgba(244,241,235,0.78)}
 .outcome-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:0.7rem;opacity:0.55}
 
-/* TAILGATE */
-.tc-btns{display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0}
-.tcb{padding:1.05rem 1.3rem;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--w);font-family:'DM Sans',sans-serif;font-size:0.85rem;text-align:left;cursor:pointer;transition:all 0.22s;line-height:1.4}
-.tcb:hover:not(:disabled){border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.028)}
-.tcb:disabled{opacity:0.38;cursor:default}
-
-/* BREATHE */
+/* BREATHING */
 .breathe-wrap{margin:1.5rem 0;padding:1.6rem;background:rgba(46,125,79,0.06);border:1px solid rgba(46,125,79,0.14);border-radius:10px;text-align:center}
 .bl{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gl);margin-bottom:1.1rem;opacity:0.8}
 .borb{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(46,125,79,0.24),rgba(46,125,79,0.05));border:1px solid rgba(77,179,116,0.25);margin:0 auto 0.9rem;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-family:'DM Mono',monospace;color:rgba(77,179,116,0.8);cursor:pointer;text-align:center;padding:0.75rem;line-height:1.5}
@@ -316,7 +367,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .wca{font-size:0.72rem;color:var(--grey2);transition:transform 0.25s;flex-shrink:0}
 .wch.open .wca{transform:rotate(90deg);color:var(--gl)}
 .wcb{max-height:0;overflow:hidden;transition:max-height 0.42s cubic-bezier(0.4,0,0.2,1)}
-.wcb.open{max-height:480px}
+.wcb.open{max-height:520px}
 .wci{padding:0 1.3rem 1.3rem}
 .wcs{font-size:0.81rem;color:var(--grey);line-height:1.88;margin-bottom:0.9rem}
 .wcin{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.14em;color:var(--gl);text-transform:uppercase;border-top:1px solid var(--border);padding-top:0.75rem}
@@ -330,12 +381,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .void-line{width:1px;height:0;background:rgba(255,255,255,0.06);margin:2.5rem auto 0;animation:gl 3s ease 1.5s forwards}
 @keyframes gl{to{height:100px}}
 .void-after{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.09);text-align:center;margin-top:2rem;opacity:0;transition:opacity 2s}
-
-/* RECOG */
-.recog{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:4rem 2rem;background:var(--black);position:relative}
-.recog-q{font-family:'Lora',serif;font-size:clamp(1.5rem,4.2vw,2.2rem);font-weight:600;font-style:italic;text-align:center;color:rgba(244,241,235,0.38);line-height:1.55;max-width:380px}
-.recog-space{height:8rem}
-.recog-ans{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(244,241,235,0.14);text-align:center}
 
 /* LIFELINE DIALER */
 .dialer-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#06100a 0%,#020803 100%)}
@@ -406,6 +451,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="sp-begin" onclick="beginStory()"><span>Begin ↓</span></button>
   </div>
   <div class="sp-credit">Made by Calloway</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CINEMATIC INTRO
+══════════════════════════════════════════════════════ -->
+<div id="cinematic">
+  <div id="cin-line" class="cin-line"></div>
+  <div class="cin-progress" id="cin-prog"></div>
+  <div class="cin-skip" onclick="skipCinematic()">Skip →</div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -490,13 +544,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="aico" onclick="openApp('msgs1')"><div class="aimg" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬<div class="badge">4</div></div><div class="albl">Messages</div></div>
             <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div><div class="albl">Instagram</div></div>
             <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div><div class="albl">Phone</div></div>
-            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#2c2c2e,#1c1c1e)">🎵</div><div class="albl">Music</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#1a1a2a,#2a1a4a)">🎵</div><div class="albl">Music</div></div>
           </div>
         </div>
         <div class="dock">
           <div class="da" onclick="openApp('msgs1')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
           <div class="da" style="background:#1c1c1e">📷</div>
-          <div class="da" style="background:#1c1c1e">🎵</div>
+          <div class="da" style="background:linear-gradient(135deg,#1a1a2a,#2a1a4a)">🎵</div>
           <div class="da" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
         </div>
         <div class="sapp" id="msgs1App">
@@ -515,14 +569,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- ═══════════════════════════════════════════════════
-     FRIDAY NIGHT TRANSITION
+     FRIDAY → SATURDAY BRIDGE
 ══════════════════════════════════════════════════════ -->
 <div style="height:25vh;background:linear-gradient(180deg,#060606,#020202);display:flex;align-items:center;justify-content:center">
   <span style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.36em;text-transform:uppercase;color:rgba(255,255,255,0.06)">Friday night → Saturday 2:17 AM</span>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
-     MUM'S CALL: 2:17 AM (face-down phone)
+     MUM'S CALL: 2:17 AM
 ══════════════════════════════════════════════════════ -->
 <section id="s_mum" style="background:linear-gradient(180deg,#010303 0%,#02050a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:5rem">
   <p class="rv" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.15);text-align:center;padding:3rem 2rem 0">Saturday · 2:17 AM</p>
@@ -537,7 +591,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <div class="call-btns"><div class="cb-decline">📵</div><div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.7">No answer.</div><div class="cb-accept">📞</div></div>
       </div>
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#010a02;opacity:0;transition:opacity 0.8s" id="mumMsgsScreen">
-        <div style="padding:50px 0 0;background:#000;flex-shrink:0"><div style="display:flex;gap:10px;align-items:center;padding:10px 15px"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a4a6a,#1a2a4a);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0">👩‍👦</div><div><div style="font-size:0.82rem;font-weight:600">Mum</div><div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">Geraldton · 3 hrs south</div></div><div style="margin-left:auto;background:rgba(192,57,43,0.9);border-radius:12px;padding:4px 10px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:white" id="missedBadge" style="display:none">Missed call 2:17 AM</div></div></div>
+        <div style="padding:50px 0 0;background:#000;flex-shrink:0"><div style="display:flex;gap:10px;align-items:center;padding:10px 15px"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2a4a6a,#1a2a4a);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0">👩‍👦</div><div><div style="font-size:0.82rem;font-weight:600">Mum</div><div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">Geraldton · 3 hrs south</div></div><div style="margin-left:auto;background:rgba(192,57,43,0.9);border-radius:12px;padding:4px 10px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:white" id="missedBadge">Missed call 2:17 AM</div></div></div>
         <div style="flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none;background:linear-gradient(180deg,#0a0a10 0%,#060610 100%)" id="mumMsgs"><div class="tyb" id="mumTyp" style="background:#1c2a3a"><div class="tydots"><span></span><span></span><span></span></div></div></div>
         <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;color:rgba(255,255,255,0.15);text-align:center;text-transform:uppercase;padding:12px" id="mumUnseen"></div>
       </div>
@@ -553,15 +607,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="ch rv">Saturday morning</div>
     <h2 class="nh rv d1" style="color:rgba(244,241,235,0.55)">He finds the messages at 9am.</h2>
     <div class="nb rv d2">
-      <p>The light is already hard. He can feel the tin roof getting hot. He doesn't check the time — he knows from the heat and the headache it's past nine. There's $80 missing from his wallet. He doesn't fully remember the drive home.</p>
-      <p>He lies there and the hollow feeling — he can't name it but it's familiar now — settles in for the day. He reaches for his phone. It's face-down beside the bed where he left it. He turns it over.</p>
+      <p>The light is already hard. He can feel the tin roof getting hot. He reaches for his phone. It's face-down beside the bed where he left it. He turns it over.</p>
       <p>Four missed messages from Mum. 2:18 AM. 2:19. 2:20. 2:47.</p>
     </div>
     <div class="inner-voice rv d3">
-      <p>She'd rung at 2am and he'd been asleep in the car somewhere. She'd been awake in Geraldton, three hours south, not knowing if he was okay. He stared at the screen for a long time.</p>
-      <p>This happened last week too. And the week before. And he still can't name the thing sitting on his chest — but he can't pretend it isn't there anymore either.</p>
+      <p>She'd rung at 2am and he'd been asleep — somewhere. She'd been awake in Geraldton, three hours south, not knowing if he was okay. He stared at the screen for a long time.</p>
+      <p>This happened last week too. And the week before. He can't name the thing sitting on his chest — but he can't pretend it isn't there anymore either.</p>
     </div>
-    <div class="outcome show bad rv d3" style="margin-top:1.5rem"><div class="outcome-lbl">What happened last night</div><p>One beer turned into eight. He got home just before 2am. The loop is smooth and familiar and almost impossible to see from inside it. The boys will message again. And he'll go again.</p></div>
+    <div class="outcome show bad rv d3" style="margin-top:1.5rem"><div class="outcome-lbl">What happened last night</div><p>One beer turned into eight. He got home just before 2am. The loop is smooth and familiar and almost impossible to see from inside it.</p></div>
     <div class="rv d4"><div id="cb-s3a" class="cbar"><button class="cbar-btn" onclick="cbClick('s_ripple','cb-s3a')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3a" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3a">30</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
@@ -576,25 +629,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="phone rv d2" id="phone_ripple" style="position:relative">
     <div class="psc" style="background:#080c0a">
       <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">9:14</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
-      <!-- DISCOVERY TOAST -->
       <div class="disc-toast" id="discToast">
         <span style="font-size:1.1rem">👀</span>
         <p>Tap the apps — see who else is affected by Jake's Fridays.</p>
       </div>
-      <!-- LOCK SCREEN -->
       <div class="lock" id="lock_ripple">
         <div style="margin-top:60px;text-align:center"><div class="lt">9:14</div><div class="ld">Saturday · Meekatharra WA</div></div>
         <div class="notifs" id="rNotifs"></div>
         <div class="unlock-btn" id="ubtn_ripple" onclick="unlockRipple()"><div class="ub-bar"></div><div class="ub-txt">Tap to open</div></div>
       </div>
-      <!-- HOME SCREEN -->
       <div class="home" id="home_ripple">
         <div class="home-bg"></div>
-        <!-- DISCOVERY COUNTER -->
         <div style="position:absolute;top:44px;right:14px;z-index:80;display:flex;gap:5px" id="discDots">
-          <div class="disc-d" id="dd0" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
-          <div class="disc-d" id="dd1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
-          <div class="disc-d" id="dd2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+          <div id="dd0" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+          <div id="dd1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
+          <div id="dd2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background 0.4s"></div>
         </div>
         <div class="hw">
           <div class="weather"><div class="wtl"><div class="wloc">Meekatharra, WA</div><div class="wtemp">38°</div><div class="wfeel">Feels like 42°</div></div><div class="wtr"><div class="wico">☀️</div>Saturday</div></div>
@@ -621,7 +670,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <div class="ig-feed">
             <div class="ig-ptop"><div class="ig-av">🤠</div><div class="ig-stats"><div><div class="ig-sn">23</div><div class="ig-sl">posts</div></div><div><div class="ig-sn">184</div><div class="ig-sl">followers</div></div><div><div class="ig-sn">67</div><div class="ig-sl">following</div></div></div></div>
             <div class="ig-bio"><div class="ig-name">Jake Harrington</div><div class="ig-btxt">Jackaroo 🤙 Meekatharra, WA<br>Living the dream or something like that</div></div>
-            <!-- Post 1: recent beer post -->
             <div class="ig-post">
               <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">Friday · 10:41 PM</div></div>
               <div class="ig-post-img" style="background:#160b04">🍺</div>
@@ -629,10 +677,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <div class="ig-post-likes">52 likes</div>
               <div class="ig-post-caption"><strong>jake_outback</strong> Friday sorted 🍺🍺</div>
               <div class="ig-post-comment"><strong>liam_harrington</strong> big dog 🔥🔥🔥</div>
-              <div class="ig-post-comment"><strong>liam_harrington</strong> shared to his story: <em style="color:rgba(255,255,255,0.4)">"my bro 🤙 living the life"</em></div>
               <div class="ig-post-shared"><span style="font-size:0.7rem">📤</span><div class="ig-post-shared-txt">Shared by liam_harrington to his story · 47 viewers</div></div>
             </div>
-            <!-- Post 2: earlier beer post -->
             <div class="ig-post">
               <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">2 weeks ago</div></div>
               <div class="ig-post-img" style="background:#1a1005">🍺</div>
@@ -640,23 +686,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <div class="ig-post-likes">41 likes</div>
               <div class="ig-post-caption"><strong>jake_outback</strong> Weekend</div>
               <div class="ig-post-comment"><strong>liam_harrington</strong> this is so cool haha</div>
-              <div class="ig-post-comment"><strong>liam_harrington</strong> 💬 <em style="color:rgba(255,255,255,0.4)">replied to liam's story: "your brother is sick bro"</em></div>
               <div class="ig-post-comment"><strong>jake_mate_pete</strong> <em style="color:rgba(255,255,255,0.4)">goals honestly</em></div>
             </div>
-            <!-- Post 3: station life -->
-            <div class="ig-post">
-              <div class="ig-post-hdr"><div class="ig-post-av">🤠</div><div class="ig-post-name">jake_outback</div><div class="ig-post-time">4 weeks ago</div></div>
-              <div class="ig-post-img" style="background:#0d1808">🌅</div>
-              <div class="ig-post-actions">❤️ 💬 ✈️</div>
-              <div class="ig-post-likes">31 likes</div>
-              <div class="ig-post-caption"><strong>jake_outback</strong> Red dirt never gets old. Big week but this makes it worth it</div>
-              <div class="ig-post-comment"><strong>liam_harrington</strong> i wanna come out there so bad</div>
-            </div>
-            <div style="padding:16px;background:#000"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.22);line-height:1.75;text-align:center">Liam is 16. He shows these posts to his mates at school. He's started hanging around older guys on weekends. He's had his first few drinks. He thinks Jake is living the dream. He doesn't know he's being taught something — he thinks he's just living. He's watching Jake for what being a man looks like.</p></div>
+            <div style="padding:16px;background:#000"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.22);line-height:1.75;text-align:center">Liam is 16. He shows these posts to his mates at school. He thinks Jake is living the dream. He's watching Jake for what being a man looks like. He doesn't know he's being taught something.</p></div>
           </div>
         </div>
 
-        <!-- MESSAGES: MUM'S THREAD + THOMMO -->
+        <!-- MESSAGES: MUM + THOMMO -->
         <div class="sapp" id="ripple_msgs">
           <div class="abar"><span class="abar-back" onclick="closeRipple('ripple_msgs',1)">‹ Messages</span></div>
           <div style="flex:1;overflow-y:auto;scrollbar-width:none">
@@ -670,16 +706,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
               <div style="flex:1"><div style="font-size:0.84rem;font-weight:600">Thommo</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px">You get home ok? You were pretty gone mate</div></div>
               <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.25)">2:31 AM</div>
             </div>
-            <div style="padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.05)">
-              <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#1a8a2e,#0d5a1e);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🤙</div>
-              <div style="flex:1"><div style="font-size:0.84rem;font-weight:600">Davo + Thommo + Bazza</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px">GET AROUND IT 🍺🍺</div></div>
-              <div style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.25)">10:48 PM</div>
-            </div>
-            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Thommo has noticed Jake drinks differently now — not for fun, but to get somewhere. He wants to say something but the moment never seems right. So they just keep going to the pub. He's waiting for a sign that Jake would want him to ask.</p></div>
+            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Thommo has noticed Jake drinks differently now — not for fun, but to get somewhere. He wants to say something but the moment never seems right. He's waiting for a sign that Jake would want him to ask.</p></div>
           </div>
         </div>
 
-        <!-- MUM'S THREAD DEEP VIEW -->
+        <!-- MUM'S THREAD -->
         <div class="sapp" id="ripple_mum">
           <div class="abar"><span class="abar-back" onclick="closeRipple('ripple_mum',-1);openRipple('msgs')">‹ Messages</span><div class="abar-av" style="background:linear-gradient(135deg,#2a4a6a,#1a2a4a)">👩‍👦</div><div class="abar-info"><div class="abar-name">Mum</div><div class="abar-sub">Geraldton · 3 hrs south</div></div></div>
           <div class="mwrap">
@@ -689,7 +720,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">Just making sure you got home okay. Ring me when you see this xx</div><div class="bt">2:20 AM</div></div>
             <div class="bw"><div class="bub mum show" style="opacity:1;transform:none">I love you. Just let me know you're safe.</div><div class="bt">2:47 AM</div></div>
           </div>
-          <div style="padding:12px 14px;background:#050510;flex-shrink:0"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.76rem;color:rgba(255,255,255,0.22);line-height:1.7">She bought a new kettle last month and keeps meaning to tell Jake. She calls on Sundays. She's noticed he picks up less. She doesn't sleep well on Friday nights. She's terrified of being the reason he stops picking up altogether — so she keeps the calls short and cheerful and doesn't push too hard.</p></div>
+          <div style="padding:12px 14px;background:#050510;flex-shrink:0"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.76rem;color:rgba(255,255,255,0.22);line-height:1.7">She doesn't sleep well on Friday nights. She's terrified of being the reason he stops picking up altogether — so she keeps the calls short and cheerful and doesn't push too hard.</p></div>
         </div>
 
         <!-- PHONE RECENTS -->
@@ -700,25 +731,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
               <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1a3a5a,#0d2040);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">👩‍👦</div>
               <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#e06060">Mum ↙</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">mobile · 2:17 AM · Saturday</div></div>
-              <div style="font-size:0.6rem;color:rgba(255,255,255,0.28);font-family:'DM Mono',monospace">2:17 AM</div>
             </div>
             <div style="padding:8px 14px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);background:#0a0a0a;margin-top:4px">All</div>
             <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
               <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2a4a2a,#1a3a1a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">👷</div>
               <div style="flex:1"><div style="font-size:0.82rem;font-weight:600">Macca — Station Boss</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">mobile · Monday 6:48 AM · outgoing</div></div>
             </div>
-            <div style="padding:12px 15px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
-              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2d4a7a,#1a2a5a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🤜</div>
-              <div style="flex:1"><div style="font-size:0.82rem;font-weight:600">Thommo</div><div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:2px">Friday 2:31 AM · missed</div></div>
-              <div style="font-size:0.6rem;color:rgba(192,57,43,0.8);font-family:'DM Mono',monospace">↙</div>
-            </div>
-            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Jake's been late twice this month. Macca — the station manager — has watched Friday absences bleeding into Mondays. He was raised in the same culture. He doesn't know how to start.<br><br>"He's a good kid" is as far as he's got.</p></div>
+            <div style="padding:16px 14px"><p style="font-family:'Lora',serif;font-style:italic;font-size:0.78rem;color:rgba(255,255,255,0.2);line-height:1.75">Jake's been late twice this month. Macca has watched Friday absences bleeding into Mondays. He was raised in the same culture. He doesn't know how to start.<br><br>"He's a good kid" is as far as he's got.</p></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Discovery complete message -->
   <div id="disc-complete" style="display:none;max-width:460px;width:100%;padding:0 1rem">
     <div class="outcome ok show" style="text-align:center">
       <div class="outcome-lbl">All perspectives discovered</div>
@@ -729,7 +753,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- ═══════════════════════════════════════════════════
-     ASSERTIVENESS SKILL — with purpose from what just happened
+     SKILL 1: ASSERTIVENESS
 ══════════════════════════════════════════════════════ -->
 <section class="narr" id="s3b" style="background:linear-gradient(180deg,#080808,#08100d);min-height:100vh">
   <div class="ni">
@@ -737,13 +761,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <h2 class="nh rv d1">Jake didn't have<br>the words.</h2>
     <div class="nb rv d2">
       <p>You just saw what last Friday cost. His mum awake at 2am. His brother reposting it like it was aspirational. Thommo typing a message and deleting it.</p>
-      <p>Jake knows none of this on Saturday morning. But you do. And the thing is — it could have gone differently. Not with willpower. Not with him being a different person. With one thing he was never taught.</p>
+      <p>Jake knows none of this on Saturday morning. But you do. And the thing is — it could have gone differently. Not with willpower. With one thing he was never taught.</p>
     </div>
     <div class="inner-voice rv d2">
       <p>He thought about it later. What would he have even said? "Nah not tonight"? They'd think something was wrong. They'd take the piss. It was easier to just go.</p>
-      <p>But was it? He's lying here on a Saturday morning feeling hollow and broke, same as last week. So what was easier, exactly?</p>
+      <p>But was it? He's lying here on a Saturday morning feeling hollow and broke. So what was easier, exactly?</p>
     </div>
-    <!-- CLUMSY ATTEMPT FIRST — shows WHY the skill matters -->
     <div class="rv d3" style="margin:2rem 0">
       <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--grey2);margin-bottom:0.8rem">What Jake actually tried saying once</div>
       <div style="background:#0a0a0a;border:1px solid var(--border);border-radius:10px;overflow:hidden">
@@ -753,7 +776,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%;align-self:flex-start">Bazza's shouting first round</div>
           <div style="align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
             <div style="background:rgba(60,80,60,0.8);border-radius:14px;border-bottom-right-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:82%;color:rgba(255,255,255,0.7);font-style:italic">Sorry lads, I'm kind of tired and I'm not sure if I should and also I've got things to do tomorrow early so maybe not tonight if that's okay, no offence</div>
-            <div style="font-family:'DM Mono',monospace;font-size:0.53rem;color:rgba(255,255,255,0.25)">Sent 5:49 PM</div>
           </div>
           <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">Bro 💀💀 just come for one</div>
           <div style="background:#2c2c2e;border-radius:14px;border-bottom-left-radius:3px;padding:8px 12px;font-size:0.79rem;line-height:1.5;max-width:80%">don't be soft mate 😂</div>
@@ -764,14 +786,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
     <div style="margin:2.2rem 0" class="rv d3">
       <div class="skill-pill o">Skill One — Assertiveness</div>
-      <div class="insight" style="margin-top:0.8rem"><div class="il o">What it actually is</div><p>Assertiveness isn't aggression, and it's not confidence. It's the ability to say what you need — clearly, calmly, without excessive apology — and let the response be what it is. Jake's clumsy message above shows exactly what happens without it: over-explaining creates the opening for pushback. Short and direct closes it.</p></div>
+      <div class="insight" style="margin-top:0.8rem"><div class="il o">What it actually is</div><p>Assertiveness isn't aggression, and it's not confidence. It's the ability to say what you need clearly, calmly, without excessive apology — and let the response be what it is. Jake's message above shows exactly what happens without it: over-explaining creates the opening for pushback. Short and direct closes it.</p></div>
     </div>
     <div class="steps rv d3">
       <div class="step" data-n="1"><h4>Decide before the pressure hits</h4><p>Plan it when you're calm: "I'll have two drinks" or "not tonight." Having a position means you're not making the call when the boys are already three in and the pressure is on.</p></div>
-      <div class="step" data-n="2"><h4>"I" not "you" — and no novel</h4><p>"I'm not feeling it tonight" is a full sentence. Jake's message was 40 words. Every extra word is an invitation. The more you explain, the more you invite pushback. Say it once, mean it, let the silence land.</p></div>
+      <div class="step" data-n="2"><h4>"I" not "you" — and no novel</h4><p>"I'm not feeling it tonight" is a full sentence. Every extra word is an invitation. Say it once, mean it, let the silence land.</p></div>
       <div class="step" data-n="3"><h4>Offer the alternative</h4><p>"Not the pub tonight but down for a drive tomorrow." You're not rejecting them — just the drinking. Real mates will feel that distinction.</p></div>
     </div>
-    <div class="nb rv d4" style="margin-top:1.8rem"><p>Jake can't go back and use this on last Friday. But it's Saturday evening. The boys are messaging again. This time, he knows the difference between the message that invites pushback — and the one that closes the door cleanly.</p></div>
     <div class="rv d4"><div id="cb-s3b" class="cbar"><button class="cbar-btn" onclick="cbClick('s3c','cb-s3b')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s3b" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s3b">35</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
@@ -806,51 +827,164 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <!-- ═══════════════════════════════════════════════════
-     TAILGATE — STRESS MANAGEMENT (now after ripple — Thursday hits harder)
+     SKILL 2: STRESS MANAGEMENT — MUSIC + BREATHING
 ══════════════════════════════════════════════════════ -->
-<section class="narr" id="s5" style="background:linear-gradient(180deg,#060808,#080808);min-height:100vh">
+<section class="narr" id="s_music_narr" style="background:linear-gradient(180deg,#06060a,#080810);min-height:60vh">
   <div class="ni">
-    <div class="ch rv">Thursday evening</div>
-    <h2 class="nh rv d1">The quiet is the loudest<br>it's ever been.</h2>
+    <div class="ch rv">Thursday · Second week</div>
+    <h2 class="nh rv d1">The urge comes<br>at 5:30. Same as always.</h2>
     <div class="nb rv d2">
-      <p>He parks the ute. Sits on the tailgate. The station is still. The solitude that feels fine on Monday is different by Thursday. He's been up since four. His shoulders ache. And there's no gym, no counsellor, no footpath to walk.</p>
-      <p>He called his mum back earlier in the week and it helped — briefly. But the weight is back. He thinks about what you saw on his phone: the messages she sent at 2am, Liam sharing his posts to 47 people. The thought sits in him differently now. It has a name. It has a face.</p>
-      <p>He's got the ute keys in his hand.</p>
-    </div>
-    <div class="rv d2" id="tailgate-choice">
-      <p style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--grey2);margin-bottom:1.1rem">What does Jake do?</p>
-      <div class="tc-btns">
-        <button class="tcb" id="tcb-pub" onclick="tailgatePick('pub')">He starts the ute. Drives to the pub.</button>
-        <button class="tcb" id="tcb-walk" onclick="tailgatePick('walk')">He puts the keys down. Walks out into the paddock.</button>
-      </div>
-      <div class="outcome" id="tailgate-outcome"></div>
-    </div>
-    <div id="breathe-block" style="display:none">
-      <div class="inner-voice rv"><p>He'd heard someone mention box breathing once. Something first responders used. He'd laughed it off. But he was alone in a paddock, it was Thursday, and there was nothing to lose.</p></div>
-      <div class="breathe-wrap rv d1">
-        <div class="bl">Box breathing — Jake in the paddock</div>
-        <div class="borb" id="borb" onclick="startBreath()"><span id="btxt">Tap to try<br>alongside him</span></div>
-        <div class="bcap" id="bcap">In for 4. Hold for 4. Out for 4. Hold for 4. Used by first responders, athletes, and anyone who needs the quiet back.</div>
-      </div>
-      <div class="nb rv d1" style="margin-top:1.8rem"><p>He came back different. Not fixed. But the thing pressing on his chest — lighter. He called his mum back. Didn't say much. She talked about the dog. He listened. When he hung up, he made dinner instead of driving to town.</p><p>The difference tonight wasn't willpower. It was having <em>somewhere else to put it</em> before the pub became the only option.</p></div>
-      <div style="margin:1.8rem 0" class="rv d2">
-        <div class="skill-pill o">Skill Two — Stress Management</div>
-        <div class="insight" style="margin-top:0.8rem"><div class="il o">What Jake found out — and what you saw on his phone</div><p>You saw who Liam is watching. You saw Mum awake at 2am. That context is exactly why this skill matters: stress doesn't disappear when you drink — it transfers. It moves to the people around you while you're temporarily not feeling it. Having <em>something</em> to reach for before alcohol — a walk, a call, a breath, a 10-minute drive into the paddock — isn't weakness. It's the only thing that actually reduces the load instead of shifting it.</p></div>
-      </div>
-      <div class="rv d2"><div id="cb-s5" class="cbar"><button class="cbar-btn" onclick="cbClick('s8','cb-s5')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s5" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s5">30</div></div><span>Continue →</span></button></div></div>
+      <p>He's parked the ute at the bore. The station is still. By Thursday, the solitude that feels fine on Monday has become something else. The heat has been relentless. He's tired in the way that sleep doesn't fix.</p>
+      <p>He's got his phone in his hand. There's a part of him that's already scrolling toward the pub. But something is different tonight. He thinks about his mum's messages. He thinks about Liam.</p>
+      <p>Instead of opening Messages, he opens Music.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     RECOGNITION
-══════════════════════════════════════════════════════ -->
-<section class="recog" id="s_recog">
-  <div class="recog-q rv">Does any part of this feel familiar?</div>
-  <div class="recog-space"></div>
-  <div class="recog-ans rv d2">You don't have to answer that.</div>
-  <div style="position:absolute;bottom:3rem;left:0;right:0;display:flex;justify-content:center" class="rv d3">
-    <div id="cb-s_recog" class="cbar" style="margin-top:0"><button class="cbar-btn" onclick="cbClick('s8','cb-s_recog')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s_recog" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s_recog">40</div></div><span>Continue →</span></button></div>
+<!-- SKILL 2 PHONE: MUSIC APP -->
+<section class="phone-stage" id="s_music" style="background:linear-gradient(180deg,#080810 0%,#06060a 100%);min-height:100vh;padding-top:2rem">
+  <p class="pl rv">Thursday · 5:34 PM · Ute parked at the bore</p>
+  <div class="phone rv d1" id="phone_music" style="position:relative">
+    <div class="psc" style="background:#0a0a12">
+      <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55;background:rgba(10,10,18,0.9)"><span class="st">5:34</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
+      <!-- LOCK SCREEN -->
+      <div class="lock" id="lock_music" style="background:linear-gradient(160deg,#0a0a14 0%,#060610 100%)">
+        <div style="margin-top:60px;text-align:center"><div class="lt" style="font-size:4.2rem">5:34</div><div class="ld">Thursday · Station Bore</div></div>
+        <div class="notifs" id="music_notifs"></div>
+        <div class="unlock-btn" id="ubtn_music" onclick="unlockMusic()"><div class="ub-bar"></div><div class="ub-txt">Tap to open</div></div>
+      </div>
+      <!-- HOME SCREEN -->
+      <div class="home" id="home_music" style="background:linear-gradient(150deg,#0a0a14 0%,#060610 100%);padding-top:36px">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(80,80,180,0.08) 0%,transparent 60%)"></div>
+        <div class="hw">
+          <div class="weather" style="background:rgba(255,255,255,0.04)"><div class="wtl"><div class="wloc">Station Bore, 80km east</div><div class="wtemp">38°</div><div class="wfeel">Cooling</div></div><div class="wtr"><div class="wico">🌅</div>Golden hour</div></div>
+          <div class="agrid">
+            <div class="aico" onclick="openMusicApp()"><div class="aimg" style="background:linear-gradient(135deg,#1a1a3a,#2a1a4a);box-shadow:0 4px 20px rgba(80,80,180,0.3)">🎵</div><div class="albl">Music</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬<div class="badge">2</div></div><div class="albl">Messages</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div><div class="albl">Phone</div></div>
+            <div class="aico"><div class="aimg" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div><div class="albl">Instagram</div></div>
+          </div>
+        </div>
+        <div class="dock" style="background:rgba(255,255,255,0.05)">
+          <div class="da" onclick="openMusicApp()" style="background:linear-gradient(135deg,#1a1a3a,#2a1a4a)">🎵</div>
+          <div class="da" style="background:#1c1c1e">💬</div>
+          <div class="da" style="background:#1c1c1e">📷</div>
+          <div class="da" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
+        </div>
+        <!-- MUSIC APP -->
+        <div class="sapp music-app" id="musicAppScreen">
+          <div class="music-header">
+            <span class="abar-back" onclick="closeMusicApp()" style="color:#a890f0">‹</span>
+            <span class="music-header-title">Library</span>
+            <span style="width:20px"></span>
+          </div>
+          <div class="music-lib" id="musicLibView">
+            <div style="padding:8px 16px;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.25)">Playlists</div>
+            <div class="playlist-row" onclick="openPlaylist()">
+              <div class="pl-art" style="background:linear-gradient(135deg,#1a1a3a,#3a1a5a)">💜</div>
+              <div class="pl-info"><div class="pl-name">Fav Songs</div><div class="pl-count">34 songs</div></div>
+              <div class="pl-chevron">›</div>
+            </div>
+            <div class="playlist-row">
+              <div class="pl-art" style="background:linear-gradient(135deg,#1a2a1a,#0d1a0d)">🌿</div>
+              <div class="pl-info"><div class="pl-name">Early Morning</div><div class="pl-count">12 songs</div></div>
+              <div class="pl-chevron">›</div>
+            </div>
+            <div class="playlist-row">
+              <div class="pl-art" style="background:linear-gradient(135deg,#2a1a0a,#1a0a04)">🔥</div>
+              <div class="pl-info"><div class="pl-name">Drive Soundtrack</div><div class="pl-count">22 songs</div></div>
+              <div class="pl-chevron">›</div>
+            </div>
+            <div style="padding:8px 16px;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:8px">Recently Played</div>
+            <div class="song-row">
+              <div class="song-thumb">🎸</div>
+              <div class="song-info"><div class="song-name">Long Way Home</div><div class="song-artist">Kasey Chambers</div></div>
+              <div class="song-dur">4:12</div>
+            </div>
+            <div class="song-row">
+              <div class="song-thumb">🎵</div>
+              <div class="song-info"><div class="song-name">Outback Roads</div><div class="song-artist">Troy Cassar-Daley</div></div>
+              <div class="song-dur">3:48</div>
+            </div>
+          </div>
+          <!-- PLAYLIST VIEW -->
+          <div id="playlistView" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+            <div style="background:linear-gradient(180deg,#1a1a3a,#0a0a1a);padding:14px 16px 10px;flex-shrink:0">
+              <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;margin-bottom:4px">‹ <span onclick="closePlaylist()" style="cursor:pointer;color:rgba(168,144,240,0.8)">Library</span></div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#1a1a3a,#3a1a5a);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">💜</div>
+                <div><div style="font-size:1rem;font-weight:700">Fav Songs</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;margin-top:2px">34 songs</div></div>
+                <div style="margin-left:auto;background:rgba(168,144,240,0.15);border:1px solid rgba(168,144,240,0.25);border-radius:20px;padding:6px 16px;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;color:rgba(168,144,240,0.9)" onclick="playFirst()">▶ Play</div>
+              </div>
+            </div>
+            <div style="flex:1;overflow-y:auto;scrollbar-width:none" id="songList">
+              <div class="song-row" id="sr0" onclick="playSong(0)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">1</div><div class="song-thumb" style="background:linear-gradient(135deg,#1a2a1a,#0d1a1a)">🌙</div><div class="song-info"><div class="song-name">Quiet Hour</div><div class="song-artist">Middle Kids</div></div><div class="song-dur">3:56</div></div>
+              <div class="song-row" id="sr1" onclick="playSong(1)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">2</div><div class="song-thumb" style="background:linear-gradient(135deg,#2a1a1a,#1a0a0a)">🎸</div><div class="song-info"><div class="song-name">Long Way Home</div><div class="song-artist">Kasey Chambers</div></div><div class="song-dur">4:12</div></div>
+              <div class="song-row" id="sr2" onclick="playSong(2)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">3</div><div class="song-thumb" style="background:linear-gradient(135deg,#1a1a2a,#0a0a1a)">🌊</div><div class="song-info"><div class="song-name">Still Running</div><div class="song-artist">Vance Joy</div></div><div class="song-dur">4:08</div></div>
+              <div class="song-row" id="sr3" onclick="playSong(3)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">4</div><div class="song-thumb" style="background:linear-gradient(135deg,#2a2a0a,#1a1a04)">☀️</div><div class="song-info"><div class="song-name">Golden Days</div><div class="song-artist">Ball Park Music</div></div><div class="song-dur">3:44</div></div>
+              <div class="song-row" id="sr4" onclick="playSong(4)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">5</div><div class="song-thumb" style="background:linear-gradient(135deg,#1a2a2a,#0a1a1a)">🌿</div><div class="song-info"><div class="song-name">Something's Got Me Started</div><div class="song-artist">Paul Kelly</div></div><div class="song-dur">4:33</div></div>
+              <div class="song-row" id="sr5" onclick="playSong(5)"><div style="width:22px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);flex-shrink:0">6</div><div class="song-thumb" style="background:linear-gradient(135deg,#1a0a2a,#0a0a1a)">💫</div><div class="song-info"><div class="song-name">Carry Me</div><div class="song-artist">Alex Lahey</div></div><div class="song-dur">3:22</div></div>
+            </div>
+          </div>
+          <!-- NOW PLAYING BAR -->
+          <div class="now-playing-bar" id="nowPlayingBar">
+            <div class="np-mini">
+              <div class="np-top">
+                <div class="np-thumb" id="npThumb">🌙</div>
+                <div class="np-song">
+                  <div class="np-sn" id="npSongName">Quiet Hour</div>
+                  <div class="np-sa" id="npArtist">Middle Kids</div>
+                </div>
+                <div class="np-controls">
+                  <button class="np-btn" onclick="prevSong()">⏮</button>
+                  <button class="np-btn np-play" id="npPlayBtn" onclick="togglePlay()">⏸</button>
+                  <button class="np-btn" onclick="nextSong()">⏭</button>
+                </div>
+              </div>
+              <div class="np-progress">
+                <span class="np-time" id="npTimeCur">0:00</span>
+                <div class="np-bar-wrap" onclick="seekMusic(event)"><div class="np-bar-fill" id="npBarFill"></div></div>
+                <span class="np-time" id="npTimeTot">3:56</span>
+                <div class="waveform" id="waveform">
+                  <div class="wf-bar" style="height:6px"></div>
+                  <div class="wf-bar" style="height:12px"></div>
+                  <div class="wf-bar" style="height:8px"></div>
+                  <div class="wf-bar" style="height:16px"></div>
+                  <div class="wf-bar" style="height:10px"></div>
+                  <div class="wf-bar" style="height:14px"></div>
+                  <div class="wf-bar" style="height:7px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="rv d2" style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.18);max-width:300px;line-height:1.8">Open Music → Fav Songs → Play a track</p>
+</section>
+
+<!-- SKILL 2: INSIGHT + BOX BREATHING -->
+<section class="narr" id="s_skill2" style="background:linear-gradient(180deg,#06060a,#080808);min-height:80vh;display:none">
+  <div class="ni">
+    <div class="inner-voice rv">
+      <p>He sat there with the ute ticking and the spinifex and the last of the heat and the music going. No signal, so it was playing from what he'd downloaded. He listened to three songs. Maybe four. He wasn't counting.</p>
+      <p>He noticed the thing on his chest was lighter. Not gone. But lighter. He hadn't done anything. He'd just let something else in first.</p>
+    </div>
+    <div style="margin:2.2rem 0" class="rv d1">
+      <div class="skill-pill o">Skill Two — Stress Management</div>
+      <div class="insight" style="margin-top:0.8rem"><div class="il o">What Jake found</div><p>Music works on stress differently to alcohol. Alcohol numbs — but the stress is still there when it wears off, plus interest. Music shifts your nervous system's state <em>without a cost to pay later</em>. A playlist you already love is a faster intervention than most people realise. And out here, it works with no signal, no service, no one to see you doing it.</p></div>
+    </div>
+    <div class="rv d2" style="margin:1.5rem 0">
+      <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--grey2);margin-bottom:1rem">He found something else that helped too.</div>
+      <div class="breathe-wrap">
+        <div class="bl">Box breathing — try it alongside him</div>
+        <div class="borb" id="borb" onclick="startBreath()"><span id="btxt">Tap to start</span></div>
+        <div class="bcap" id="bcap">In for 4 · Hold for 4 · Out for 4 · Hold for 4.<br>Used by first responders, surgeons, soldiers. It works because it forces your body to slow down — your mind follows.</div>
+      </div>
+      <p style="font-family:'Lora',serif;font-style:italic;font-size:0.84rem;color:rgba(255,255,255,0.35);line-height:1.75;margin-top:1rem;text-align:center">He came back different. Not fixed. But the thing pressing on his chest — lighter. He drove home. Made dinner. Went to sleep before ten.<br><br>The difference tonight wasn't willpower. It was having <em style="color:rgba(244,241,235,0.7)">somewhere else to put it</em> before the pub became the only option.</p>
+    </div>
+    <div class="rv d3"><div id="cb-s5" class="cbar"><button class="cbar-btn" onclick="cbClick('s8','cb-s5')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s5" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s5">35</div></div><span>Continue →</span></button></div></div>
   </div>
 </section>
 
@@ -871,21 +1005,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- ═══════════════════════════════════════════════════
-     INTERIOR MONOLOGUE BRIDGE — after Thommo, before Jake's week
+     BRIDGE
 ══════════════════════════════════════════════════════ -->
-<section class="narr" id="s_bridge" style="background:linear-gradient(180deg,#060609,#080d08);min-height:60vh">
+<section class="narr" id="s_bridge" style="background:linear-gradient(180deg,#060609,#080d08);min-height:50vh">
   <div class="ni">
     <div class="ch rv">Sunday night. After the message.</div>
     <div class="inner-voice rv d1">
       <p>He put the phone down on the bench and stood there for a minute. He could hear the generator. The fly screen was rattling in the wind. Thommo knew. Of course Thommo knew.</p>
-      <p>He'd been carrying the thing that was sitting on him like it was invisible. Like everyone around him couldn't tell. Thommo just said it out loud and that changed something. Not fixed. Not even close. But it was like being in the dark for a long time and someone cracking a window — not much, but enough to tell you the sun still exists.</p>
-      <p>He went to bed early. He didn't drive to town. He didn't know yet whether he was going to do anything differently. But something had shifted — in the quiet, without anyone seeing it happen. He woke up Monday and made a decision. One small one. Then another one on Tuesday. Then another.</p>
+      <p>He'd been carrying the thing sitting on him like it was invisible. Thommo just said it out loud and that changed something. Not fixed. Not even close. But it was like being in the dark for a long time and someone cracking a window — not much, but enough to tell you the sun still exists.</p>
+      <p>He woke up Monday and made a decision. One small one. Then another one on Tuesday. Then another.</p>
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════
-     JAKE'S WEEK — RESILIENCE (skill placed between Thu + Fri for purpose)
+     SKILL 3: RESILIENCE — JAKE'S WEEK
 ══════════════════════════════════════════════════════ -->
 <section class="narr" id="s9" style="background:linear-gradient(180deg,#080d08,#080808);min-height:100vh">
   <div class="ni">
@@ -896,16 +1030,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <p style="font-size:0.84rem;color:var(--grey2);font-style:italic;font-family:'Lora',serif">Tap each day to see what he did.</p>
     </div>
     <div class="rv d2" style="margin:1.8rem 0">
-      <div class="wcard" id="wc-mon"><div class="wch" onclick="toggleDay('wc-mon')"><span class="wcd">Mon</span><span class="wct">Calls his mum on the drive in</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">She picks up first ring. He doesn't say much. She talks about the dog knocking over the new kettle. He laughs — properly, not performed. The thing sitting on his chest since Friday is a fraction lighter. He notices that. He files it away.</div><div class="wcin">Connection before crisis is the best kind. Not grand gestures. A ten-minute drive, a phone call.</div></div></div></div>
-      <div class="wcard" id="wc-tue"><div class="wch" onclick="toggleDay('wc-tue')"><span class="wcd">Tue</span><span class="wct">Doesn't drive to town. Sits with it.</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">The urge comes around 5:30, same as always. He sits on the step and watches the sky go orange. It's uncomfortable. He stays anyway. After twenty minutes, the feeling hasn't gone — but it's different. He makes dinner. Goes to sleep before ten.</div><div class="wcin">You can't outrun a feeling. But if you don't numb it, it moves. Sitting with discomfort is a trainable skill.</div></div></div></div>
-      <div class="wcard" id="wc-wed"><div class="wch" onclick="toggleDay('wc-wed')"><span class="wcd">Wed</span><span class="wct">Books a telehealth appointment</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">Three minutes to fill in the form. He almost closes the tab twice. He books it. He doesn't tell anyone. It's just for him. The appointment isn't for another week but already something has loosened. It's the act of deciding, not the appointment itself.</div><div class="wcin">Asking for help is preparation, not weakness. Getting support before crisis is like checking your ute before a long drive, not after it breaks down.</div></div></div></div>
+      <div class="wcard" id="wc-mon"><div class="wch" onclick="toggleDay('wc-mon')"><span class="wcd">Mon</span><span class="wct">Calls his mum on the drive in</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">She picks up first ring. He doesn't say much. She talks about the dog knocking over the new kettle. He laughs — properly, not performed. The thing sitting on his chest since Friday is a fraction lighter. He notices that. He files it away.</div><div class="wcin">Connection before crisis is the best kind. Not grand gestures — a ten-minute drive, a phone call.</div></div></div></div>
+      <div class="wcard" id="wc-tue"><div class="wch" onclick="toggleDay('wc-tue')"><span class="wcd">Tue</span><span class="wct">Puts on a playlist instead of driving to town</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">The urge comes around 5:30. He opens his phone — Fav Songs. Sits on the step and watches the sky go orange with it playing from the speaker. After twenty minutes, the feeling hasn't gone — but it's different. He makes dinner. Goes to sleep before ten.</div><div class="wcin">The music intervention is real. Stress doesn't disappear but it moves — shifts state without a cost to pay later.</div></div></div></div>
+      <div class="wcard" id="wc-wed"><div class="wch" onclick="toggleDay('wc-wed')"><span class="wcd">Wed</span><span class="wct">Books a telehealth appointment</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">Three minutes to fill in the form. He almost closes the tab twice. He books it. He doesn't tell anyone. It's just for him. The appointment isn't for another week but already something has loosened. It's the act of deciding, not the appointment itself.</div><div class="wcin">Asking for help is preparation, not weakness. Getting support before crisis is like checking your ute before a long drive — not after it breaks down.</div></div></div></div>
       <div class="wcard" id="wc-thu"><div class="wch" onclick="toggleDay('wc-thu')"><span class="wcd">Thu</span><span class="wct">Goes for a walk before dark</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">Twenty minutes out past the fence line. No phone. Just the red dirt and the spinifex and whatever is in his chest. He's sweating by the time he gets back. He notices his shoulders were up near his ears. He's been carrying them there for months without realising.</div><div class="wcin">Physical movement processes stress that sitting still can't touch. No gym required. The land out there is free and always available.</div>
-              <!-- SKILL BOX BETWEEN THURSDAY AND FRIDAY — primes the Friday moment -->
-              <div class="skill-inset">
-                <div class="si-lbl">Skill Three — Resilience — what this week is building</div>
-                <p>Resilience isn't bouncing back. It's building the things that give you somewhere to put the weight before Friday arrives. A phone call on Monday. A walk on Thursday. One booked appointment. These aren't big acts. They're the structure that makes the next choice possible — and makes it possible to pause for long enough to actually choose.</p>
-              </div>
-            </div></div></div>
+                <div class="skill-inset">
+                  <div class="si-lbl">Skill Three — Resilience — what this week is building</div>
+                  <p>Resilience isn't bouncing back from disaster. It's building the things — a call on Monday, music on Tuesday, a walk on Thursday — that give you somewhere to put the weight <em>before</em> Friday arrives. These aren't grand gestures. They're the structure that makes the next choice possible.</p>
+                </div>
+              </div></div></div>
       <div class="wcard" id="wc-fri"><div class="wch" onclick="toggleDay('wc-fri')"><span class="wcd">Fri</span><span class="wct">The boys message. He reads it differently.</span><span class="wca">›</span></div><div class="wcb"><div class="wci"><div class="wcs">5:31 PM. "Jakeyyyy you coming in tonight?" He's parked at the bore, still in his work shirt, eating an apple from the esky. He reads it. He doesn't feel the old jolt of obligation — the automatic yes. He actually pauses. He thinks about Monday morning and what he wants it to feel like. He puts the phone down and finishes the apple first.<br><br>That pause — that four-second gap between the message arriving and him responding — that's the whole week in one moment. That's what Monday, Tuesday, Wednesday and Thursday built. Not willpower. Structure.</div><div class="wcin">The goal isn't to never go to the pub. It's to make the choice consciously, not by default. That pause — that's what a week of small things built.</div></div></div></div>
     </div>
     <div class="rv d3"><div id="cb-s9" class="cbar"><button class="cbar-btn" onclick="cbClick('s12','cb-s9')"><div class="cbar-ring"><svg width="44" height="44" viewBox="0 0 44 44"><circle class="cbar-ring-track" cx="22" cy="22" r="18"/><circle class="cbar-ring-fill" id="crf-s9" cx="22" cy="22" r="18"/></svg><div class="cbar-ring-num" id="crn-s9">45</div></div><span>Continue →</span></button></div></div>
@@ -965,39 +1098,89 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 <script>
 // ════════════════════════════════════════════════
+// CINEMATIC INTRO
+// ════════════════════════════════════════════════
+const cinLines = [
+  { text: '800 kilometres north of Perth.', cls: '', dur: 2200 },
+  { text: 'There is one pub.', cls: '', dur: 1800 },
+  { text: 'Population: 918.', cls: 'small', dur: 1800 },
+  { text: 'Jake is 22.', cls: '', dur: 2000 },
+  { text: 'He\'s been up since four.', cls: '', dur: 1800 },
+  { text: 'The dust is in everything.', cls: '', dur: 1800 },
+  { text: 'He doesn\'t think about whether to go.', cls: '', dur: 2200 },
+  { text: 'He just goes.', cls: 'em', dur: 2400 },
+  { text: 'He always just goes.', cls: '', dur: 2000 },
+  { text: 'This is about what happens after.', cls: 'small', dur: 2600 },
+];
+let cinIdx = 0, cinTO, cinSkipped = false;
+const cinEl = document.getElementById('cin-line');
+const cinProg = document.getElementById('cin-prog');
+let cinTotal = cinLines.reduce((a,l)=>a+l.dur+600,0);
+let cinElapsed = 0;
+
+function showCinLine() {
+  if (cinSkipped) return;
+  if (cinIdx >= cinLines.length) {
+    setTimeout(endCinematic, 1000);
+    return;
+  }
+  const l = cinLines[cinIdx];
+  cinEl.className = 'cin-line' + (l.cls ? ' ' + l.cls : '');
+  cinEl.textContent = l.text;
+  void cinEl.offsetWidth;
+  cinEl.classList.add('show');
+  cinTO = setTimeout(() => {
+    cinEl.classList.add('hide');
+    cinElapsed += l.dur + 600;
+    cinProg.style.width = Math.min(100, (cinElapsed / cinTotal * 100)) + '%';
+    cinIdx++;
+    setTimeout(showCinLine, 350);
+  }, l.dur);
+}
+
+function skipCinematic() {
+  cinSkipped = true;
+  clearTimeout(cinTO);
+  endCinematic();
+}
+
+function endCinematic() {
+  const cin = document.getElementById('cinematic');
+  cin.classList.add('gone');
+  setTimeout(() => {
+    cin.style.display = 'none';
+    runTransition();
+  }, 1200);
+}
+
+// ════════════════════════════════════════════════
 // SPLASH + TRANSITION
 // ════════════════════════════════════════════════
 function beginStory() {
   const splash = document.getElementById('splash');
-  const tov = document.getElementById('tov');
   splash.classList.add('gone');
   setTimeout(() => {
     splash.style.display = 'none';
-    tov.style.display = 'block';
-    runTransition();
+    const cin = document.getElementById('cinematic');
+    cin.style.display = 'flex';
+    setTimeout(showCinLine, 600);
   }, 900);
 }
 
 function runTransition() {
   const tov = document.getElementById('tov');
-  // Step 1: horizon line
+  tov.style.display = 'block';
   setTimeout(() => tov.querySelector('.tov-horizon').classList.add('show'), 400);
-  // Step 2: sky glow
   setTimeout(() => {
     tov.querySelector('.tov-sky').classList.add('lit');
     tov.querySelector('.tov-glow').classList.add('show');
     tov.querySelector('.tov-dust').classList.add('show');
   }, 900);
-  // Step 3: sun
   setTimeout(() => tov.querySelector('.tov-sun').classList.add('show'), 1600);
-  // Step 4: land rises
   setTimeout(() => tov.querySelector('.tov-land').classList.add('show'), 2100);
-  // Step 5: eyebrow
   setTimeout(() => tov.querySelector('.tt-eyebrow').classList.add('show'), 2800);
-  // Step 6: title letters
   const spans = tov.querySelectorAll('.tt-h span');
   spans.forEach((s, i) => setTimeout(() => s.classList.add('show'), 3200 + i * 90));
-  // Step 7: fade out
   setTimeout(() => {
     tov.querySelector('.tov-fade').classList.add('show');
     setTimeout(() => {
@@ -1009,25 +1192,17 @@ function runTransition() {
 }
 
 // ════════════════════════════════════════════════
-// SAFE SCROLL — forward only
+// SCROLL / PROGRESS / REVEAL
 // ════════════════════════════════════════════════
 function safeScrollTo(id) {
   const el = document.getElementById(id);
   if (!el) return;
   if (el.getBoundingClientRect().top > -100) el.scrollIntoView({ behavior: 'smooth' });
 }
-
-// ════════════════════════════════════════════════
-// PROGRESS BAR
-// ════════════════════════════════════════════════
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.documentElement.scrollHeight - innerHeight);
   document.getElementById('prog').style.width = (pct * 100) + '%';
 });
-
-// ════════════════════════════════════════════════
-// REVEAL
-// ════════════════════════════════════════════════
 const ro = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.08 });
@@ -1040,11 +1215,12 @@ const cbState = {};
 function startCountdown(barId, targetId, seconds) {
   const bar = document.getElementById(barId);
   if (!bar || cbState[barId]?.started) return;
-  cbState[barId] = { started: true, interval: null };
+  cbState[barId] = { started: true };
   bar.classList.add('show');
   const C = 2 * Math.PI * 18;
-  const fillEl = document.getElementById('crf-' + barId.replace('cb-',''));
-  const numEl = document.getElementById('crn-' + barId.replace('cb-',''));
+  const sfx = barId.replace('cb-','');
+  const fillEl = document.getElementById('crf-' + sfx);
+  const numEl = document.getElementById('crn-' + sfx);
   if (fillEl) { fillEl.style.strokeDasharray = C; fillEl.style.strokeDashoffset = 0; }
   if (numEl) numEl.textContent = seconds;
   let e = 0;
@@ -1071,7 +1247,6 @@ function watchSection(sId, barId, tId, secs, thresh) {
 watchSection('s1','cb-s1','s2',30);
 watchSection('s3a','cb-s3a','s_ripple',30);
 watchSection('s3b','cb-s3b','s3c',35);
-watchSection('s_recog','cb-s_recog','s8',40,0.6);
 watchSection('s9','cb-s9','s12',45,0.4);
 
 // ════════════════════════════════════════════════
@@ -1178,7 +1353,6 @@ function runMumCall() {
         document.getElementById('callScreen').classList.add('hidden');
         const ms = document.getElementById('mumMsgsScreen');
         ms.style.opacity = '1';
-        document.getElementById('missedBadge').style.display = 'block';
         const msgs = [
           {text:"Jake?", time:"2:18 AM"},
           {text:"Hello?", time:"2:19 AM"},
@@ -1188,8 +1362,7 @@ function runMumCall() {
         let d = 1000;
         msgs.forEach(m => { setTimeout(() => addMumMsg(m.text, m.time), d); d += 2200; });
         setTimeout(() => {
-          const u = document.getElementById('mumUnseen');
-          u.textContent = 'Jake sees these at 9:14 AM Saturday morning.';
+          document.getElementById('mumUnseen').textContent = 'Jake sees these at 9:14 AM Saturday morning.';
         }, d + 500);
       }, 1200);
     }
@@ -1201,27 +1374,30 @@ function addMumMsg(text, time) {
   typ.style.display = 'flex'; typ.style.background = '#1c2a3a'; con.scrollTop = con.scrollHeight;
   setTimeout(() => {
     typ.style.display = 'none';
-    const bub = document.createElement('div'); bub.className = 'mum-bub'; bub.textContent = text;
-    const bt = document.createElement('div'); bt.className = 'bt'; bt.style.cssText = 'padding:0 3px;font-family:DM Mono,monospace;font-size:0.53rem;color:rgba(255,255,255,0.25)'; bt.textContent = time;
+    const bub = document.createElement('div');
+    bub.style.cssText = 'background:#1a2a3a;border-radius:17px;border-bottom-left-radius:4px;padding:8px 12px;font-size:0.81rem;line-height:1.47;opacity:0;transform:translateY(6px);transition:all 0.3s ease;max-width:77%';
+    bub.textContent = text;
+    const bt = document.createElement('div');
+    bt.style.cssText = 'font-size:0.55rem;color:rgba(255,255,255,0.28);padding:0 3px;font-family:DM Mono,monospace';
+    bt.textContent = time;
     con.insertBefore(bt, typ); con.insertBefore(bub, bt);
     con.scrollTop = con.scrollHeight;
-    setTimeout(() => bub.classList.add('show'), 30);
+    setTimeout(() => { bub.style.opacity='1'; bub.style.transform='translateY(0)'; }, 30);
   }, 1100);
 }
 
 // ════════════════════════════════════════════════
-// RIPPLE PHONE — INTERACTIVE DISCOVERY
+// RIPPLE PHONE
 // ════════════════════════════════════════════════
 let rippleInit = false, discovered = [false, false, false];
 new IntersectionObserver(es => {
   if (es[0].isIntersecting && !rippleInit) {
     rippleInit = true;
     setTimeout(() => {
-      // Build lock notifs
       const rNotifs = document.getElementById('rNotifs');
       const notifItems = [
         { app:'Instagram', icon:'📸', bg:'linear-gradient(135deg,#833ab4,#fd1d1d)', title:'liam_harrington', prev:'liked your photo · "big dog 🔥🔥🔥"', time:'8:52 AM' },
-        { app:'Messages', icon:'💬', bg:'linear-gradient(135deg,#2a4a6a,#1a2a4a)', title:'Mum', prev:'I love you. Just let me know you\'re safe.', time:'2:47 AM' },
+        { app:'Messages', icon:'💬', bg:'linear-gradient(135deg,#2a4a6a,#1a2a4a)', title:'Mum', prev:"I love you. Just let me know you're safe.", time:'2:47 AM' },
       ];
       notifItems.forEach(n => {
         const c = document.createElement('div'); c.className = 'nc';
@@ -1245,31 +1421,22 @@ function unlockRipple() {
     setTimeout(() => toast.classList.remove('show'), 4500);
   }, 600);
 }
-
 function openRipple(which) {
   const appMap = { insta:'ripple_insta', msgs:'ripple_msgs', phone:'ripple_phone', mum_thread:'ripple_mum' };
   const id = appMap[which]; if (!id) return;
   document.querySelectorAll('#home_ripple .sapp').forEach(a => a.classList.remove('open'));
   document.getElementById(id).classList.add('open');
-  // Mark discovery
   const discIdx = {insta:0, msgs:1, phone:2};
   if (discIdx[which] !== undefined) markDiscovered(discIdx[which]);
 }
-
-function closeRipple(id, discIdx) {
-  document.getElementById(id).classList.remove('open');
-}
-
+function closeRipple(id) { document.getElementById(id).classList.remove('open'); }
 function markDiscovered(i) {
   if (discovered[i]) return;
   discovered[i] = true;
-  // Remove badge
   const badges = ['r-insta-badge','r-msgs-badge','r-phone-badge'];
   const b = document.getElementById(badges[i]); if (b) b.remove();
-  // Light up dot
   const dot = document.getElementById('dd' + i);
   if (dot) dot.style.background = 'var(--ember)';
-  // Check if all discovered
   if (discovered.every(Boolean)) {
     setTimeout(() => {
       const dc = document.getElementById('disc-complete');
@@ -1321,10 +1488,10 @@ function satPick(val) {
       const out = document.getElementById('sat-outcome');
       if (val === 'no') {
         out.className = 'outcome ok show';
-        out.innerHTML = `<div class="outcome-lbl">Skill One — used</div><p>He typed "Nah not tonight lads. Down for a drive tomorrow tho 👍" and hit send before he could talk himself out of it. Short. Direct. An alternative, not a rejection. No apology.<br><br>Thommo replied "Fair enough mate." Bazza didn't respond. Davo sent a thumbs up.<br><br>Jake put the phone down. His heart was going a little. It felt harder than it should have. But on Sunday morning, he woke up with $80 still in his wallet and no hollow feeling. That was new.</p>`;
+        out.innerHTML = `<div class="outcome-lbl">Skill One — used</div><p>Short. Direct. An alternative, not a rejection. No apology. Thommo replied "Fair enough mate." Bazza didn't respond. Davo sent a thumbs up.<br><br>Jake put the phone down. His heart was going a little. It felt harder than it should have. But on Sunday morning, he woke up with $80 still in his wallet and no hollow feeling. That was new.</p>`;
       } else {
         out.className = 'outcome bad show';
-        out.innerHTML = `<div class="outcome-lbl">The loop continues</div><p>He knows the skill now. But knowing isn't doing. He goes. One beer turns into five. He wakes up Sunday same as always — hollow, broke, the loop unbroken. But somewhere in him, something is different. He knows there was another option. He didn't take it today. There'll be a next Friday.</p>`;
+        out.innerHTML = `<div class="outcome-lbl">The loop continues</div><p>He knows the skill now. But knowing isn't doing. He goes. One beer turns into five. He wakes up Sunday same as always — hollow, broke, the loop unbroken. But somewhere in him, something is different. He knows there was another option. There'll be a next Friday.</p>`;
       }
       ro.observe(out);
       setTimeout(() => safeScrollTo('s4'), 5500);
@@ -1341,38 +1508,146 @@ new IntersectionObserver(es => {
     voidFired = true;
     const va = document.getElementById('void-after');
     setTimeout(() => { va.style.opacity = '1'; }, 2000);
-    setTimeout(() => safeScrollTo('s5'), 10000);
+    setTimeout(() => safeScrollTo('s_music_narr'), 10000);
   }
 }, { threshold: 0.8 }).observe(document.getElementById('s4'));
 
 // ════════════════════════════════════════════════
-// TAILGATE
+// MUSIC PHONE (Skill 2)
 // ════════════════════════════════════════════════
-let tgChosen = false;
-function tailgatePick(val) {
-  if (tgChosen) return; tgChosen = true;
-  document.getElementById('tcb-pub').disabled = true;
-  document.getElementById('tcb-walk').disabled = true;
-  const out = document.getElementById('tailgate-outcome');
-  const bb = document.getElementById('breathe-block');
-  if (val === 'pub') {
-    document.getElementById('tcb-pub').style.borderColor = 'rgba(176,48,48,0.4)';
-    out.className = 'outcome bad show';
-    out.innerHTML = "<div class='outcome-lbl'>Jake drives to town</div><p>One beer turns into five. The noise in his chest quietens for a couple of hours. On the drive home the feeling comes back — duller now, sitting underneath the headache. His mum is awake in Geraldton. Liam is asleep not knowing any of this.</p><p style='margin-top:0.7rem;font-style:italic;font-size:0.8rem;color:rgba(224,101,53,0.55)'>But somewhere in him, he knows this isn't working.</p>";
-  } else {
-    document.getElementById('tcb-walk').style.borderColor = 'rgba(77,179,116,0.4)';
-    out.className = 'outcome ok show';
-    out.innerHTML = "<div class='outcome-lbl'>Jake walks into the paddock</div><p>Past the fence line. The heat has dropped. The spinifex is making that dry sound it makes in the evening wind. He just walks and lets whatever is in him be in him. This is harder than driving to town. But it's not nothing.</p>";
+let musicLockInit = false;
+new IntersectionObserver(es => {
+  if (es[0].isIntersecting && !musicLockInit) {
+    musicLockInit = true;
+    setTimeout(() => {
+      // Add music notification to lock screen
+      const mn = document.getElementById('music_notifs');
+      const n = document.createElement('div'); n.className = 'nc';
+      n.innerHTML = `<div class="nc-ico" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div><div class="nc-b"><div class="nc-app">Messages</div><div class="nc-title">Davo + Thommo + Bazza</div><div class="nc-prev">Jakeyyyy you coming in tonight? 🍺</div></div><div class="nc-t">5:31 PM</div>`;
+      n.onclick = unlockMusic;
+      if (mn.lastElementChild) mn.insertBefore(n, mn.lastElementChild); else mn.appendChild(n);
+      setTimeout(() => { n.classList.add('in'); document.getElementById('ubtn_music').classList.add('pulse'); }, 600);
+    }, 800);
   }
+}, { threshold: 0.3 }).observe(document.getElementById('s_music'));
+
+function unlockMusic() {
+  document.getElementById('ubtn_music').classList.remove('pulse');
+  document.getElementById('lock_music').classList.add('gone');
+}
+
+function closeMusicApp() {
+  document.getElementById('musicAppScreen').classList.remove('open');
+}
+
+function openMusicApp() {
+  document.getElementById('musicAppScreen').classList.add('open');
+}
+
+function openPlaylist() {
+  document.getElementById('musicLibView').style.display = 'none';
+  const pv = document.getElementById('playlistView');
+  pv.style.display = 'flex';
+  pv.style.flexDirection = 'column';
+}
+
+function closePlaylist() {
+  document.getElementById('playlistView').style.display = 'none';
+  document.getElementById('musicLibView').style.display = 'block';
+}
+
+// Music player state
+const songs = [
+  { name:'Quiet Hour', artist:'Middle Kids', dur:'3:56', secs:236, emoji:'🌙' },
+  { name:'Long Way Home', artist:'Kasey Chambers', dur:'4:12', secs:252, emoji:'🎸' },
+  { name:'Still Running', artist:'Vance Joy', dur:'4:08', secs:248, emoji:'🌊' },
+  { name:'Golden Days', artist:'Ball Park Music', dur:'3:44', secs:224, emoji:'☀️' },
+  { name:"Something's Got Me Started", artist:'Paul Kelly', dur:'4:33', secs:273, emoji:'🌿' },
+  { name:'Carry Me', artist:'Alex Lahey', dur:'3:22', secs:202, emoji:'💫' },
+];
+let currentSong = -1, musicPlaying = false, musicSecs = 0, musicIv = null, musicShownSkill = false;
+
+function playFirst() { openPlaylist(); playSong(0); }
+
+function playSong(idx) {
+  currentSong = idx;
+  musicSecs = 0;
+  if (musicIv) clearInterval(musicIv);
+  const s = songs[idx];
+  document.getElementById('npSongName').textContent = s.name;
+  document.getElementById('npArtist').textContent = s.artist;
+  document.getElementById('npThumb').textContent = s.emoji;
+  document.getElementById('npTimeTot').textContent = s.dur;
+  document.getElementById('npTimeCur').textContent = '0:00';
+  document.getElementById('npBarFill').style.width = '0%';
+  document.getElementById('npPlayBtn').textContent = '⏸';
+  // Highlight playing song
+  document.querySelectorAll('.song-row').forEach((r,i) => r.classList.toggle('playing', i===idx));
+  const npBar = document.getElementById('nowPlayingBar');
+  npBar.classList.add('open');
+  musicPlaying = true;
+  // Animate waveform
+  const wfBars = document.querySelectorAll('.wf-bar');
+  wfBars.forEach((b,i) => { b.classList.add('active'); b.style.animationDelay = (i*0.12)+'s'; });
+  document.getElementById('npThumb').classList.add('spin');
+  startMusicTimer();
+  // Show skill section after 8 seconds of listening
   setTimeout(() => {
-    bb.style.display = 'block';
-    Array.from(bb.querySelectorAll('.rv')).forEach(el => ro.observe(el));
-  }, val === 'pub' ? 1200 : 700);
-  setTimeout(() => {
-    const cb5 = document.getElementById('cb-s5');
-    if (cb5) { ro.observe(cb5); startCountdown('cb-s5','s_recog',30); }
-    watchSection('s_recog','cb-s_recog','s8',40,0.6);
-  }, 9000);
+    if (!musicShownSkill) {
+      musicShownSkill = true;
+      const sk = document.getElementById('s_skill2');
+      sk.style.display = 'flex';
+      sk.style.flexDirection = 'column';
+      sk.style.alignItems = 'center';
+      sk.style.justifyContent = 'center';
+      sk.querySelectorAll('.rv').forEach(el => ro.observe(el));
+      const cb = sk.querySelector('.cbar');
+      if (cb) startCountdown('cb-s5','s8',35);
+      setTimeout(() => safeScrollTo('s_skill2'), 1500);
+    }
+  }, 8000);
+}
+
+function startMusicTimer() {
+  if (musicIv) clearInterval(musicIv);
+  musicIv = setInterval(() => {
+    if (!musicPlaying) return;
+    musicSecs++;
+    const s = songs[currentSong];
+    const pct = (musicSecs / s.secs) * 100;
+    document.getElementById('npBarFill').style.width = Math.min(100, pct) + '%';
+    const m = Math.floor(musicSecs / 60), sc = musicSecs % 60;
+    document.getElementById('npTimeCur').textContent = m + ':' + sc.toString().padStart(2,'0');
+    if (musicSecs >= s.secs) { clearInterval(musicIv); nextSong(); }
+  }, 1000);
+}
+
+function togglePlay() {
+  musicPlaying = !musicPlaying;
+  document.getElementById('npPlayBtn').textContent = musicPlaying ? '⏸' : '▶';
+  const wfBars = document.querySelectorAll('.wf-bar');
+  if (musicPlaying) {
+    wfBars.forEach(b => b.classList.add('active'));
+    document.getElementById('npThumb').classList.add('spin');
+    startMusicTimer();
+  } else {
+    wfBars.forEach(b => b.classList.remove('active'));
+    document.getElementById('npThumb').classList.remove('spin');
+    clearInterval(musicIv);
+  }
+}
+
+function nextSong() {
+  if (currentSong < songs.length - 1) playSong(currentSong + 1);
+}
+function prevSong() {
+  if (musicSecs > 3) { musicSecs = 0; document.getElementById('npTimeCur').textContent='0:00'; document.getElementById('npBarFill').style.width='0%'; }
+  else if (currentSong > 0) playSong(currentSong - 1);
+}
+function seekMusic(e) {
+  const bar = e.currentTarget;
+  const pct = e.offsetX / bar.offsetWidth;
+  musicSecs = Math.floor(pct * songs[currentSong].secs);
 }
 
 // ════════════════════════════════════════════════
@@ -1384,10 +1659,10 @@ function startBreath() {
   const orb = document.getElementById('borb');
   if (breathing) {
     breathing = false; clearTimeout(bTO); orb.classList.remove('on');
-    document.getElementById('btxt').textContent = 'Tap to try\nalongside him';
+    document.getElementById('btxt').textContent = 'Tap to start';
     return;
   }
-  breathing = true; orb.classList.add('on'); runBreath();
+  breathing = true; orb.classList.add('on'); bPhase = 0; runBreath();
 }
 function runBreath() {
   if (!breathing) return;
@@ -1528,10 +1803,10 @@ const helpContent = [
   { type:'resource', name:'Lifeline', num:'13 11 14', desc:'24/7 crisis support · free · confidential', bg:'#1a3a1c', delay:9000 },
   { type:'resource', name:'Beyond Blue', num:'1300 22 4636', desc:'24/7 mental health support', bg:'#1a2a3a', delay:10200 },
   { type:'resource', name:'MensLine Australia', num:'1300 78 99 78', desc:'Support for Australian men · 24/7', bg:'#1a1a3a', delay:11400 },
-  { type:'resource', name:'RFDS Western Ops', num:'rfds.org.au/wa', desc:'Telehealth for remote WA', bg:'#2a1a0a', delay:12600 },
+  { type:'resource', name:'RFDS Western Operations', num:'rfds.org.au/wa', desc:'Telehealth for remote WA', bg:'#2a1a0a', delay:12600 },
   { type:'resource', name:'Hello Sunday Morning', num:'hellosundaymorning.org', desc:'Change your relationship with alcohol', bg:'#0a2a1a', delay:13800 },
   { type:'resource', name:'13YARN', num:'13 92 76', desc:'24/7 · Aboriginal &amp; Torres Strait Islander', bg:'#2a1a0a', delay:15000 },
-  { type:'msg', text:"These are free, confidential, and available in remote areas. Jake, you made the right call.", delay:17000 },
+  { type:'msg', text:"These are free, confidential, and available in remote areas. You made the right call.", delay:17000 },
 ];
 function runHelpMessages() {
   const scroll = document.getElementById('helpScroll'), typ = document.getElementById('helpTyp');
