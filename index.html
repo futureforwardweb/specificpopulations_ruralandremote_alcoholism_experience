@@ -427,6 +427,35 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 @keyframes gl{to{height:100px}}
 .void-after{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;color:rgba(255,255,255,0.09);text-align:center;margin-top:2rem;opacity:0;transition:opacity 2s}
 
+/* LIFELINE SAFARI SEARCH */
+.safari-wrap{position:absolute;inset:0;display:flex;flex-direction:column;background:#1c1c1e;padding-top:46px;transition:opacity 0.4s ease}
+.safari-url-bar{margin:8px 12px;background:#2c2c2e;border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px}
+.safari-url-icon{font-size:0.65rem;color:#8e8e93}
+.safari-url-text{font-family:-apple-system,'DM Sans',sans-serif;font-size:0.78rem;color:#fff;flex:1;min-height:1em}
+.safari-url-cursor{width:1.5px;height:14px;background:#007aff;animation:compose-blink 1s step-end infinite;display:inline-block;vertical-align:middle}
+.safari-results{padding:12px;opacity:0;transition:opacity 0.6s ease}
+.safari-results.vis{opacity:1}
+.safari-result-card{background:#2c2c2e;border-radius:12px;padding:14px;cursor:default;transition:background 0.15s}
+.safari-result-site{font-family:-apple-system,'DM Sans',sans-serif;font-size:0.6rem;color:#8e8e93;margin-bottom:4px}
+.safari-result-title{font-family:-apple-system,'DM Sans',sans-serif;font-size:0.85rem;color:#007aff;font-weight:500;margin-bottom:6px}
+.safari-result-desc{font-family:-apple-system,'DM Sans',sans-serif;font-size:0.72rem;color:rgba(235,235,245,0.8);line-height:1.5}
+.safari-result-num{font-weight:700;color:#fff}
+.safari-copied-toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;font-family:-apple-system,'DM Sans',sans-serif;font-size:0.78rem;padding:10px 22px;border-radius:10px;opacity:0;transition:opacity 0.3s;z-index:10;pointer-events:none}
+.safari-copied-toast.vis{opacity:1}
+/* LIFELINE COMPOSE */
+.compose-wrap{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;transition:opacity 0.5s ease}
+.compose-header{background:rgba(255,255,255,0.05);padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.compose-header-back{font-size:1.2rem;color:rgba(80,136,204,0.8);cursor:default}
+.compose-header-title{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.85)}
+.compose-to{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.compose-to-label{font-size:0.7rem;color:rgba(255,255,255,0.3)}
+.compose-to-num{font-family:'DM Mono',monospace;font-size:0.78rem;color:rgba(80,136,204,0.8);letter-spacing:0.1em}
+.compose-body{flex:1;padding:14px;display:flex;flex-direction:column;justify-content:flex-end}
+.compose-input-area{background:rgba(255,255,255,0.06);border-radius:20px;padding:10px 14px;min-height:38px;display:flex;align-items:center;gap:8px}
+.compose-text{font-size:0.82rem;color:rgba(255,255,255,0.7);flex:1;min-height:1.2em;font-family:'DM Sans',sans-serif;letter-spacing:0.01em}
+.compose-cursor{width:1.5px;height:1em;background:rgba(80,136,204,0.8);animation:compose-blink 1s step-end infinite;flex-shrink:0}
+@keyframes compose-blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.compose-send{font-size:1.1rem;opacity:0.2;cursor:default}
 /* LIFELINE DIALER */
 .dialer-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#06100a 0%,#020803 100%)}
 .dialer-num{font-family:'Lora',serif;font-size:3rem;font-weight:300;letter-spacing:0.15em;margin-top:80px;text-align:center;min-height:3.8rem;color:rgba(255,255,255,0.9)}
@@ -912,13 +941,14 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#1a2a4a,#0a1a3a)">💳</div><div class="albl">Bankwest</div></div>
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#7f0000,#4a0000)">❤️</div><div class="albl">Health</div></div>
             <div class="aico off"><div class="aimg" style="background:#1c1c1e">📷</div><div class="albl">Camera</div></div>
+            <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div><div class="albl">Safari</div></div>
           </div>
         </div>
         <div class="dock">
           <div class="da" onclick="openApp('msgs1')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
           <div class="da off" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div>
           <div class="da off" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
-          <div class="da off" style="background:#1c1c1e">🌐</div>
+          <div class="da off" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div>
         </div>
         <div class="sapp" id="msgs1App">
           <div class="abar"><span class="abar-back" onclick="closeApp('msgs1App')">‹ Back</span><div class="abar-av" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">🤙</div><div class="abar-info"><div class="abar-name">Davo + Thommo + Bazza</div><div class="abar-sub">Group · 4 members</div></div></div>
@@ -1204,13 +1234,14 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#1a2a4a,#0a1a3a)">💳</div><div class="albl">Bankwest</div></div>
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#7f0000,#4a0000)">❤️</div><div class="albl">Health</div></div>
             <div class="aico off"><div class="aimg" style="background:#1c1c1e">📷</div><div class="albl">Camera</div></div>
+            <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div><div class="albl">Safari</div></div>
           </div>
         </div>
         <div class="dock">
           <div class="da" onclick="openRipple('msgs')" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
           <div class="da" onclick="openRipple('insta')" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div>
           <div class="da" onclick="openRipple('phone')" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
-          <div class="da off" style="background:#1c1c1e">🌐</div>
+          <div class="da off" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div>
         </div>
 
         <!-- INSTAGRAM: LIAM'S VIEW -->
@@ -1610,13 +1641,14 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#1a2a4a,#0a1a3a)">💳</div><div class="albl">Bankwest</div></div>
             <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#7f0000,#4a0000)">❤️</div><div class="albl">Health</div></div>
             <div class="aico off"><div class="aimg" style="background:#1c1c1e">📷</div><div class="albl">Camera</div></div>
+            <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div><div class="albl">Safari</div></div>
           </div>
         </div>
         <div class="dock" style="background:rgba(255,255,255,0.05)">
           <div class="da off" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
           <div class="da off" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div>
           <div class="da off" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
-          <div class="da off" style="background:#1c1c1e">🌐</div>
+          <div class="da off" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div>
         </div>
         <!-- MUSIC APP -->
         <div class="sapp music-app" id="musicAppScreen">
@@ -1975,13 +2007,14 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
               <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#1a2a4a,#0a1a3a)">💳</div><div class="albl">Bankwest</div></div>
               <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#7f0000,#4a0000)">❤️</div><div class="albl">Health</div></div>
               <div class="aico off"><div class="aimg" style="background:#1c1c1e">📷</div><div class="albl">Camera</div></div>
+              <div class="aico off"><div class="aimg" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div><div class="albl">Safari</div></div>
             </div>
           </div>
           <div class="dock" style="background:rgba(255,255,255,0.05)">
             <div class="da off" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div>
             <div class="da off" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📸</div>
             <div class="da off" style="background:linear-gradient(135deg,#0a7cf0,#0850aa)">📱</div>
-            <div class="da off" style="background:#1c1c1e">🌐</div>
+            <div class="da off" style="background:linear-gradient(135deg,#00c6fb,#005bea)">🧭</div>
           </div>
           <!-- Podcast App -->
           <div class="pod-app" id="podApp">
@@ -2143,13 +2176,13 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
 
       <div class="cin-line dim" id="cl-3" style="font-family:'Lora',serif;font-size:0.84rem;line-height:1.85;margin-bottom:1.5rem">Engine off. Keys on the dash. The kind of silence where you notice things you've been driving past for weeks.</div>
 
-      <div class="cin-line" id="cl-4" style="font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.2em;color:rgba(80,136,204,0.9);margin-bottom:1.5rem;padding:14px 24px;border:2px solid rgba(80,136,204,0.4);border-radius:14px;display:inline-block;background:rgba(80,136,204,0.08);animation:ll-blink 4s ease-in-out infinite">📱 LL</div>
+      <div class="cin-line dim" id="cl-4" style="font-family:'Lora',serif;font-size:0.8rem;line-height:1.85;margin-bottom:1.5rem">He doesn't have the number saved. He's been putting it off because saving it makes it real.</div>
 
-      <div class="cin-line dim" id="cl-5" style="font-family:'Lora',serif;font-size:0.8rem;line-height:1.85;margin-bottom:0.8rem">He saved it at the servo three weeks ago. Petrol pumping. Felt stupid.</div>
+      <div class="cin-line dim" id="cl-5" style="font-family:'Lora',serif;font-size:0.8rem;line-height:1.85;margin-bottom:1.5rem">He picks up his phone anyway.</div>
 
-      <div class="cin-line dim" id="cl-6" style="font-family:'Lora',serif;font-size:0.8rem;line-height:1.85;margin-bottom:2rem">Filed it where no one would see. Scrolled past it every day since.</div>
+      <div class="cin-line dim" id="cl-6" style="font-family:'Lora',serif;font-size:0.8rem;line-height:1.85;margin-bottom:2rem">Because calling feels too exposed.<br>You can't take back a call.</div>
 
-      <div class="cin-line ember" id="cl-7" style="font-family:'Lora',serif;font-size:0.92rem;font-style:italic;line-height:1.8;margin-bottom:0.5rem">Tonight he isn't deciding if he deserves to call.</div>
+      <div class="cin-line ember" id="cl-7" style="font-family:'Lora',serif;font-size:0.92rem;font-style:italic;line-height:1.8;margin-bottom:0.5rem">Tonight he isn't deciding if he deserves help.</div>
 
       <div class="cin-line ember" id="cl-8" style="font-family:'Lora',serif;font-size:0.92rem;font-style:italic;line-height:1.8;margin-bottom:2.5rem">He's just tired of talking himself out of it.</div>
 
@@ -2168,9 +2201,33 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
     <div class="phone rv d1" id="phone_end" style="position:relative">
       <div class="psc" style="background:#000">
         <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:55"><span class="st">8:41</span><div class="si"><div class="sig"><div class="sb"></div><div class="sb"></div><div class="sb"></div></div><span>🔋</span></div></div>
-        <div class="dialer-wrap" id="dialerWrap">
+        <!-- SAFARI SEARCH SCREEN -->
+        <div class="safari-wrap" id="safariWrap">
+          <div class="safari-url-bar"><span class="safari-url-icon">🔍</span><span class="safari-url-text" id="safariText"></span><span class="safari-url-cursor" id="safariCursor"></span></div>
+          <div class="safari-results" id="safariResults">
+            <div class="safari-result-card" id="safariResultCard">
+              <div class="safari-result-site">lifeline.org.au</div>
+              <div class="safari-result-title">Lifeline Australia – Crisis Support</div>
+              <div class="safari-result-desc">24-hour crisis support and suicide prevention.<br>Call <span class="safari-result-num">13 11 14</span> — free, confidential, anywhere in Australia.</div>
+            </div>
+          </div>
+          <div class="safari-copied-toast" id="safariCopied">Copied to clipboard</div>
+        </div>
+        <!-- COMPOSE SCREEN -->
+        <div class="compose-wrap" id="composeWrap" style="display:none">
+          <div class="compose-header"><span class="compose-header-back">‹</span><div class="compose-header-title">New Message</div></div>
+          <div class="compose-to"><span class="compose-to-label">To:</span><span class="compose-to-num">13 11 14</span></div>
+          <div class="compose-body">
+            <div class="compose-input-area">
+              <div class="compose-text" id="composeText"></div><div class="compose-cursor" id="composeCursor"></div>
+              <div class="compose-send">↑</div>
+            </div>
+          </div>
+        </div>
+        <!-- DIALER -->
+        <div class="dialer-wrap" id="dialerWrap" style="display:none">
           <div class="dialer-num" id="dialerNum">&#8203;</div>
-          <div class="dialer-label" id="dialerLbl">Lifeline - 13 11 14</div>
+          <div class="dialer-label" id="dialerLbl">13 11 14</div>
           <div class="dialer-keys">
             <div class="dk" data-d="1"><div class="dk-n">1</div><div class="dk-l"></div></div>
             <div class="dk" data-d="2"><div class="dk-n">2</div><div class="dk-l">ABC</div></div>
@@ -2194,7 +2251,7 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
         </div>
       </div>
     </div>
-    <p class="rv d2" id="dialer-hint" style="text-align:center;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.18);line-height:1.9;max-width:340px">Watch Jake type the number.</p>
+    <p class="rv d2" id="dialer-hint" style="text-align:center;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.18);line-height:1.9;max-width:340px"></p>
   </div>
 </section>
 
@@ -2279,14 +2336,301 @@ body:not(.story-started) > div:not(#splash):not(#cinematic):not(#cin-credit):not
   <!-- Card 4: Road animation - Canvas-based cinematic ute scene -->
   <div id="ge-card-4" class="ge-card" style="z-index:20;position:relative;overflow:hidden;width:100%;max-width:100%;padding:0">
     <canvas id="ge-road-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
-    <div id="ge-fadeout" style="position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:9999;transition:opacity 4s ease"></div>
+    <div id="ge-ending-text" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity 2.5s ease;pointer-events:none;text-align:center;padding:2rem">
+      <div style="font-family:'Lora',serif;font-size:clamp(1.05rem,2.8vw,1.4rem);font-style:italic;color:rgba(244,241,235,0.88);line-height:1.75;max-width:340px;text-shadow:0 0 40px rgba(0,0,0,0.9)">He didn't know what he was going to say when he got there.</div>
+      <div style="font-family:'Lora',serif;font-size:clamp(1.05rem,2.8vw,1.4rem);font-style:italic;color:rgba(244,241,235,0.88);line-height:1.75;max-width:340px;margin-top:0.6rem;text-shadow:0 0 40px rgba(0,0,0,0.9)">He went anyway.</div>
+    </div>
+    <div id="ge-fadeout" style="position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:9999;transition:opacity 5s ease"></div>
   </div>
 </section>
 
 <script>
 // ════════════════════════════════════════════════
+// WEB AUDIO
+// ════════════════════════════════════════════════
+let AudioCtx;
+function _getAudioCtx() {
+  if (!AudioCtx) AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (AudioCtx.state === 'suspended') AudioCtx.resume();
+  return AudioCtx;
+}
+function phoneKeyTone(freq = 440, dur = 0.12) {
+  try {
+    const ctx = _getAudioCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = freq;
+    o.type = 'sine';
+    g.gain.setValueAtTime(0.08, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.start(); o.stop(ctx.currentTime + dur);
+  } catch(e) {}
+}
+function notificationChime() {
+  [880, 1100].forEach((f, i) => setTimeout(() => phoneKeyTone(f, 0.14), i * 80));
+}
+const _dtmfRow = { '1':697,'2':697,'3':697,'4':770,'5':770,'6':770,'7':852,'8':852,'9':852,'0':941,'*':941,'#':941 };
+function dialKeyTone(digit) { phoneKeyTone(_dtmfRow[digit] || 697); }
+let _ringIv = null;
+function startRingTone() {
+  const ring = () => { phoneKeyTone(480, 0.18); setTimeout(() => phoneKeyTone(440, 0.18), 250); };
+  ring();
+  _ringIv = setInterval(ring, 2000);
+}
+function stopRingTone() { if (_ringIv) { clearInterval(_ringIv); _ringIv = null; } }
+
+// ── 1. Outback ambience: gentle drone + filtered wind ──
+let _ambienceNodes = [];
+function startOutbackAmbience() {
+  if (_ambienceNodes.length) return; // already running
+  try {
+    const ctx = _getAudioCtx();
+    const now = ctx.currentTime;
+
+    // Sub-bass drone: two detuned sines, slow fade-in
+    [55, 58.5].forEach(freq => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.015, now + 5);
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      _ambienceNodes.push({ o, g });
+    });
+
+    // Filtered noise: soft outback wind texture
+    const bufLen = ctx.sampleRate * 4;
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 280; lp.Q.value = 0.5;
+    const windGain = ctx.createGain();
+    windGain.gain.setValueAtTime(0, now);
+    windGain.gain.linearRampToValueAtTime(0.012, now + 6);
+    src.connect(lp); lp.connect(windGain); windGain.connect(ctx.destination);
+    src.start();
+    _ambienceNodes.push({ o: src, g: windGain });
+  } catch(e) {}
+}
+function stopOutbackAmbience() {
+  _ambienceNodes.forEach(({ o, g }) => {
+    try {
+      const ctx = _getAudioCtx();
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + 3);
+      o.stop(ctx.currentTime + 3.1);
+    } catch(e) {}
+  });
+  _ambienceNodes = [];
+}
+
+// ── 2. Heartbeat for cost reveal ──
+function heartbeat() {
+  try {
+    const ctx = _getAudioCtx();
+    function beat(t) {
+      const o1 = ctx.createOscillator(), g1 = ctx.createGain();
+      o1.frequency.value = 55; o1.type = 'sine';
+      g1.gain.setValueAtTime(0, t);
+      g1.gain.linearRampToValueAtTime(0.18, t + 0.04);
+      g1.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      o1.connect(g1); g1.connect(ctx.destination);
+      o1.start(t); o1.stop(t + 0.25);
+      const o2 = ctx.createOscillator(), g2 = ctx.createGain();
+      o2.frequency.value = 70; o2.type = 'sine';
+      g2.gain.setValueAtTime(0, t + 0.14);
+      g2.gain.linearRampToValueAtTime(0.11, t + 0.18);
+      g2.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      o2.connect(g2); g2.connect(ctx.destination);
+      o2.start(t + 0.14); o2.stop(t + 0.38);
+    }
+    const now = ctx.currentTime;
+    beat(now); beat(now + 0.9); beat(now + 1.8);
+  } catch(e) {}
+}
+
+// ── 3. Australian telephone ring (400+450Hz dual burst) ──
+function telRing() {
+  try {
+    const ctx = _getAudioCtx();
+    function burst(startT, dur) {
+      [400, 450].forEach(f => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.value = f; o.type = 'sine';
+        g.gain.setValueAtTime(0.07, startT);
+        g.gain.setValueAtTime(0.07, startT + dur);
+        g.gain.linearRampToValueAtTime(0, startT + dur + 0.02);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(startT); o.stop(startT + dur + 0.05);
+      });
+    }
+    const n = ctx.currentTime;
+    burst(n, 0.4); burst(n + 0.5, 0.4);
+  } catch(e) {}
+}
+
+// ── 4. Breathing tones: sweep up on inhale, down on exhale ──
+function breatheTone(direction) {
+  try {
+    const ctx = _getAudioCtx();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine';
+    const [start, end] = direction === 'in' ? [200, 320] : [320, 200];
+    o.frequency.setValueAtTime(start, ctx.currentTime);
+    o.frequency.linearRampToValueAtTime(end, ctx.currentTime + 4);
+    g.gain.setValueAtTime(0, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.4);
+    g.gain.setValueAtTime(0.06, ctx.currentTime + 3.4);
+    g.gain.linearRampToValueAtTime(0, ctx.currentTime + 4);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 4);
+  } catch(e) {}
+}
+
+// ── 5. Keyboard click texture ──
+function keyClick() {
+  try {
+    const ctx = _getAudioCtx();
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.025, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 8);
+    }
+    const src = ctx.createBufferSource(), g = ctx.createGain();
+    g.gain.value = 0.03;
+    src.buffer = buf; src.connect(g); g.connect(ctx.destination);
+    src.start();
+  } catch(e) {}
+}
+
+// ── 6. Call connect sound: click + line hiss ──
+function callConnectSound() {
+  try {
+    const ctx = _getAudioCtx();
+    const n = ctx.currentTime;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.value = 120; o.type = 'sine';
+    g.gain.setValueAtTime(0.15, n); g.gain.exponentialRampToValueAtTime(0.001, n + 0.08);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(n); o.stop(n + 0.1);
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 1.5, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.018;
+    const src = ctx.createBufferSource();
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass'; filter.frequency.value = 2400; filter.Q.value = 0.8;
+    const hissGain = ctx.createGain();
+    hissGain.gain.setValueAtTime(0, n + 0.05);
+    hissGain.gain.linearRampToValueAtTime(1, n + 0.3);
+    hissGain.gain.linearRampToValueAtTime(0, n + 1.4);
+    src.buffer = buf; src.connect(filter); filter.connect(hissGain); hissGain.connect(ctx.destination);
+    src.start(n + 0.05);
+  } catch(e) {}
+}
+
+// ════════════════════════════════════════════════
 // SPLASH SCREEN INIT - Stars & Embers
 // ════════════════════════════════════════════════
+
+// Cricket chirp on splash (first 3 seconds)
+function playSplashCricket() {
+  try {
+    const ctx = _getAudioCtx();
+    const now = ctx.currentTime;
+    const dur = 0;
+
+    // Real cricket sound = stridulation: a rapid trill of wing-scrape pulses
+    // at ~30-50Hz repetition rate, with harmonics around 4-5kHz
+    // We layer multiple cricket "voices" at slightly different timings
+
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(0.18, now + 0.3);
+    master.gain.setValueAtTime(0.18, now + dur - 0.8);
+    master.gain.linearRampToValueAtTime(0, now + dur);
+    master.connect(ctx.destination);
+
+    function makeCricket(baseFreq, startDelay, vol) {
+      // Each cricket: carrier oscillator amplitude-modulated by a trill oscillator
+      const carrier = ctx.createOscillator();
+      carrier.type = 'sine';
+      carrier.frequency.value = baseFreq;
+
+      // Add a harmonic for richness
+      const harmonic = ctx.createOscillator();
+      harmonic.type = 'sine';
+      harmonic.frequency.value = baseFreq * 2.02;
+      const harmGain = ctx.createGain();
+      harmGain.gain.value = 0.3;
+      harmonic.connect(harmGain);
+
+      // Trill modulator: rapid on-off at ~38Hz creates the chirp texture
+      const trillOsc = ctx.createOscillator();
+      trillOsc.type = 'square';
+      trillOsc.frequency.value = 38 + Math.random() * 8;
+      const trillGain = ctx.createGain();
+      trillGain.gain.value = 1;
+      trillOsc.connect(trillGain);
+
+      // Use trill to modulate carrier amplitude
+      const carrierGain = ctx.createGain();
+      carrierGain.gain.value = 0;
+      trillGain.connect(carrierGain.gain);
+
+      // Merge carrier + harmonic
+      const merge = ctx.createGain();
+      merge.gain.value = vol;
+      carrier.connect(carrierGain);
+      harmGain.connect(carrierGain);
+      carrierGain.connect(merge);
+
+      // Bandpass to shape the cricket tone
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = baseFreq;
+      bp.Q.value = 8;
+      merge.connect(bp);
+
+      // Envelope: chirp bursts with silences (like real cricket pattern)
+      const envGain = ctx.createGain();
+      envGain.gain.setValueAtTime(0, now);
+      let t = now + startDelay;
+      while (t < now + dur) {
+        // Chirp ON: 0.12-0.18s trill burst
+        const chirpLen = 0.12 + Math.random() * 0.06;
+        envGain.gain.setValueAtTime(0, t);
+        envGain.gain.linearRampToValueAtTime(1, t + 0.008);
+        envGain.gain.setValueAtTime(1, t + chirpLen - 0.008);
+        envGain.gain.linearRampToValueAtTime(0, t + chirpLen);
+        t += chirpLen;
+        // Silence between chirps: 0.06-0.1s
+        t += 0.06 + Math.random() * 0.04;
+        // Every 3-5 chirps, longer pause (like a real cricket cadence)
+        if (Math.random() < 0.25) t += 0.3 + Math.random() * 0.4;
+      }
+
+      bp.connect(envGain);
+      envGain.connect(master);
+
+      carrier.start(now); harmonic.start(now); trillOsc.start(now);
+      carrier.stop(now + dur + 0.2);
+      harmonic.stop(now + dur + 0.2);
+      trillOsc.stop(now + dur + 0.2);
+    }
+
+    // Layer 2-3 crickets at different pitches (like hearing multiple in the bush)
+    makeCricket(4400, 0, 0.7);         // main cricket, close
+    makeCricket(4850, 0.15, 0.35);     // second cricket, slightly distant
+    makeCricket(3900, 0.4, 0.2);       // third, far away, lower pitch
+
+  } catch(e) {}
+}
+
 (function initSplash() {
   // Generate stars
   const starsEl = document.getElementById('spStars');
@@ -2473,6 +2817,8 @@ function showWarningScreen(onDone) {
 function beginStory() {
   const splash = document.getElementById('splash');
   splash.classList.add('gone');
+  playSplashCricket();
+  startOutbackAmbience();
   document.getElementById('cinematic').style.display = 'flex';
   setTimeout(showCinLine, 80);
   setTimeout(() => { splash.style.display = 'none'; }, 1200);
@@ -2496,6 +2842,7 @@ function runTransition() {
     tov.querySelector('.tov-fade').classList.add('show');
     setTimeout(() => {
       tov.style.display = 'none';
+      stopOutbackAmbience();
       document.body.classList.add('story-started');
       document.getElementById('s0').scrollIntoView();
       // Now that sections are visible, create all phone/interaction observers
@@ -2540,9 +2887,18 @@ function safeScrollTo(id) {
   }
 }
 window.addEventListener('scroll', () => {
-  const pct = window.scrollY / (document.documentElement.scrollHeight - innerHeight);
+  const scrolled = window.scrollY;
+  const pct = scrolled / (document.documentElement.scrollHeight - innerHeight);
   document.getElementById('prog').style.width = (pct * 100) + '%';
-});
+
+  // Parallax: landing sun
+  const sun = document.querySelector('.l-sun');
+  if (sun) sun.style.transform = `translateX(-50%) translateY(${scrolled * 0.15}px)`;
+
+  // Parallax: Mum SVG scene
+  const mumScene = document.querySelector('#s_mum_side svg');
+  if (mumScene) mumScene.style.transform = `translateY(${scrolled * 0.04}px)`;
+}, { passive: true });
 const ro = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.08 });
@@ -2677,6 +3033,7 @@ function showCostReveal() {
   const el = document.getElementById('cost-reveal');
   if (!el) { showSatContinue(); return; }
   el.classList.add('show');
+  heartbeat();
   // Auto-dismiss after 4.5 seconds OR on tap
   const timer = setTimeout(hideCostReveal, 4500);
   el.addEventListener('click', () => { clearTimeout(timer); hideCostReveal(); }, { once: true });
@@ -2725,10 +3082,12 @@ function startMonCall() {
   calling.classList.add('show');
   const status = document.getElementById('mon-call-status');
   let rings = 0;
+  telRing();
+  const _monRingIv = setInterval(telRing, 4000);
   const iv = setInterval(() => {
     rings++;
     status.textContent = rings <= 2 ? 'ringing...' : 'connected';
-    if (rings >= 3) { clearInterval(iv); setTimeout(showMonDialogue, 700); }
+    if (rings >= 3) { clearInterval(iv); clearInterval(_monRingIv); setTimeout(showMonDialogue, 700); }
   }, 1600);
 }
 function showMonDialogue() {
@@ -3063,11 +3422,14 @@ function _initMumObserver() {
 function runMumCall() {
   const status = document.getElementById('callStatus');
   let rings = 0;
+  telRing();
+  const _telRingIv = setInterval(telRing, 4000);
   const iv = setInterval(() => {
     rings++;
     status.textContent = rings <= 3 ? `ringing... (${rings})` : 'no answer.';
     if (rings >= 4) {
       clearInterval(iv);
+      clearInterval(_telRingIv);
       setTimeout(() => {
         document.getElementById('callScreen').classList.add('hidden');
         const ms = document.getElementById('mumMsgsScreen');
@@ -3221,7 +3583,7 @@ function runLiamSequence() {
         if (cursor) setTimeout(() => { cursor.style.opacity = '0'; }, 600);
         return;
       }
-      if (commentText) commentText.textContent += phrase[i];
+      if (commentText) { commentText.textContent += phrase[i]; keyClick(); }
       i++;
     }, 80);
   }, 2800);
@@ -3293,7 +3655,7 @@ function runLiamSequence() {
             }
             return;
           }
-          if (shareText) shareText.textContent += msg[j];
+          if (shareText) { shareText.textContent += msg[j]; keyClick(); }
           j++;
         }, 70);
       }, 400);
@@ -3334,6 +3696,7 @@ function _initResistObserver() {
           const typer = setInterval(() => {
             if (ci < text.length) {
               typed.textContent += text[ci];
+              keyClick();
               ci++;
             } else {
               clearInterval(typer);
@@ -3602,7 +3965,7 @@ function _initMusicObserver() {
       n.innerHTML = `<div class="nc-ico" style="background:linear-gradient(135deg,#1a8a2e,#0d5a1e)">💬</div><div class="nc-b"><div class="nc-app">Messages</div><div class="nc-title">Davo + Thommo + Bazza</div><div class="nc-prev">Jakeyyyy you coming in tonight? 🍺</div></div><div class="nc-t">5:31 PM</div>`;
       n.onclick = unlockMusic;
       if (mn.lastElementChild) mn.insertBefore(n, mn.lastElementChild); else mn.appendChild(n);
-      setTimeout(() => { n.classList.add('in'); document.getElementById('ubtn_music').classList.add('pulse'); }, 600);
+      setTimeout(() => { n.classList.add('in'); notificationChime(); document.getElementById('ubtn_music').classList.add('pulse'); }, 600);
     }, 800);
   }
 }, { threshold: 0.7 }).observe(document.getElementById('s_music'));
@@ -3723,24 +4086,45 @@ function seekMusic(e) {
 // ════════════════════════════════════════════════
 // BREATHING
 // ════════════════════════════════════════════════
-let breathing = false, bPhase = 0, bTO;
+let breathing = false, bPhase = 0, bTO, bStartTime = 0;
 const bPhases = [{txt:'Breathe\nin...',dur:4000},{txt:'Hold.',dur:4000},{txt:'Breathe\nout...',dur:4000},{txt:'Hold.',dur:4000}];
-function startBreath() {
+function stopBreath() {
+  if (!breathing) return;
+  breathing = false; clearTimeout(bTO);
   const orb = document.getElementById('borb');
-  if (breathing) {
-    breathing = false; clearTimeout(bTO); orb.classList.remove('on');
-    document.getElementById('btxt').textContent = 'Tap to start';
-    return;
-  }
-  breathing = true; orb.classList.add('on'); bPhase = 0; runBreath();
+  if (orb) orb.classList.remove('on');
+  const btxt = document.getElementById('btxt');
+  if (btxt) btxt.textContent = 'Tap to restart';
+  const bcap = document.getElementById('bcap');
+  if (bcap) bcap.textContent = 'In for 4 · Hold for 4 · Out for 4 · Hold for 4.';
+}
+function startBreath() {
+  if (breathing) { stopBreath(); return; }
+  breathing = true; bPhase = 0; bStartTime = Date.now();
+  document.getElementById('borb').classList.add('on');
+  runBreath();
 }
 function runBreath() {
   if (!breathing) return;
+  // Auto-stop after 24 seconds
+  if (Date.now() - bStartTime >= 24000) { stopBreath(); return; }
   const p = bPhases[bPhase % 4];
   document.getElementById('btxt').textContent = p.txt;
   document.getElementById('bcap').textContent = `Cycle ${Math.floor(bPhase/4)+1} · Tap to stop`;
+  const phaseIdx = bPhase % 4;
+  if (phaseIdx === 0) breatheTone('in');
+  else if (phaseIdx === 2) breatheTone('out');
   bPhase++; bTO = setTimeout(runBreath, p.dur);
 }
+// Stop breathing if user scrolls past the section
+(function() {
+  const breatheSection = document.getElementById('s_skill2');
+  if (breatheSection) {
+    new IntersectionObserver(es => {
+      if (!es[0].isIntersecting && breathing) stopBreath();
+    }, { threshold: 0.1 }).observe(breatheSection);
+  }
+})();
 
 // ════════════════════════════════════════════════
 // SKILL 2 SECTION COUNTDOWN
@@ -3801,9 +4185,18 @@ function sendJake() {
   });
 }
 function detectSentiment(msg) {
-  const m = msg.toLowerCase();
-  if (/piss off|leave me|none of your|f.{0,2}k off|back off/i.test(m)) return 'angry';
-  if (/not (really|great|good|okay|ok|fine)|struggling|tired|flat|heavy|stressed|been rough|not sleeping|too much/i.test(m)) return 'honest';
+  const m = msg.toLowerCase().trim();
+  const hostile = /piss off|f.{0,2}k off|leave me|back off|none of your/i.test(m);
+  if (hostile) return 'angry';
+
+  const deflectors = /^(yeah|yep|nah|nope|fine|good|ok|okay|alright|lol|haha|👍|all good|sweet)[\s.!?]*$/;
+  if (deflectors.test(m)) return 'deflect';
+
+  const honest = /struggling|rough|heavy|tired|not great|not okay|not sleeping|been hard|a lot|don't know|lost|flat|yeah nah not really/i.test(m);
+  if (honest) return 'honest';
+
+  // Length heuristic - longer replies suggest more openness
+  if (m.split(' ').length > 8) return 'honest';
   return 'deflect';
 }
 function thommoRespond(sentiment) {
@@ -3864,6 +4257,7 @@ const s12Timings = [0, 1200, 2400, 4200, 6400, 8200, 9800, 12000, 14000, 16500];
 })();
 
 function runS12Cinematic() {
+  startOutbackAmbience();
   const lines = document.querySelectorAll('#s12-cin .cin-line');
   lines.forEach((line, i) => {
     setTimeout(() => line.classList.add('vis'), s12Timings[i] || (i * 1500));
@@ -3878,6 +4272,7 @@ function runS12Cinematic() {
 }
 
 function openLifelinePhone() {
+  stopOutbackAmbience();
   const cin = document.getElementById('s12-cin');
   cin.style.transition = 'opacity 1s ease';
   cin.style.opacity = '0';
@@ -3887,19 +4282,154 @@ function openLifelinePhone() {
     stage.style.display = 'flex';
     stage.querySelectorAll('.rv').forEach(el => ro.observe(el));
 
-    // Start the auto-dial hesitation sequence
-    setTimeout(autoTypeNumber, 1800);
+    // Start the Safari search sequence
+    setTimeout(runSearchSequence, 1800);
   }, 1000);
 }
 
 // ════════════════════════════════════════════════
-// LIFELINE DIALER
+// LIFELINE: COMPOSE → DIALER SEQUENCE
 // ════════════════════════════════════════════════
 let dialerInit = false, callSecs = 0, callIv;
 const lifelineNum = '131114';
 let dialedSoFar = '';
 
+// ── Safari search: type query, show result, copy number ────
+function runSearchSequence() {
+  const textEl = document.getElementById('safariText');
+  const cursorEl = document.getElementById('safariCursor');
+  const query = 'lifeline number australia';
+  let charIdx = 0;
+
+  function typeChar() {
+    if (charIdx < query.length) {
+      textEl.textContent = query.slice(0, charIdx + 1);
+      keyClick();
+      charIdx++;
+      setTimeout(typeChar, 52 + Math.random() * 48);
+    } else {
+      cursorEl.style.display = 'none';
+      // Brief pause then show results
+      setTimeout(() => {
+        document.getElementById('safariResults').classList.add('vis');
+        // After results show, auto-tap the result card
+        setTimeout(() => {
+          const card = document.getElementById('safariResultCard');
+          card.style.background = '#3a3a3c';
+          setTimeout(() => { card.style.background = ''; }, 200);
+          // Show "Copied" toast
+          setTimeout(() => {
+            const copied = document.getElementById('safariCopied');
+            copied.classList.add('vis');
+            setTimeout(() => {
+              copied.classList.remove('vis');
+              // Switch to compose screen
+              setTimeout(switchToCompose, 800);
+            }, 1200);
+          }, 400);
+        }, 1800);
+      }, 1000);
+    }
+  }
+  setTimeout(typeChar, 600);
+}
+
+function switchToCompose() {
+  const safari = document.getElementById('safariWrap');
+  const compose = document.getElementById('composeWrap');
+  safari.style.opacity = '0';
+  setTimeout(() => {
+    safari.style.display = 'none';
+    compose.style.display = 'flex';
+    compose.style.opacity = '0';
+    compose.offsetHeight;
+    compose.style.transition = 'opacity 0.5s ease';
+    compose.style.opacity = '1';
+    setTimeout(runComposeSequence, 1200);
+  }, 400);
+}
+
+// ── Compose screen: type and delete messages ────
+const composeAttempts = [
+  "hey I've been struggling a bit with",
+  "I don't really know how to",
+  "this is probably stupid but",
+  "I just wanted to talk to someone"
+];
+
+function runComposeSequence() {
+  const textEl = document.getElementById('composeText');
+  const hintEl = document.getElementById('dialer-hint');
+  if (hintEl) hintEl.textContent = '';
+  let attemptIdx = 0;
+
+  function runAttempt() {
+    if (attemptIdx >= composeAttempts.length) {
+      // All four deleted. Empty beat, then switch to dialer.
+      setTimeout(switchToDialer, 2200);
+      return;
+    }
+    const msg = composeAttempts[attemptIdx];
+    let charIdx = 0;
+
+    // Type char by char
+    function typeChar() {
+      if (charIdx < msg.length) {
+        textEl.textContent = msg.slice(0, charIdx + 1);
+        keyClick();
+        charIdx++;
+        const speed = 38 + Math.random() * 42;
+        setTimeout(typeChar, speed);
+      } else {
+        // Pause, then delete
+        const pauseTime = 1200 + Math.random() * 600;
+        setTimeout(() => deleteCompose(textEl, () => {
+          attemptIdx++;
+          setTimeout(runAttempt, 600 + Math.random() * 400);
+        }), pauseTime);
+      }
+    }
+    typeChar();
+  }
+  runAttempt();
+}
+
+function deleteCompose(el, cb) {
+  let text = el.textContent;
+  function delChar() {
+    if (!text.length) { el.textContent = ''; if (cb) cb(); return; }
+    // Delete in small chunks (2-3 chars at a time, like holding backspace)
+    const chunk = Math.min(text.length, Math.floor(Math.random() * 2) + 2);
+    text = text.slice(0, -chunk);
+    el.textContent = text;
+    setTimeout(delChar, 32 + Math.random() * 28);
+  }
+  delChar();
+}
+
+function switchToDialer() {
+  const compose = document.getElementById('composeWrap');
+  const dialer = document.getElementById('dialerWrap');
+  const hintEl = document.getElementById('dialer-hint');
+
+  // Fade out compose
+  compose.style.opacity = '0';
+  setTimeout(() => {
+    compose.style.display = 'none';
+    dialer.style.display = 'flex';
+    dialer.style.opacity = '0';
+    dialer.offsetHeight; // force reflow
+    dialer.style.transition = 'opacity 0.5s ease';
+    dialer.style.opacity = '1';
+
+    // Start dialer typing sequence
+    setTimeout(autoTypeNumber, 1200);
+  }, 500);
+}
+
+// ── Dialer: type, delete, retype ─────────────────
 function pressDialerKey(digit) {
+  dialKeyTone(digit);
   document.querySelectorAll('.dk').forEach(k => {
     if (k.dataset.d === digit) { k.classList.add('pressed'); setTimeout(() => k.classList.remove('pressed'), 160); }
   });
@@ -3910,71 +4440,46 @@ function setDialerDisplay(str) {
 }
 
 function autoTypeNumber() {
-  // Attempt 1: types "131" then chickens out - deletes all
+  // Attempt 1: types full number "131114" then deletes all
   let typed = '';
-  const attempt1 = ['1','3','1'];
+  const digits = lifelineNum.split('');
   let step = 0;
 
-  function runAttempt1() {
-    if (step < attempt1.length) {
-      typed += attempt1[step]; pressDialerKey(attempt1[step]); setDialerDisplay(typed);
-      step++; setTimeout(runAttempt1, 420 + Math.random()*180);
+  function typeDigits(seq, cb) {
+    if (step < seq.length) {
+      typed += seq[step]; pressDialerKey(seq[step]); setDialerDisplay(typed);
+      step++;
+      setTimeout(() => typeDigits(seq, cb), 380 + Math.random() * 180);
     } else {
-      // pause then delete all
-      setTimeout(() => deleteAll(typed, () => {
-        typed = '';
-        // Attempt 2: types "13 11" then deletes last two
-        setTimeout(() => {
-          const attempt2 = ['1','3','1','1'];
-          let s2 = 0;
-          function runAttempt2() {
-            if (s2 < attempt2.length) {
-              typed += attempt2[s2]; pressDialerKey(attempt2[s2]); setDialerDisplay(typed);
-              s2++; setTimeout(runAttempt2, 380 + Math.random()*180);
-            } else {
-              setTimeout(() => {
-                // delete last 2
-                typed = typed.slice(0,-2); setDialerDisplay(typed);
-                setTimeout(() => { typed = typed.slice(0,-2); setDialerDisplay(typed);
-                  // pause, then final complete dial
-                  setTimeout(() => finalDial(typed), 1400);
-                }, 500);
-              }, 1100);
-            }
-          }
-          runAttempt2();
-        }, 900);
-      }), 1200);
+      if (cb) cb();
     }
   }
-  runAttempt1();
+
+  // Type 131114
+  typeDigits(digits, () => {
+    // Pause — then delete all
+    setTimeout(() => deleteAllDigits(typed, () => {
+      typed = '';
+      step = 0;
+      // Pause, then retype the whole number
+      setTimeout(() => {
+        typeDigits(digits, () => {
+          dialedSoFar = lifelineNum;
+          const hintEl = document.getElementById('dialer-hint');
+          if (hintEl) hintEl.textContent = 'Tap the green button.';
+        });
+      }, 1200);
+    }), 1400);
+  });
 }
 
-function deleteAll(typed, cb) {
+function deleteAllDigits(typed, cb) {
   let t = typed;
   function delNext() {
     if (!t.length) { setDialerDisplay(''); if (cb) cb(); return; }
-    t = t.slice(0,-1); setDialerDisplay(t); setTimeout(delNext, 260);
+    t = t.slice(0,-1); setDialerDisplay(t); setTimeout(delNext, 200);
   }
   delNext();
-}
-
-function finalDial(startStr) {
-  // type out remaining digits of lifelineNum
-  let typed = startStr;
-  const remaining = lifelineNum.slice(typed.length);
-  let i = 0;
-  function typeNext() {
-    if (i >= remaining.length) {
-      dialedSoFar = lifelineNum;
-      document.getElementById('dialer-hint').textContent = 'Tap the green button.';
-      return;
-    }
-    typed += remaining[i]; pressDialerKey(remaining[i]); setDialerDisplay(typed);
-    dialedSoFar = typed;
-    i++; setTimeout(typeNext, 380 + Math.random()*180);
-  }
-  typeNext();
 }
 function dialCall() {
   if (dialedSoFar.length < 6) { showTip('Wait for the number to load...'); return; }
@@ -3984,9 +4489,13 @@ function dialCall() {
   setTimeout(() => {
     dw.style.display = 'none';
     const cs = document.getElementById('callingScreen'); cs.classList.add('show');
+    telRing();
+    const _lifeRingIv = setInterval(telRing, 4000);
     setTimeout(() => {
+      clearInterval(_lifeRingIv);
       document.getElementById('callingStatus').textContent = 'connected';
       document.getElementById('callingRing').textContent = '🔊';
+      callConnectSound();
       setTimeout(() => {
         cs.classList.remove('show');
         const hs = document.getElementById('helpScreen'); hs.classList.add('show');
@@ -4141,7 +4650,7 @@ function initSatMornPhone() {
     c.onclick = unlockSatMorn;
     const last = stack.lastElementChild;
     if (last) stack.insertBefore(c, last); else stack.appendChild(c);
-    setTimeout(() => c.classList.add('in'), n.delay);
+    setTimeout(() => { c.classList.add('in'); notificationChime(); }, n.delay);
   });
   setTimeout(() => {
     const btn = document.getElementById('ubtn_sat');
@@ -4531,25 +5040,6 @@ function runRoadAnimation() {
       ctx.fillStyle = `rgba(255,200,170,${bright * 0.85})`;
       ctx.beginPath(); ctx.roundRect(lx - lw * 0.28, lightY - lh * 0.3, lw * 0.56, lh * 0.6, 0.5); ctx.fill();
     });
-    // Ground bleed
-    if (bright > 0.04) {
-      const gw = Math.max(2, s * W * 0.09), gh = Math.max(1, s * W * 0.05);
-      const gb = ctx.createRadialGradient(cx, cy + gh, 0, cx, cy + gh, gw * 2);
-      gb.addColorStop(0, `rgba(150,12,4,${0.22 * bright})`); gb.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.ellipse(cx, cy + gh, gw, gh * 0.5, 0, 0, Math.PI * 2); ctx.fillStyle = gb; ctx.fill();
-    }
-    // Road reflection
-    if (bright > 0.06 && cy < H - 20) {
-      [-0.26, 0.26].forEach(off => {
-        const tx = roadX(off, cy), ry = Math.min(H, cy + (H - cy) * 0.65), rx = roadX(off, ry);
-        const rf = ctx.createLinearGradient(tx, cy, rx, ry);
-        rf.addColorStop(0, `rgba(150,10,4,${0.18 * bright})`);
-        rf.addColorStop(0.4, `rgba(100,6,2,${0.07 * bright})`);
-        rf.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.moveTo(tx, cy); ctx.lineTo(rx, ry);
-        ctx.lineWidth = Math.max(0.5, bright * 4 * s * 3); ctx.strokeStyle = rf; ctx.stroke();
-      });
-    }
   }
 
   // ── scene drawing ──────────────────────────────
@@ -4614,10 +5104,16 @@ function runRoadAnimation() {
   }
 
   // ── caption text ───────────────────────────────
-  let captionOpacity = 0;
+  let captionOpacity = 0, captionForceFade = false, captionFadeStart = 0;
   function updateCaption(progress, dt) {
-    const target = progress > 0.35 ? 1 : 0;
-    captionOpacity += (target - captionOpacity) * Math.min(dt * 0.6, 1);
+    if (captionForceFade) {
+      // Fade out over 2 seconds
+      const elapsed = (performance.now() - captionFadeStart) / 1000;
+      captionOpacity = Math.max(0, 1 - elapsed / 2);
+    } else {
+      const target = progress > 0.35 ? 1 : 0;
+      captionOpacity += (target - captionOpacity) * Math.min(dt * 0.6, 1);
+    }
   }
   function drawCaption() {
     if (captionOpacity < 0.01) return;
@@ -4632,6 +5128,7 @@ function runRoadAnimation() {
 
   // ── main loop ────────────────────────────────────
   let fadeOutTriggered = false;
+  let starFreeze = 0; // 0 = full twinkle, 1 = fully frozen
   function frame(now) {
     if (!last) last = now;
     const dt = Math.min((now - last) / 1000, 0.05);
@@ -4639,12 +5136,43 @@ function runRoadAnimation() {
     ctx.clearRect(0, 0, W, H);
     const progress = carProgress(), pos = carPos(progress);
     drawSky(); drawGround(); drawHorizon(); drawRoad();
-    drawMilkyWay(); drawStars(t); drawMoon(); drawCaption(); updateCaption(progress, dt);
+    drawMilkyWay();
+    // Stars: starFreeze 0=full twinkle, 1=static (set by setTimeout interval)
+    const _sfadeIn = Math.min(t / 2.5, 1);
+    stars.forEach(s => {
+      const twinkle = s.base + 0.25 * (1 - starFreeze) * Math.sin(t * s.freq + s.phase);
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${(twinkle * _sfadeIn).toFixed(3)})`; ctx.fill();
+    });
+    drawMoon(); drawCaption(); updateCaption(progress, dt);
     drawUte(pos.x, pos.y, pos.scale, progress);
-    // Fade to black after ute vanishes
+    // After ute vanishes: show text → text disappears → stars shimmer out → fade to black
     if (progress >= 1 && !fadeOutTriggered) {
       fadeOutTriggered = true;
-      setTimeout(() => { const fo = document.getElementById('ge-fadeout'); if (fo) fo.style.opacity = '1'; }, 3000);
+      // Show ending text after 1.5s
+      setTimeout(() => {
+        const et = document.getElementById('ge-ending-text');
+        if (et) et.style.opacity = '1';
+      }, 1500);
+      // Text disappears after 6s
+      setTimeout(() => {
+        const et = document.getElementById('ge-ending-text');
+        if (et) { et.style.transition = 'opacity 2s ease'; et.style.opacity = '0'; }
+        // Also fade out the canvas caption at the same time
+        captionForceFade = true; captionFadeStart = performance.now();
+      }, 7500);
+      // After text gone: stars slowly stop twinkling (starts at 10s)
+      setTimeout(() => {
+        const _freezeInterval = setInterval(() => {
+          starFreeze = Math.min(1, starFreeze + 0.015);
+          if (starFreeze >= 1) clearInterval(_freezeInterval);
+        }, 100);
+      }, 10000);
+      // Fade to black after stars settle (starts at 17s)
+      setTimeout(() => {
+        const fo = document.getElementById('ge-fadeout');
+        if (fo) fo.style.opacity = '1';
+      }, 17000);
     }
     requestAnimationFrame(frame);
   }
